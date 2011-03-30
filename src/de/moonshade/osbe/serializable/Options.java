@@ -42,6 +42,7 @@ public class Options implements Serializable {
 
 	public Options() {
 		// set initial lastPath
+		/*
 		if (System.getProperty("os.name").startsWith("Windows")) {
 			RegistryKey r = new RegistryKey(RootKey.HKEY_CLASSES_ROOT,
 					"osu!\\shell\\open\\command");
@@ -53,8 +54,10 @@ public class Options implements Serializable {
 				}
 			}
 		} else {
+		*/
 			lastPath = System.getProperty("user.home");
-		}
+			
+		//}
 	}
 
 	/**

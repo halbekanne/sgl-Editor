@@ -17,7 +17,11 @@
 package de.moonshade.osbe.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,14 +31,29 @@ import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JToggleButton;
+import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.Border;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -67,8 +86,18 @@ public class DefaultGUI implements GUI {
 	private JFrame mainFrame = null;
 	private JPanel mainContent = null;
 	private JMenuBar menuBar = null;
-	private RTextScrollPane fileContentScroll = null;
-	private RSyntaxTextArea fileContentArea = null;
+	private JTabbedPane tabbedPaneLeft = null;
+	private JTabbedPane tabbedPaneCenter = null;
+	private JTabbedPane objectTabbedPaneLeft = null;
+	private JTabbedPane objectTabbedPaneCenter = null;
+	private JTree explorerTree;
+	private JTabbedPane fileContentContainer;
+	private RTextScrollPane sourceContentScroll = null;
+	private RSyntaxTextArea sourceContentArea = null;
+	private RTextScrollPane objectContentScroll = null;
+	private RSyntaxTextArea objectContentArea = null;	
+	private JList objectMethodList;
+	private JPanel methodListToolBar;
 	private ArrayList<JMenu> menuList = new ArrayList<JMenu>();
 
 	public DefaultGUI(Main main, Options options) {
@@ -79,6 +108,23 @@ public class DefaultGUI implements GUI {
 	@Override
 	public void init(String title) {
 		if (mainFrame == null) {
+			
+			try {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnsupportedLookAndFeelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			mainFrame = new JFrame();
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			mainFrame.setSize(options.getLastWidth(), options.getLastHeight());
@@ -88,7 +134,13 @@ public class DefaultGUI implements GUI {
 
 			mainFrame.setJMenuBar(getMenuBar());
 			mainFrame.setContentPane(getMainContent());
+			initLayout();
 		}
+	}
+	
+	private void initLayout() {
+		tabbedPaneLeft.add("Explorer",getExplorer());
+		tabbedPaneCenter.add("something...ing.osb",getFileContentContainer());
 	}
 
 	private JPanel getMainContent() {
@@ -97,7 +149,9 @@ public class DefaultGUI implements GUI {
 			borderLayout.setHgap(2);
 			mainContent = new JPanel();
 			mainContent.setLayout(borderLayout);
-			mainContent.add(getFileContentScroll(), BorderLayout.CENTER);
+			//mainContent.add(getSourceContentScroll(), BorderLayout.CENTER);
+			mainContent.add(getSplitSections(), BorderLayout.CENTER);
+			
 			/*
 			 * mainContent.add(getStatusBar(), BorderLayout.SOUTH);
 			 * mainContent.add(getToolBar(), BorderLayout.NORTH);
@@ -106,38 +160,188 @@ public class DefaultGUI implements GUI {
 		return mainContent;
 	}
 
-	/**
-	 * This method initializes fileContentScroll
-	 * 
-	 * @return javax.swing.JScrollPane
-	 */
-	private RTextScrollPane getFileContentScroll() {
-		if (fileContentScroll == null) {
-			fileContentScroll = new RTextScrollPane();
-			fileContentScroll.setViewportView(getFileContentArea());
-			fileContentScroll.setLineNumbersEnabled(true);
+	
+	
+	private JTabbedPane getFileContentContainer() {
+		if (fileContentContainer == null) {
+			fileContentContainer = new JTabbedPane();
+			fileContentContainer.add("Compiled Source",getSourceContentScroll());
+			fileContentContainer.add("Main",getObjectSplitPanel());
 		}
-		return fileContentScroll;
+		return fileContentContainer;
+	}
+	
+	private JSplitPane getObjectSplitPanel() {
+		JPanel objectListPanel = new JPanel();
+		//JSplitPane.VERTICAL_SPLIT,getObjectMethodList(), getMethodListToolBar()
+		objectListPanel.setLayout(new BorderLayout(2,2));
+		objectListPanel.add(getMethodListHeadPanel(), BorderLayout.NORTH);
+		objectListPanel.add(getObjectMethodScrollPane(), BorderLayout.CENTER);
+		objectListPanel.add(getMethodListToolBar(), BorderLayout.SOUTH);
+		
+		JSplitPane objectSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,objectListPanel, getObjectContentScroll());
+		//splitPaneLeft.setOneTouchExpandable(true);
+		objectSplitPanel.setDividerSize(2);
+		//splitPaneLeft.set
+		objectSplitPanel.setDividerLocation(100);
+		return objectSplitPanel;
+	}
+	
+	private JPanel getMethodListToolBar() {
+		if (methodListToolBar == null) {
+			methodListToolBar = new JPanel();
+			methodListToolBar.setPreferredSize(new Dimension(3000,28));
+			methodListToolBar.setMaximumSize(new Dimension(3000,28));
+			methodListToolBar.setLayout(new FlowLayout(FlowLayout.LEFT,2,2));
+			JButton add = new JButton(new ImageIcon("icons/add.png"));
+			add.setPreferredSize(new Dimension(30,25));
+			add.setMaximumSize(new Dimension(30,25));
+			methodListToolBar.add(add);
+			JButton del = new JButton(new ImageIcon("icons/delete.png"));
+			del.setPreferredSize(new Dimension(30,25));
+			del.setMaximumSize(new Dimension(30,25));
+			methodListToolBar.add(del);
+			JButton edit = new JButton(new ImageIcon("icons/pencil.png"));
+			edit.setPreferredSize(new Dimension(30,25));
+			edit.setMaximumSize(new Dimension(30,25));
+			methodListToolBar.add(edit);
+			
+		}
+		return methodListToolBar;
+	}
+	
+	private JPanel getMethodListHeadPanel() {
+		JPanel methodListHeadPanel = new JPanel();
+		methodListHeadPanel.setPreferredSize(new Dimension(3000,20));
+		methodListHeadPanel.setMaximumSize(new Dimension(3000,20));
+		methodListHeadPanel.add(new JLabel("Methods:"));
+		return methodListHeadPanel;
 	}
 
-	/**
-	 * This method initializes fileContentArea
-	 * 
-	 * @return org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-	 */
-	private RSyntaxTextArea getFileContentArea() {
-		if (fileContentArea == null) {
-			fileContentArea = new RSyntaxTextArea();
+	
+	private JScrollPane getObjectMethodScrollPane() {
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(getObjectMethodList());
+		return scrollPane;
+	}
+	
+	private JList getObjectMethodList() {
+		if (objectMethodList == null) {
+			DefaultListModel listModel = new DefaultListModel();
+	        listModel.addElement("Jane Doe");
+	        listModel.addElement("John Smith");
+	        listModel.addElement("Kathy Green");
+			
+			objectMethodList = new JList(listModel);
+		}
+		return objectMethodList;
+	}
+	
+	
+	
+	private RTextScrollPane getObjectContentScroll() {
+		if (objectContentScroll == null) {
+			objectContentScroll = new RTextScrollPane();
+			objectContentScroll.setViewportView(getObjectContentArea());
+			objectContentScroll.setLineNumbersEnabled(true);
+		}
+		return objectContentScroll;
+	}
+	
+	private RSyntaxTextArea getObjectContentArea() {
+		if (objectContentArea == null) {
+			objectContentArea = new RSyntaxTextArea();
 			/*
 			 * Note: At this point, I set my syntax highlighter for osu files.
 			 * It was created with the TokenTokenMaker, so it's not that
 			 * perfect.
 			 */
-			fileContentArea
+			objectContentArea
 					.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_OSU);
 
 		}
-		return fileContentArea;
+		return objectContentArea;
+	}
+	
+	
+	
+	
+	/**
+	 * This method initializes sourceContentScroll
+	 * 
+	 * @return javax.swing.JScrollPane
+	 */
+	private RTextScrollPane getSourceContentScroll() {
+		if (sourceContentScroll == null) {
+			sourceContentScroll = new RTextScrollPane();
+			sourceContentScroll.setViewportView(getSourceContentArea());
+			sourceContentScroll.setLineNumbersEnabled(true);
+		}
+		return sourceContentScroll;
+	}
+		
+	
+	
+	private JSplitPane getSplitSections() {
+		JSplitPane splitPaneLeft = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,getTabbedPaneLeft(), getTabbedPaneCenter());
+		//splitPaneLeft.setOneTouchExpandable(true);
+		splitPaneLeft.setDividerSize(2);
+		//splitPaneLeft.set
+		splitPaneLeft.setDividerLocation(150);
+		return splitPaneLeft;
+	}
+	
+	private JTabbedPane getTabbedPaneLeft() {
+		if (tabbedPaneLeft == null) {
+			tabbedPaneLeft = new JTabbedPane();
+		}
+		return tabbedPaneLeft;
+	}
+	
+	private JTabbedPane getTabbedPaneCenter() {
+		if (tabbedPaneCenter == null) {
+			tabbedPaneCenter = new JTabbedPane();
+		}
+		return tabbedPaneCenter;
+	}	
+	
+	private JTree getExplorer() {
+		if (explorerTree == null) {
+			explorerTree = new JTree();
+			explorerTree.setDragEnabled(true);
+		}
+		return explorerTree;
+	}
+	
+	
+	private RTextScrollPane getSomething() {
+
+		RTextScrollPane something = new RTextScrollPane();
+		something = new RTextScrollPane();
+		something.setViewportView(getSourceContentArea());
+		something.setLineNumbersEnabled(true);
+
+		return something;
+	}
+
+	/**
+	 * This method initializes sourceContentArea
+	 * 
+	 * @return org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+	 */
+	private RSyntaxTextArea getSourceContentArea() {
+		if (sourceContentArea == null) {
+			sourceContentArea = new RSyntaxTextArea();
+			/*
+			 * Note: At this point, I set my syntax highlighter for osu files.
+			 * It was created with the TokenTokenMaker, so it's not that
+			 * perfect.
+			 */
+			sourceContentArea
+					.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_OSU);
+
+		}
+		return sourceContentArea;
 	}
 
 	private JMenuBar getMenuBar() {
@@ -248,7 +452,7 @@ public class DefaultGUI implements GUI {
 
 	@Override
 	public RSyntaxTextArea getContentArea() {
-		return fileContentArea;
+		return sourceContentArea;
 	}
 
 	@Override
