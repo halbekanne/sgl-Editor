@@ -23,11 +23,20 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import de.moonshade.osbe.analyse.AnalyseStructureThread;
 import de.moonshade.osbe.gui.DefaultGUI;
 import de.moonshade.osbe.gui.GUI;
 import de.moonshade.osbe.menuhandler.Action;
 import de.moonshade.osbe.menuhandler.MenuHandler;
+import de.moonshade.osbe.oop.CodeItem;
+import de.moonshade.osbe.oop.Generator;
+import de.moonshade.osbe.oop.MainClass;
+import de.moonshade.osbe.oop.Root;
+import de.moonshade.osbe.oop.exception.GeneratorException;
+import de.moonshade.osbe.oop.line.NewVariableDefinition;
+import de.moonshade.osbe.oop.line.VariableDefinition;
 import de.moonshade.osbe.serializable.Options;
 
 public class Main {
@@ -36,6 +45,7 @@ public class Main {
 	private MenuHandler handler = null;
 	private Options options = null;
 	private ArrayList<String> bufferedLines;
+	private Generator generator = new Generator();
 
 	/**
 	 * @param args
@@ -78,9 +88,18 @@ public class Main {
 		gui.createMenuItem("Paste", 2, Action.Save);
 		
 		gui.start();
-		
+		/*
 		Thread analyzeStructure = new AnalyseStructureThread(gui);
 		analyzeStructure.start();
+		*/
+		
+		try {
+			generator.compile(gui.getMainClassContent());
+		} catch (GeneratorException e) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, e.getClass().getSimpleName() + " in " + e.getContext() + ", line " + e.getLine() + ":\n" + e.getMessage() + ".", "Generator Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 
 	}
 
@@ -139,6 +158,56 @@ public class Main {
 		options.setLastHeight(gui.getHeight());
 		options.setLastWidth(gui.getWidth());
 		options.setLastLocation(gui.getLocation());
+	}
+	
+	
+	public void generate() throws GeneratorException {
+		// Aus GUI sollen die erforderlichen Informationen herausgenommen werden, in Objekte gestopft werden und dann generiert werden
+		String mainContent = gui.getMainClassContent();
+		
+		// Wir besorgen uns ein Root Element
+		Root root = new Root();
+		
+		// Wir gehen systematisch durch den Code und analysieren ihn grob
+		String[] lines = mainContent.split("\\n");
+		int lineCounter = 1;
+		for (String line : lines) {
+			line = line.trim();
+			if (line == null || line.length() == 0) {
+				lineCounter++;
+				continue;
+			}
+			
+			CodeItem codeItem = null;
+			MainClass context = root.getMain();
+			
+			if (line.matches("\\S+\\s+\\S+\\s*=\\s*\\S+.*")) {
+				System.out.println("This is a Variable definition for a new Variable");
+				codeItem = new NewVariableDefinition(context,line); 
+			} else if (line.matches("\\S+\\s*=\\s*\\S*.*")) {
+				System.out.println("This is a Variable definition");
+				codeItem = new VariableDefinition(context,line);
+			}
+				
+			else {
+				System.out.println("This is not a Variable definition :(");
+			}
+			
+			// Jetzt soll die entsprechende Zeile analysiert werden+
+			if (codeItem == null) {
+				throw new GeneratorException("Main",lineCounter,"Unable to parse this line");
+			}
+			try {
+				codeItem.analyse();
+			} catch (GeneratorException e) {
+				e.setContext("Main");
+				e.setLine(lineCounter);
+				throw e;
+			}
+			
+			lineCounter++;
+		}
+		
 	}
 
 }

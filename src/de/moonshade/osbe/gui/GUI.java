@@ -75,7 +75,12 @@ public interface GUI {
 	 *
 	 */
 	public void createMenuItem(String title, int id, final Action effect);
-
+	
+	
+	
+	public String getMainClassContent();
+	
+	
 	/**
 	 * Returns the current height of the main frame
 	 * 

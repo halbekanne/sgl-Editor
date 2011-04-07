@@ -44,6 +44,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -97,6 +98,7 @@ public class DefaultGUI implements GUI {
 	private RTextScrollPane objectContentScroll = null;
 	private RSyntaxTextArea objectContentArea = null;	
 	private JList objectMethodList;
+	private DefaultListModel objectMethodListModel = null;
 	private JPanel methodListToolBar;
 	private ArrayList<JMenu> menuList = new ArrayList<JMenu>();
 
@@ -196,14 +198,35 @@ public class DefaultGUI implements GUI {
 			JButton add = new JButton(new ImageIcon("icons/add.png"));
 			add.setPreferredSize(new Dimension(30,25));
 			add.setMaximumSize(new Dimension(30,25));
+			add.setToolTipText("Create a new method");
+			add.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					objectMethodListModel.addElement(JOptionPane.showInputDialog("Enter the name of the new method:"));
+				}
+			});
 			methodListToolBar.add(add);
 			JButton del = new JButton(new ImageIcon("icons/delete.png"));
 			del.setPreferredSize(new Dimension(30,25));
 			del.setMaximumSize(new Dimension(30,25));
+			del.setToolTipText("Delete the selected method");
+			del.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					objectMethodListModel.remove(objectMethodList.getSelectedIndex());
+				}
+			});
 			methodListToolBar.add(del);
 			JButton edit = new JButton(new ImageIcon("icons/pencil.png"));
 			edit.setPreferredSize(new Dimension(30,25));
 			edit.setMaximumSize(new Dimension(30,25));
+			edit.setToolTipText("Change the name of the selected method");
+			edit.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					objectMethodListModel.set(objectMethodList.getSelectedIndex(),JOptionPane.showInputDialog("Change the name of the method:"));
+				}
+			});
 			methodListToolBar.add(edit);
 			
 		}
@@ -227,12 +250,12 @@ public class DefaultGUI implements GUI {
 	
 	private JList getObjectMethodList() {
 		if (objectMethodList == null) {
-			DefaultListModel listModel = new DefaultListModel();
-	        listModel.addElement("Jane Doe");
-	        listModel.addElement("John Smith");
-	        listModel.addElement("Kathy Green");
+			objectMethodListModel = new DefaultListModel();
+			objectMethodListModel.addElement("Jane Doe");
+			objectMethodListModel.addElement("John Smith");
+			objectMethodListModel.addElement("Kathy Green");
 			
-			objectMethodList = new JList(listModel);
+			objectMethodList = new JList(objectMethodListModel);
 		}
 		return objectMethodList;
 	}
@@ -258,6 +281,7 @@ public class DefaultGUI implements GUI {
 			 */
 			objectContentArea
 					.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_OSU);
+			objectContentArea.setText("\n\n   int t = 9 + 4\n   boolean b = 2 < 3");
 
 		}
 		return objectContentArea;
@@ -473,6 +497,11 @@ public class DefaultGUI implements GUI {
 		}
 
 		return null;
+	}
+
+	@Override
+	public String getMainClassContent() {
+		return objectContentArea.getText();
 	}
 
 }

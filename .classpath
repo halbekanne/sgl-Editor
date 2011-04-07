@@ -5,5 +5,16 @@
 	<classpathentry kind="lib" path="ext/jRegistryKey.dll"/>
 	<classpathentry kind="lib" path="ext/jRegistryKey.jar"/>
 	<classpathentry kind="lib" path="ext/rsyntaxtextarea.jar"/>
+	<classpathentry kind="lib" path="ext/mathExpr.jar" sourcepath="C:/Users/Dominik Halfkann/Downloads/mathExpr/mathExpr">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www-sfb288.math.tu-berlin.de/~jtem/mathExpr/api/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="ext/blas.jar"/>
+	<classpathentry kind="lib" path="ext/jterm.jar"/>
+	<classpathentry kind="lib" path="ext/mfc.jar"/>
+	<classpathentry kind="lib" path="ext/moebiusViewer.jar"/>
+	<classpathentry kind="lib" path="ext/numericalMethods.jar"/>
+	<classpathentry kind="lib" path="ext/viewer3d.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
