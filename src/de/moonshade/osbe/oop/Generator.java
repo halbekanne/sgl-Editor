@@ -154,8 +154,7 @@ public class Generator {
 	public static boolean encodBooleanExpression(Context context,
 			String expression) throws GeneratorException {
 		try {
-			return Boolean.parseBoolean(new ScriptEngineManager()
-					.getEngineByName("javascript").eval(expression).toString());
+			return Boolean.parseBoolean(new ScriptEngineManager().getEngineByName("javascript").eval(expression).toString());
 		} catch (ScriptException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
