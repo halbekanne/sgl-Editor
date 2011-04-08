@@ -1,5 +1,7 @@
 package de.moonshade.osbe.oop.line;
 
+import javax.script.ScriptException;
+
 import de.moonshade.osbe.oop.Context;
 import de.moonshade.osbe.oop.Generator;
 import de.moonshade.osbe.oop.Line;

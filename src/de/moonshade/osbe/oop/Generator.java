@@ -6,11 +6,6 @@ import java.util.regex.Pattern;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import mathExpr.ExpressionConfiguration;
-import mathExpr.evaluator.Type;
-import mathExpr.evaluator.realEvaluator.Real;
-import mathExpr.evaluator.realEvaluator.RealType;
-
 import de.moonshade.osbe.oop.exception.GeneratorException;
 import de.moonshade.osbe.oop.exception.ParserException;
 import de.moonshade.osbe.oop.line.NewVariableDefinition;
@@ -77,25 +72,17 @@ public class Generator {
 	public static int encodeIntegerExpression(Context context, String expression)
 			throws GeneratorException {
 
-		// 1.) default type will be real
-		Type defaultType = RealType.TYPE;
+		
 
-		// 2.) create ExpressionConfiguration
-		ExpressionConfiguration config = new ExpressionConfiguration(
-				defaultType);
-
-		// 3.) parse an expression
-		Real real;
+		float result;
 		try {
-			config.setExpression(expression);
-
-			// 4.) evaluate the parsed expression
-			real = (Real) config.evaluateExpression();
-		} catch (Throwable e) {
-			throw new ParserException(null, -1, "Unable to parse expression \""
-					+ expression + "\" to an integer value.");
+			result = Float.parseFloat(new ScriptEngineManager().getEngineByName("javascript").eval(expression).toString());
+		} catch (Exception ex) {
+			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to an integer value");
 		}
-		double result = real.getValue();
+		System.out.print(result);
+
+		
 		return (int) Math.round(result);
 
 		/*
@@ -156,9 +143,8 @@ public class Generator {
 		try {
 			return Boolean.parseBoolean(new ScriptEngineManager().getEngineByName("javascript").eval(expression).toString());
 		} catch (ScriptException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to a boolean value");
 		}
-		return false;
 	}
 }

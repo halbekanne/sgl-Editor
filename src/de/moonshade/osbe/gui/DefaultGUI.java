@@ -281,7 +281,7 @@ public class DefaultGUI implements GUI {
 			 */
 			objectContentArea
 					.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_OSU);
-			objectContentArea.setText("\n\n   int t = 9 + 4\n   boolean b = 2 < 3");
+			objectContentArea.setText("\n\n   int t = 3%2\n   boolean b = 2 < 3");
 
 		}
 		return objectContentArea;
