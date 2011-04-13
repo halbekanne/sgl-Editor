@@ -4,7 +4,7 @@ import javax.script.ScriptException;
 
 import de.moonshade.osbe.oop.exception.GeneratorException;
 
-public class CodeItem {
+public class CodeItem extends Context {
 	
 	protected String content;
 	

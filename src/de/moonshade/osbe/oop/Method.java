@@ -3,7 +3,7 @@ package de.moonshade.osbe.oop;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Method implements Context {
+public class Method extends Context {
 
 	List<CodeItem> codeItems = new ArrayList<CodeItem>();
 

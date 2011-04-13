@@ -94,7 +94,7 @@ public class Main {
 		*/
 		
 		try {
-			generator.compile(gui.getMainClassContent());
+			generator.startCompiler(gui);
 		} catch (GeneratorException e) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, e.getClass().getSimpleName() + " in " + e.getContext() + ", line " + e.getLine() + ":\n" + e.getMessage() + ".", "Generator Error", JOptionPane.ERROR_MESSAGE);

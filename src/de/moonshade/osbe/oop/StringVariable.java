@@ -1,11 +1,12 @@
 package de.moonshade.osbe.oop;
 
-public class BooleanVariable implements Variable {
+public class StringVariable implements Variable {
 
 	private String name;
-	private boolean value;
+	private String value;
 	
-	public BooleanVariable(String name, boolean value) {
+	public StringVariable(String name, String value) {
+		// TODO Auto-generated constructor stub
 		this.name = name;
 		this.value = value;
 	}
@@ -13,7 +14,7 @@ public class BooleanVariable implements Variable {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.name;
 	}
 
 	@Override
@@ -31,34 +32,31 @@ public class BooleanVariable implements Variable {
 	@Override
 	public void setValue(int value) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public boolean getBooleanValue() {
 		// TODO Auto-generated method stub
-		return value;
+		return false;
 	}
 
 	@Override
 	public void setValue(boolean value) {
 		// TODO Auto-generated method stub
-		this.value = value;
+
 	}
 
 	@Override
 	public String getStringValue() {
 		// TODO Auto-generated method stub
-		return String.valueOf(value);
+		return value;
 	}
 
 	@Override
 	public void setValue(String value) {
 		// TODO Auto-generated method stub
-		
+		this.value = value;
 	}
-	
-	
 
-	
 }

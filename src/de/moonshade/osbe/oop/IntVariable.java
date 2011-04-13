@@ -13,7 +13,7 @@ public class IntVariable implements Variable {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.name;
 	}
 
 	@Override
@@ -42,6 +42,18 @@ public class IntVariable implements Variable {
 
 	@Override
 	public void setValue(boolean value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getStringValue() {
+		// TODO Auto-generated method stub
+		return String.valueOf(value);
+	}
+
+	@Override
+	public void setValue(String value) {
 		// TODO Auto-generated method stub
 		
 	}

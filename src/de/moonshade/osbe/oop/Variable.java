@@ -10,6 +10,8 @@ public interface Variable {
 	public int getIntValue();
 	public void setValue(int value);
 	public boolean getBooleanValue();
-	public void setValue(boolean value);	
+	public void setValue(boolean value);
+	public String getStringValue();
+	public void setValue(String value);
 	
 }

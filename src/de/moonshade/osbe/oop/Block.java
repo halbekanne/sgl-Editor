@@ -1,36 +1,14 @@
 package de.moonshade.osbe.oop;
 
-public class Block extends CodeItem implements Context {
+import java.util.ArrayList;
+import java.util.List;
 
-	@Override
-	public void createVariable(String name, int value) {
-		// TODO Auto-generated method stub
-		
-	}
+public class Block extends CodeItem {
 
-	@Override
-	public void createVariable(String name, String value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void createVariable(String name, Object value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Variable searchVariable(String variableName) {
-		return null;
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void createVariable(String name, boolean value) {
-		// TODO Auto-generated method stub
-		
+	protected String contentString = "";
+	
+	public void contentAdd(String line) {
+		contentString = contentString + "\n" + line;
 	}
 
 }

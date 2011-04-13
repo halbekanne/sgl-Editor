@@ -1,11 +1,15 @@
 package de.moonshade.osbe.oop.line;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.script.ScriptException;
 
 import de.moonshade.osbe.oop.Context;
 import de.moonshade.osbe.oop.Generator;
 import de.moonshade.osbe.oop.Line;
 import de.moonshade.osbe.oop.exception.GeneratorException;
+import de.moonshade.osbe.oop.exception.UnknownTypeException;
 import de.moonshade.osbe.oop.exception.WrongTypeException;
 
 public class NewVariableDefinition extends Line {
@@ -26,26 +30,56 @@ public class NewVariableDefinition extends Line {
 	
 	public void analyse() throws GeneratorException {
 		
-		String[] parts = content.split("=");
-		String[] parts2 = parts[0].split(" ");
-		
-		if (parts2[0].equals("int")) {
-			// Integer Variable erstellen
-			String name = parts2[1];
-			String expression = parts[1];
-			// Parst einen arithmetischen Ausdruck in einen Integer-Wert
-			int value = Generator.encodeIntegerExpression(context, expression);
-			System.out.println("And the int value is: " + value);
-			context.createVariable(name, value);
-		} else if (parts2[0].equals("boolean")) {
-			// boolean Variable erstellen
-			String name = parts2[1];
-			String expression = parts[1];
-			// Parst einen boolschen Ausdruck in einen boolean-Wert
-			boolean value = Generator.encodBooleanExpression(context, expression);
-			System.out.println("And the boolean value is: " + value);
-			context.createVariable(name, value);
+		Pattern pattern; Matcher matcher;
+		pattern = Pattern.compile("=");
+		matcher = pattern.matcher(content);
+		if (matcher.find()) {
+			String definition = content.substring(0, matcher.start()).trim();
+			String expression = content.substring(matcher.end()).trim();
+			String type = definition.split(" ")[0];
+			String name = definition.split(" ")[1];
+			
+			if (type.equals("int")) {
+				// Parst einen arithmetischen Ausdruck in einen Integer-Wert
+				int value = Generator.encodeIntegerExpression(context, expression);
+				System.out.println("And the int value is: " + value);
+				context.createVariable(name, value);
+				
+			} else if (type.equals("boolean")) {
+				// Parst einen boolschen Ausdruck in einen boolean-Wert
+				boolean value = Generator.encodeBooleanExpression(context, expression);
+				System.out.println("And the boolean value is: " + value);
+				context.createVariable(name, value);
+				
+			} 
+			// String Variables are not supported jet
+			/*
+			else if (type.equals("String")) {
+				// Parst einen boolschen Ausdruck in einen String-Wert
+				String value = Generator.encodeStringExpression(context, expression);
+				System.out.println("And the string is: " + value);
+				context.createVariable(name, value);
+			}
+			*/
+			else {
+				throw new UnknownTypeException(null,-1,"The variable type \"" + type + "\" is unknown or not supported");
+			}
+			
 		}
+		
+		//String[] parts = content.split("=");
+		//String[] parts2 = parts[0].split(" ");
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		/*
 		String[] parts = content.split(" ");
 		if (parts[0].equals("int")) {

@@ -280,8 +280,8 @@ public class DefaultGUI implements GUI {
 			 * perfect.
 			 */
 			objectContentArea
-					.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_OSU);
-			objectContentArea.setText("\n\n   int t = 3%2\n   boolean b = 2 < 3");
+					.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+			objectContentArea.setText("\n\nif (2 > 2) {\n   int t = 1\n   t = t + 1\n} else if (2 == 2) {\n   int x = 2\n   x = x + 1\n}");
 
 		}
 		return objectContentArea;
