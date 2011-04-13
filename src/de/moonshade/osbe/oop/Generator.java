@@ -1,5 +1,7 @@
 package de.moonshade.osbe.oop;
 
+import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +18,7 @@ import de.moonshade.osbe.oop.line.VariableDefinition;
 public class Generator {
 
 	Root root = new Root();
+	public static String output = "";
 
 	public void startCompiler(GUI gui) throws GeneratorException {
 
@@ -25,6 +28,9 @@ public class Generator {
 		// Compilieren der Main-Klasse
 		Generator.compile(root.getMain(), gui.getMainClassContent());
 
+		// In output sollte jetzt schöner Storyboard-Code zu finden sein, tragen wir es doch in unser Textfenster ein
+		gui.getContentArea().setText(output);
+		
 	}
 
 	public static void compile(Context context, String input)
@@ -154,6 +160,22 @@ public class Generator {
 
 			lineCounter++;
 		}
+		
+		// Analyse ageschlossen
+		
+		// Jetzt wollen wir doch mal die Sprite Variablen ins Storyboard umsetzen ^^
+		List<Variable> variables = context.getAllVariables();
+		
+		ListIterator<Variable> i = variables.listIterator();
+		while (i.hasNext()) {
+			Variable var = variables.get(i.nextIndex());
+			if (var instanceof SpriteVariable) {
+				SpriteVariable sprite = (SpriteVariable) var;
+				Generator.output += "Sprite," + sprite.getLayer() +"," + sprite.getOrigin() + "," + sprite.getPath() + ",320,240\n";
+			}
+			
+			i.next();
+		}
 
 	}
 
@@ -170,7 +192,7 @@ public class Generator {
 
 	}
 
-	private static String encodeVariables(Context context, String expression) {
+	private static String encodeVariables(Context context, String expression) throws GeneratorException {
 
 		boolean found;
 		do {

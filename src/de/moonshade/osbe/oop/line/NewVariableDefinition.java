@@ -8,6 +8,7 @@ import javax.script.ScriptException;
 import de.moonshade.osbe.oop.Context;
 import de.moonshade.osbe.oop.Generator;
 import de.moonshade.osbe.oop.Line;
+import de.moonshade.osbe.oop.SpriteVariable;
 import de.moonshade.osbe.oop.exception.GeneratorException;
 import de.moonshade.osbe.oop.exception.UnknownTypeException;
 import de.moonshade.osbe.oop.exception.WrongTypeException;
@@ -51,7 +52,37 @@ public class NewVariableDefinition extends Line {
 				System.out.println("And the boolean value is: " + value);
 				context.createVariable(name, value);
 				
-			} 
+			} else if (type.equals("Sprite")) {
+				// Parst ein Sprite-Objekt
+				if (!expression.matches("new\\s+Sprite\\(\".*")) {
+					throw new GeneratorException(null,-1,"Wrong syntax or missing parameters");
+				}
+				
+				pattern = Pattern.compile("\\(.*\\)");
+				matcher = pattern.matcher(expression);
+				if (matcher.find()) {
+					String rawParameters = expression.substring(matcher.start() + 1, matcher.end() - 1);
+					System.out.println(rawParameters);
+					// Könnte Probleme geben, wenn Dateipfad Kommas enthält
+					String[] parameter = rawParameters.split(",");
+					//String file = parameter[0].replace("\"", "");
+					
+					SpriteVariable sprite;
+					
+					if (parameter.length == 1) {
+						sprite = new SpriteVariable(name, parameter[0]);
+					} else if (parameter.length == 2) {
+						sprite = new SpriteVariable(name, parameter[0], parameter[1]);
+					} else if (parameter.length == 3) {
+						sprite = new SpriteVariable(name, parameter[0], parameter[1], parameter[2]);
+					} else {
+						throw new GeneratorException(null,-1,"In order to create a Sprite, you need 1-3 parameters");
+					}
+					
+					context.createVariable(sprite);
+				}
+				
+			}
 			// String Variables are not supported jet
 			/*
 			else if (type.equals("String")) {

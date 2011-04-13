@@ -1,10 +1,12 @@
 package de.moonshade.osbe.oop;
 
+import de.moonshade.osbe.oop.exception.GeneratorException;
+
 public class IntVariable implements Variable {
 
 	private String name;
 	private int value;
-	
+
 	public IntVariable(String name, int value) {
 		this.name = name;
 		this.value = value;
@@ -22,42 +24,20 @@ public class IntVariable implements Variable {
 		this.name = name;
 	}
 
-	@Override
-	public int getIntValue() {
+	public int getValue() {
 		// TODO Auto-generated method stub
 		return value;
 	}
 
-	@Override
 	public void setValue(int value) {
 		// TODO Auto-generated method stub
 		this.value = value;
 	}
 
 	@Override
-	public boolean getBooleanValue() {
+	public String getStringValue() throws GeneratorException {
 		// TODO Auto-generated method stub
-		return false;
+		return String.valueOf(getValue());
 	}
 
-	@Override
-	public void setValue(boolean value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getStringValue() {
-		// TODO Auto-generated method stub
-		return String.valueOf(value);
-	}
-
-	@Override
-	public void setValue(String value) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
-	
 }

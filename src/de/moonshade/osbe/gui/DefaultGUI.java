@@ -281,8 +281,10 @@ public class DefaultGUI implements GUI {
 			 */
 			objectContentArea
 					.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-			objectContentArea.setText("\n\nif (2 > 2) {\n   int t = 1\n   t = t + 1\n} else if (2 == 2) {\n   int x = 2\n   x = x + 1\n}");
-
+			//objectContentArea.setText("\n\nif (2 > 2) {\n   int t = 1\n   t = t + 1\n} else if (2 == 2) {\n   int x = 2\n   x = x + 1\n}");
+			objectContentArea.setText("\n Sprite test = new Sprite(\"sb/test\")\n Sprite test2 = new Sprite(\"sb/test\",Background) \n Sprite test3 = new Sprite(\"sb/test\",Background,TopLeft)");
+			
+			
 		}
 		return objectContentArea;
 	}

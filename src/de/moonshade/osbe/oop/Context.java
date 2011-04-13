@@ -51,24 +51,33 @@ public abstract class Context {
 	public void createVariable(String name, boolean value) {
 		// TODO Auto-generated method stub
 		variables.add(new BooleanVariable(name,value));
-		System.out.println("Boolean Variable verändert: " + name + " = " + value);
+		System.out.println("Boolean Variable angelegt: " + name + " = " + value);
 	}
 
+	public void createVariable(SpriteVariable sprite) {
+		// TODO Auto-generated method stub
+		variables.add(sprite);
+		System.out.println("Sprite Variable angelegt: " + sprite.getName() + " = " + sprite.getPath());
+	}
 
 	
 	public void setVariable(Variable variable, int value) {
-		variables.get(variables.indexOf(variable)).setValue(value);
+		((IntVariable) variables.get(variables.indexOf(variable))).setValue(value);
 		System.out.println("Int Variable verändert: " + variable.getName() + " = " + value);
 	}
 	
 	public void setVariable(Variable variable, String value) {
-		variables.get(variables.indexOf(variable)).setValue(value);
+		((StringVariable) variables.get(variables.indexOf(variable))).setValue(value);
 		System.out.println("String Variable verändert: " + variable.getName() + " = " + value);
 	}
 	
 	public void setVariable(Variable variable, boolean value) {
-		variables.get(variables.indexOf(variable)).setValue(value);
+		((BooleanVariable) variables.get(variables.indexOf(variable))).setValue(value);
 		System.out.println("Boolean Variable verändert: " + variable.getName() + " = " + value);
+	}
+	
+	public List<Variable> getAllVariables() {
+		return variables;
 	}
 	
 }

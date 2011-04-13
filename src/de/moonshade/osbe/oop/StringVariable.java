@@ -1,5 +1,7 @@
 package de.moonshade.osbe.oop;
 
+import de.moonshade.osbe.oop.exception.GeneratorException;
+
 public class StringVariable implements Variable {
 
 	private String name;
@@ -10,7 +12,7 @@ public class StringVariable implements Variable {
 		this.name = name;
 		this.value = value;
 	}
-
+	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
@@ -23,40 +25,22 @@ public class StringVariable implements Variable {
 		this.name = name;
 	}
 
-	@Override
-	public int getIntValue() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	@Override
-	public void setValue(int value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean getBooleanValue() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setValue(boolean value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getStringValue() {
+	public String getValue() {
 		// TODO Auto-generated method stub
 		return value;
 	}
 
-	@Override
+
 	public void setValue(String value) {
 		// TODO Auto-generated method stub
 		this.value = value;
+	}
+
+	@Override
+	public String getStringValue() throws GeneratorException {
+		// TODO Auto-generated method stub
+		return getValue();
 	}
 
 }
