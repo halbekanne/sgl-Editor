@@ -80,12 +80,20 @@ public class Main {
 		gui.createMenuItem("Copy", 1, Action.Save);
 		gui.createMenuItem("Paste", 1, Action.Save);
 		
+		/*
 		gui.createMenu("View");
+		
 		gui.createMenuItem("Outline", 2, Action.New);
 		gui.createMenuItem("Files", 2, Action.Open);
 		gui.createMenuItem("Cut", 2, Action.Save);
 		gui.createMenuItem("Copy", 2, Action.Save);
 		gui.createMenuItem("Paste", 2, Action.Save);
+		*/
+		
+		gui.createMenu("Generate");
+		
+		gui.createMenuItem("Generate Storyboard", 2, Action.GenerateStoryboard);
+		
 		
 		gui.start();
 		/*
@@ -93,6 +101,7 @@ public class Main {
 		analyzeStructure.start();
 		*/
 		
+		/*
 		try {
 			generator.startCompiler(gui);
 		} catch (GeneratorException e) {
@@ -100,6 +109,7 @@ public class Main {
 			JOptionPane.showMessageDialog(null, e.getClass().getSimpleName() + " in " + e.getContext() + ", line " + e.getLine() + ":\n" + e.getMessage() + ".", "Generator Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
+		*/
 
 	}
 

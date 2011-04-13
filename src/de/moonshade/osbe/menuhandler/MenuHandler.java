@@ -33,6 +33,10 @@ public class MenuHandler {
 		case Save:
 			System.out.println("Save clicked");
 			break;
+		case GenerateStoryboard:
+			menuAction = new ActionGenerateStoryboard();
+			System.out.println("Generate clicked");
+			break;
 		}
 		System.out.println("something clicked");
 

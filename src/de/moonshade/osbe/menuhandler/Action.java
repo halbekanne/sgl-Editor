@@ -14,5 +14,5 @@
 package de.moonshade.osbe.menuhandler;
 
 public enum Action {
-	New, Open, Save, SaveAs, TimeShift
+	New, Open, Save, SaveAs, TimeShift, GenerateStoryboard
 }
