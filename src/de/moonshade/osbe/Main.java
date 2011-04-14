@@ -93,6 +93,7 @@ public class Main {
 		gui.createMenu("Generate");
 		
 		gui.createMenuItem("Generate Storyboard", 2, Action.GenerateStoryboard);
+                gui.createMenuItem("Generate Storyboard from OOSBL", 2, Action.ParseOosbl);
 		
 		
 		gui.start();
