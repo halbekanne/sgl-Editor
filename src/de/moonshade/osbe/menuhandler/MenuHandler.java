@@ -37,7 +37,14 @@ public class MenuHandler {
 			menuAction = new ActionGenerateStoryboard();
 			System.out.println("Generate clicked");
 			break;
+                case ParseOosbl:
+			menuAction = new ActionParseOosbl();
+			System.out.println("Oosbl clicked");
+                        break;
 		}
+
+
+                
 		System.out.println("something clicked");
 
 		if (menuAction != null) {
