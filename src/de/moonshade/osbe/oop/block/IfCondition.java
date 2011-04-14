@@ -11,10 +11,11 @@ public class IfCondition extends Block {
 	boolean condition = false;
 	boolean lastCondition;
 
-	public IfCondition(Context context, String line, boolean lastCondition) {
+	public IfCondition(Context context, String line, boolean lastCondition, int absoluteTime) {
 		this.context = context;
 		this.content = line;
 		this.lastCondition = lastCondition;
+		this.absoluteTime = absoluteTime;
 	}
 	
 	public void analyse() throws GeneratorException {
@@ -28,7 +29,7 @@ public class IfCondition extends Block {
 			condition = true;
 			// wenn die behauptung wahr ist, dann sollten wir auch den contextString ausführen
 			// übrigens wow neuer kontext, der Block hier ist jetzt der neue Kontext damit wir lokale variablen und son kram finden
-			Generator.compile(this, contentString);
+			Generator.compile(this, contentString, absoluteTime);
 		} else {
 			System.out.println("Die Bedingung ist falsch oder else-if Block, die Anweisungen werden nicht ausgeführt!");
 		}

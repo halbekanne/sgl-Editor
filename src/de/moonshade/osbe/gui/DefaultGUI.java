@@ -167,8 +167,9 @@ public class DefaultGUI implements GUI {
 	private JTabbedPane getFileContentContainer() {
 		if (fileContentContainer == null) {
 			fileContentContainer = new JTabbedPane();
+			fileContentContainer.add("SGL/OOSBL",getObjectContentScroll());
 			fileContentContainer.add("Compiled Source",getSourceContentScroll());
-			fileContentContainer.add("Main",getObjectSplitPanel());
+			
 		}
 		return fileContentContainer;
 	}
@@ -282,7 +283,7 @@ public class DefaultGUI implements GUI {
 			objectContentArea
 					.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 			//objectContentArea.setText("\n\nif (2 > 2) {\n   int t = 1\n   t = t + 1\n} else if (2 == 2) {\n   int x = 2\n   x = x + 1\n}");
-			objectContentArea.setText("\n Sprite test = new Sprite(\"sb/test\")\n Sprite test2 = new Sprite(\"sb/test\",Background) \n Sprite test3 = new Sprite(\"sb/test\",Background,TopLeft)");
+			objectContentArea.setText("\n Sprite test = new Sprite(\"sb/test\")\n test.move(10,20)\n test.move(100,20,40)\n test.move(100,200,20,40,30,60)");
 			
 			
 		}

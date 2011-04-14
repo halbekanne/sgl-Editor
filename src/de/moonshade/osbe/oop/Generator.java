@@ -13,6 +13,7 @@ import de.moonshade.osbe.oop.block.IfCondition;
 import de.moonshade.osbe.oop.exception.GeneratorException;
 import de.moonshade.osbe.oop.exception.ParserException;
 import de.moonshade.osbe.oop.line.NewVariableDefinition;
+import de.moonshade.osbe.oop.line.StaticMethod;
 import de.moonshade.osbe.oop.line.VariableDefinition;
 
 public class Generator {
@@ -26,14 +27,14 @@ public class Generator {
 		root = new Root();
 
 		// Compilieren der Main-Klasse
-		Generator.compile(root.getMain(), gui.getMainClassContent());
+		Generator.compile(root.getMain(), gui.getMainClassContent(), 0);
 
 		// In output sollte jetzt schöner Storyboard-Code zu finden sein, tragen wir es doch in unser Textfenster ein
 		gui.getContentArea().setText(output);
 		
 	}
 
-	public static void compile(Context context, String input)
+	public static void compile(Context context, String input, int absoluteTime)
 			throws GeneratorException {
 
 		// Wir gehen systematisch durch den Code und analysieren ihn grob
@@ -101,13 +102,13 @@ public class Generator {
 
 						if (line.endsWith("{")) {
 							System.out.println("This is an if-Block with brackets");
-							block = new IfCondition(context, line, false);
+							block = new IfCondition(context, line, false, absoluteTime);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
 						} else {
 							System.out.println("This is a single-line if-Condition");
-							codeItem = new IfCondition(context, line, false);
+							codeItem = new IfCondition(context, line, false, absoluteTime);
 						}
 					} else if (line.matches("\\}?\\s*else if\\s*\\(.*")) {
 						//System.out.println("This is an else-if-Block");
@@ -116,14 +117,14 @@ public class Generator {
 							System.out.println("This is an else-if-Block with brackets");
 							block = new IfCondition(context,
 									line.substring(line.indexOf("if")),
-									lastCondition);
+									lastCondition, absoluteTime);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
 						} else {
 							System.out.println("This is a single-line if-else-Condition");
 							codeItem = new IfCondition(context, line,
-									lastCondition);
+									lastCondition, absoluteTime);
 						}
 					} else if (line.matches("\\S+\\s+\\S+\\s*=\\s*\\S+.*")) {
 						System.out
@@ -132,6 +133,13 @@ public class Generator {
 					} else if (line.matches("\\S+\\s*=\\s*\\S*.*")) {
 						System.out.println("This is a Variable definition");
 						codeItem = new VariableDefinition(context, line);
+						
+						
+					} else if (line.matches("\\S+\\.\\S+\\(.*\\)")) {
+						System.out.println("This is a static Method");
+						codeItem = new StaticMethod(context, line, absoluteTime);
+						
+						
 					} else if (line.equals("}")) {
 						lineCounter++;
 						continue eachline;
@@ -172,6 +180,7 @@ public class Generator {
 			if (var instanceof SpriteVariable) {
 				SpriteVariable sprite = (SpriteVariable) var;
 				Generator.output += "Sprite," + sprite.getLayer() +"," + sprite.getOrigin() + "," + sprite.getPath() + ",320,240\n";
+				Generator.output += sprite.getStoryboard();
 			}
 			
 			i.next();
