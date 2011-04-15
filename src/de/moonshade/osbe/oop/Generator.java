@@ -20,21 +20,29 @@ public class Generator {
 
 	Root root = new Root();
 	public static String output = "";
+        public GUI gui;
 
 	public void startCompiler(GUI gui) throws GeneratorException {
 
 		// Löschen eines evt. alten Root Elements
 		root = new Root();
+                this.gui = gui;
 
 		// Compilieren der Main-Klasse
-		Generator.compile(root.getMain(), gui.getMainClassContent(), 0);
+		compile(root.getMain(), gui.getMainClassContent(), 0);
 
 		// In output sollte jetzt schöner Storyboard-Code zu finden sein, tragen wir es doch in unser Textfenster ein
-		gui.getContentArea().setText(output);
+
+                this.setOutput(output);
 		
 	}
 
-	public static void compile(Context context, String input, int absoluteTime)
+        public void setOutput(String str)
+        {
+            this.gui.getContentArea().setText(str);
+        }
+
+	public void compile(Context context, String input, int absoluteTime)
 			throws GeneratorException {
 
 		// Wir gehen systematisch durch den Code und analysieren ihn grob
@@ -146,9 +154,10 @@ public class Generator {
 					} else {
 						System.out.println("WTF is this? D:");
 					}
-
+                                        
 					// Jetzt soll die entsprechende Zeile analysiert werden
 					if (codeItem == null) {
+                                                this.setOutput(new String());
 						throw new GeneratorException("Main", lineCounter,
 								"Unable to understand this line in Main");
 					}
