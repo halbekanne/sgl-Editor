@@ -8,7 +8,11 @@ public abstract class Context {
 
 	private List<Variable> variables = new ArrayList<Variable>();
 	private int time = 0;
+	protected Context parentContext = null;
 	
+	public Context getParentContext() {
+		return parentContext;
+	}
 	
 
 	public void createVariable(String name, int value) {
@@ -34,7 +38,7 @@ public abstract class Context {
 		// TODO Auto-generated method stub
 		
 		//Suche Variable hier
-		
+		System.out.println(this.getClass().getName());
 		ListIterator<Variable> i = variables.listIterator();
 		while (i.hasNext()) {
 			if (variables.get(i.nextIndex()).getName().equals(variableName)) {
@@ -43,7 +47,23 @@ public abstract class Context {
 			i.next();
 		}
 		
-		
+		// Suche im übergeordneten context, rekursiver Aufruf
+		Context currentContext = this.getParentContext();
+		while(currentContext != null) {
+			System.out.println(currentContext.getClass().getName());
+			
+			ListIterator<Variable> iPar = currentContext.getAllVariables().listIterator();
+			while (iPar.hasNext()) {
+				if (currentContext.getAllVariables().get(iPar.nextIndex()).getName().equals(variableName)) {
+					return currentContext.getAllVariables().get(iPar.nextIndex());
+				}
+				iPar.next();
+			}
+			
+			currentContext = currentContext.getParentContext();
+		}
+		System.out.println("d'oh");
+		System.out.println("Variable " + variableName + " wurde nicht gefunden :(");
 		return null;
 	}
 

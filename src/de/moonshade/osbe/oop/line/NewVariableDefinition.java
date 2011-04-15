@@ -64,7 +64,9 @@ public class NewVariableDefinition extends Line {
 					String rawParameters = expression.substring(matcher.start() + 1, matcher.end() - 1);
 					System.out.println(rawParameters);
 					// Könnte Probleme geben, wenn Dateipfad Kommas enthält
-					String[] parameter = rawParameters.split(",");
+					//String[] parameter = rawParameters.split(",");
+					String[] parameter = Generator.splitParameters(rawParameters);
+					
 					//String file = parameter[0].replace("\"", "");
 					
 					SpriteVariable sprite;

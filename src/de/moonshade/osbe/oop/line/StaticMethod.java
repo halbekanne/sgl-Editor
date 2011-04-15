@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.moonshade.osbe.oop.Context;
+import de.moonshade.osbe.oop.Generator;
 import de.moonshade.osbe.oop.Line;
 import de.moonshade.osbe.oop.SpriteVariable;
 import de.moonshade.osbe.oop.Variable;
@@ -11,11 +12,11 @@ import de.moonshade.osbe.oop.exception.GeneratorException;
 
 public class StaticMethod extends Line {
 
-	private Context context;
+	//private Context context;
 	private int absoluteTime = 0;
 	
 	public StaticMethod(Context context, String line, int absoluteTime) {
-		this.context = context;
+		this.parentContext = context;
 		this.content = line;
 		this.absoluteTime = absoluteTime;
 	}
@@ -41,7 +42,8 @@ public class StaticMethod extends Line {
 
 				String methodName = method.substring(0, matcherBracket.start());
 				String parameters = method.substring(matcherBracket.start() + 1, matcherBracket.end() - 1);
-				String[] parameter = parameters.split(",");
+				//String[] parameter = parameters.split(",");
+				String[] parameter = Generator.splitParameters(parameters);
 				executeMethod(variableName, methodName, parameter);
 				
 				
@@ -57,7 +59,7 @@ public class StaticMethod extends Line {
 	private void executeMethod(String variableName, String name, String[] parameter) throws GeneratorException {
 		
 		// Jetzt suchen wir doch erstmal die Variable ^^
-		Variable variable = context.searchVariable(variableName);
+		Variable variable = parentContext.searchVariable(variableName);
 
 		if (variable instanceof SpriteVariable) {
 			// Hier kommen alle statischen Methoden rein, die bei Sprites etwas tun
@@ -73,24 +75,24 @@ public class StaticMethod extends Line {
 				System.out.println(6);
 				int startX = 0, startY = 0, endX = 0, endY = 0;
 				if (parameter.length == 2) {
-					startX = Integer.parseInt(parameter[0]);
-					startY = Integer.parseInt(parameter[1]);
+					startX = Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					startY = Generator.encodeIntegerExpression(parentContext, parameter[1]);
 					endX = startX;
 					endY = startY;
 				} else if (parameter.length == 3) {
-					startTime += Integer.parseInt(parameter[0]);
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
 					endTime = startTime;
-					startX = Integer.parseInt(parameter[1]);
-					startY = Integer.parseInt(parameter[2]);
+					startX = Generator.encodeIntegerExpression(parentContext, parameter[1]);
+					startY = Generator.encodeIntegerExpression(parentContext, parameter[2]);
 					endX = startX;
 					endY = startY;
 				} else if (parameter.length == 6) {
-					startTime += Integer.parseInt(parameter[0]);
-					endTime = Integer.parseInt(parameter[1]);
-					startX = Integer.parseInt(parameter[2]);
-					startY = Integer.parseInt(parameter[3]);
-					endX = Integer.parseInt(parameter[4]);
-					endY = Integer.parseInt(parameter[5]);
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					endTime = Generator.encodeIntegerExpression(parentContext, parameter[1]);
+					startX = Generator.encodeIntegerExpression(parentContext, parameter[2]);
+					startY = Generator.encodeIntegerExpression(parentContext, parameter[3]);
+					endX = Generator.encodeIntegerExpression(parentContext, parameter[4]);
+					endY = Generator.encodeIntegerExpression(parentContext, parameter[5]);
 				} 
 				
 				System.out.println(1);

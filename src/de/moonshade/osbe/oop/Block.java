@@ -3,7 +3,7 @@ package de.moonshade.osbe.oop;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Block extends CodeItem {
+public abstract class Block extends CodeItem {
 
 	protected String contentString = "";
 	protected int absoluteTime = 0;

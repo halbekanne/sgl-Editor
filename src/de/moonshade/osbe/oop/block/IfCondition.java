@@ -17,29 +17,39 @@ public class IfCondition extends Block {
 		this.lastCondition = lastCondition;
 		this.absoluteTime = absoluteTime;
 	}
-	
+
 	public void analyse() throws GeneratorException {
 		String expression = content.substring(content.indexOf("(") + 1, content.lastIndexOf(")"));
-		//System.out.println("expression: " + expression);
-		//System.out.println("content string: " + contentString);
+		// System.out.println("expression: " + expression);
+		// System.out.println("content string: " + contentString);
 
-                Generator generator = new Generator();
+		Generator generator = new Generator();
 
-		// ist die behauptung wahr? Ist der letzte if-block wahr gewesen? (für else und else if)
+		// ist die behauptung wahr? Ist der letzte if-block wahr gewesen? (für
+		// else und else if)
 		if (!lastCondition && Generator.encodeBooleanExpression(context, expression)) {
 			System.out.println("Die Bedingung ist wahr, Anweisungen werden ausgeführt.");
 			condition = true;
-			// wenn die behauptung wahr ist, dann sollten wir auch den contextString ausführen
-			// übrigens wow neuer kontext, der Block hier ist jetzt der neue Kontext damit wir lokale variablen und son kram finden
+			// wenn die behauptung wahr ist, dann sollten wir auch den
+			// contextString ausführen
+			// übrigens wow neuer kontext, der Block hier ist jetzt der neue
+			// Kontext damit wir lokale variablen und son kram finden
 			generator.compile(this, contentString, absoluteTime);
 		} else {
-			System.out.println("Die Bedingung ist falsch oder else-if Block, die Anweisungen werden nicht ausgeführt!");
+			System.out
+					.println("Die Bedingung ist falsch oder else-if Block, die Anweisungen werden nicht ausgeführt!");
 		}
-		
+
 	}
-	
+
 	public boolean isTrue() {
 		return condition;
 	}
-	
+
+	@Override
+	public Context getParentContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

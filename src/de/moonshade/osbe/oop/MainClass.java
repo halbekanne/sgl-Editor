@@ -16,5 +16,11 @@ public class MainClass extends Context {
 		return codeItems;
 	}
 
+	@Override
+	public Context getParentContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }

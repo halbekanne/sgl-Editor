@@ -36,5 +36,11 @@ public class Method extends Context {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Context getParentContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

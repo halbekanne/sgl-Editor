@@ -1,7 +1,9 @@
 package de.moonshade.osbe.oop;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,6 +12,7 @@ import javax.script.ScriptException;
 
 import de.moonshade.osbe.gui.GUI;
 import de.moonshade.osbe.oop.block.IfCondition;
+import de.moonshade.osbe.oop.block.TimeBlock;
 import de.moonshade.osbe.oop.exception.GeneratorException;
 import de.moonshade.osbe.oop.exception.ParserException;
 import de.moonshade.osbe.oop.line.NewVariableDefinition;
@@ -20,30 +23,32 @@ public class Generator {
 
 	Root root = new Root();
 	public static String output = "";
-        public GUI gui;
+	private GUI gui;
 
 	public void startCompiler(GUI gui) throws GeneratorException {
 
 		// Löschen eines evt. alten Root Elements
 		root = new Root();
-                this.gui = gui;
+		this.gui = gui;
+		
+		// Löschen des outputs
+		output = "";
 
 		// Compilieren der Main-Klasse
 		compile(root.getMain(), gui.getMainClassContent(), 0);
 
-		// In output sollte jetzt schöner Storyboard-Code zu finden sein, tragen wir es doch in unser Textfenster ein
+		// In output sollte jetzt schöner Storyboard-Code zu finden sein, tragen
+		// wir es doch in unser Textfenster ein
 
-                this.setOutput(output);
-		
+		this.setOutput(output);
+
 	}
 
-        public void setOutput(String str)
-        {
-            this.gui.getContentArea().setText(str);
-        }
+	public void setOutput(String str) {
+		this.gui.getContentArea().setText(str);
+	}
 
-	public void compile(Context context, String input, int absoluteTime)
-			throws GeneratorException {
+	public void compile(Context context, String input, int absoluteTime) throws GeneratorException {
 
 		// Wir gehen systematisch durch den Code und analysieren ihn grob
 		String[] lines = input.split("\\n");
@@ -64,8 +69,7 @@ public class Generator {
 
 			while (analyseTwice) {
 				if (isBlock) {
-					System.out.println("analysiere Zeile " + lineCounter + ": "
-							+ line);
+					System.out.println("analysiere Zeile " + lineCounter + ": " + line);
 					if (line.startsWith("}"))
 						bracketCounter--;
 
@@ -91,7 +95,7 @@ public class Generator {
 						continue;
 
 					} else {
-						//System.out.println("4: " + bracketCounter);
+						// System.out.println("4: " + bracketCounter);
 						block.contentAdd(line);
 						analyseTwice = false;
 					}
@@ -106,7 +110,7 @@ public class Generator {
 					System.out.println("Line " + lineCounter + ": \"" + line + "\"");
 
 					if (line.matches("if\\s*\\(.*")) {
-						//System.out.println("This is an if-Block");
+						// System.out.println("This is an if-Block");
 
 						if (line.endsWith("{")) {
 							System.out.println("This is an if-Block with brackets");
@@ -119,45 +123,50 @@ public class Generator {
 							codeItem = new IfCondition(context, line, false, absoluteTime);
 						}
 					} else if (line.matches("\\}?\\s*else if\\s*\\(.*")) {
-						//System.out.println("This is an else-if-Block");
+						// System.out.println("This is an else-if-Block");
 
 						if (line.endsWith("{")) {
 							System.out.println("This is an else-if-Block with brackets");
-							block = new IfCondition(context,
-									line.substring(line.indexOf("if")),
+							block = new IfCondition(context, line.substring(line.indexOf("if")),
 									lastCondition, absoluteTime);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
 						} else {
 							System.out.println("This is a single-line if-else-Condition");
-							codeItem = new IfCondition(context, line,
-									lastCondition, absoluteTime);
+							codeItem = new IfCondition(context, line, lastCondition, absoluteTime);
 						}
+					} else if (line.matches("at\\s*\\(.*")) {
+						// at-block
+						if (line.endsWith("{")) {
+							System.out.println("This is a Time-Block with brackets");
+
+						} else {
+							System.out.println("This is a single-line Time-Block");
+							codeItem = new TimeBlock(context, line, absoluteTime, true);
+						}
+
 					} else if (line.matches("\\S+\\s+\\S+\\s*=\\s*\\S+.*")) {
-						System.out
-								.println("This is a NEW Variable + definition");
+						System.out.println("This is a NEW Variable + definition");
 						codeItem = new NewVariableDefinition(context, line);
 					} else if (line.matches("\\S+\\s*=\\s*\\S*.*")) {
 						System.out.println("This is a Variable definition");
 						codeItem = new VariableDefinition(context, line);
-						
-						
+
 					} else if (line.matches("\\S+\\.\\S+\\(.*\\)")) {
 						System.out.println("This is a static Method");
 						codeItem = new StaticMethod(context, line, absoluteTime);
-						
-						
+
 					} else if (line.equals("}")) {
 						lineCounter++;
 						continue eachline;
 					} else {
 						System.out.println("WTF is this? D:");
 					}
-                                        
+
 					// Jetzt soll die entsprechende Zeile analysiert werden
 					if (codeItem == null) {
-                                                this.setOutput(new String());
+						this.setOutput(new String());
 						throw new GeneratorException("Main", lineCounter,
 								"Unable to understand this line in Main");
 					}
@@ -172,26 +181,28 @@ public class Generator {
 					analyseTwice = false;
 
 				}
-				
-			}	
+
+			}
 
 			lineCounter++;
 		}
-		
+
 		// Analyse ageschlossen
-		
-		// Jetzt wollen wir doch mal die Sprite Variablen ins Storyboard umsetzen ^^
+
+		// Jetzt wollen wir doch mal die Sprite Variablen ins Storyboard
+		// umsetzen ^^
 		List<Variable> variables = context.getAllVariables();
-		
+
 		ListIterator<Variable> i = variables.listIterator();
 		while (i.hasNext()) {
 			Variable var = variables.get(i.nextIndex());
 			if (var instanceof SpriteVariable) {
 				SpriteVariable sprite = (SpriteVariable) var;
-				Generator.output += "Sprite," + sprite.getLayer() +"," + sprite.getOrigin() + "," + sprite.getPath() + ",320,240\n";
+				Generator.output += "Sprite," + sprite.getLayer() + "," + sprite.getOrigin() + ","
+						+ sprite.getPath() + ",320,240\n";
 				Generator.output += sprite.getStoryboard();
 			}
-			
+
 			i.next();
 		}
 
@@ -210,7 +221,8 @@ public class Generator {
 
 	}
 
-	private static String encodeVariables(Context context, String expression) throws GeneratorException {
+	private static String encodeVariables(Context context, String expression)
+			throws GeneratorException {
 
 		boolean found;
 		do {
@@ -218,17 +230,24 @@ public class Generator {
 
 			Pattern pattern;
 			Matcher matcher;
-			pattern = Pattern.compile("[a-zA-Z]\\w*\\W");
+			pattern = Pattern.compile("[a-zA-Z]\\w*(\\W|$)");
 			matcher = pattern.matcher(expression);
 			if (matcher.find()) {
-				String variableName = expression.substring(matcher.start(),
-						matcher.end() - 1);
-				System.out.println(variableName
-						+ " ist eine Variable. Suche Wert...");
+				String variableName = expression.substring(matcher.start(), matcher.end());
+
+				System.out.println("1: " + variableName);
+
+				int ende = matcher.end();
+				if (variableName.endsWith("\\W")) {
+					variableName = expression.substring(matcher.start(), matcher.end() - 1);
+					ende -= 1;
+				}
+				System.out.println("2: " + variableName);
+
+				System.out.println(variableName + " ist eine Variable. Suche Wert...");
 				Variable variable = context.searchVariable(variableName);
-				expression = expression.substring(0, matcher.start())
-						+ variable.getStringValue()
-						+ expression.substring(matcher.end() - 1);
+				expression = expression.substring(0, matcher.start()) + variable.getStringValue()
+						+ expression.substring(ende);
 				System.out.println("Neue Expression: " + expression);
 				found = true;
 			}
@@ -237,18 +256,115 @@ public class Generator {
 		return expression;
 	}
 
+	private static String encodeIntMethods(Context context, String expression)
+			throws GeneratorException {
+
+		boolean found;
+		do {
+			found = false;
+
+			Pattern pattern;
+			Matcher matcher;
+			pattern = Pattern.compile("[a-zA-Z]\\w*\\(.*");
+			matcher = pattern.matcher(expression);
+			if (matcher.find()) {
+				String methodString = expression.substring(matcher.start());
+
+				// wir suchen das Ende und den Anfang der Methodenklammern
+				char[] chars = methodString.toCharArray();
+				int firstBracket = 0;
+				int lastBracket = 0;
+				int counter = 0;
+				for (int a = 0; a < chars.length; a++) {
+					if (chars[a] == '(') {
+						counter++;
+						if (firstBracket == 0) {
+							firstBracket = a;
+						}
+					} else if (chars[a] == ')') {
+						counter--;
+						if (counter == 0) {
+							lastBracket = a;
+							break;
+						}
+					}
+				}
+
+				String methodName = methodString.substring(0, firstBracket);
+				String methodParameters = methodString.substring(firstBracket + 1, lastBracket);
+
+				System.out
+						.println(methodName + " ist eine Methode. Parameter: " + methodParameters);
+
+				expression = expression.substring(0, matcher.start())
+						+ intMethods(context, methodName, splitParameters(methodParameters))
+						+ expression.substring(matcher.start() + lastBracket + 1);
+				System.out.println("Neue Expression: " + expression);
+
+				found = true;
+			}
+
+		} while (found);
+		return expression;
+	}
+
+	public static String[] splitParameters(String parameters) {
+
+		char[] chars = parameters.toCharArray();
+
+		int counter = 0;
+		List<String> parameterList = new ArrayList<String>();
+		String buffer = "";
+		for (int a = 0; a < chars.length; a++) {
+
+			if (chars[a] == ',' && counter == 0) {
+				parameterList.add(buffer);
+				buffer = "";
+			} else {
+				// Wir müssen immer wissen, ob wir grad in einer Klammer sind
+				// oder nicht
+				if (chars[a] == '(') {
+					counter++;
+				} else if (chars[a] == ')') {
+					counter--;
+				}
+				buffer += chars[a];
+			}
+
+		}
+		parameterList.add(buffer);
+
+		return parameterList.toArray(new String[0]);
+	}
+
+	private static int intMethods(Context context, String name, String[] parameter)
+			throws GeneratorException {
+
+		if (name.equals("rand")) {
+			if (parameter.length == 2) {
+				Random generator = new Random();
+				int start = Generator.encodeIntegerExpression(context, parameter[0]);
+				int end = Generator.encodeIntegerExpression(context, parameter[1]);
+				return start + generator.nextInt(end - start + 1);
+			}
+		}
+
+		throw new GeneratorException(null, -1, "Cannot find integer method \"" + name + "\"");
+	}
+
 	public static int encodeIntegerExpression(Context context, String expression)
 			throws GeneratorException {
 
+		expression = encodeIntMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
 		float result;
 		try {
-			result = Float.parseFloat(new ScriptEngineManager()
-					.getEngineByName("javascript").eval(expression).toString());
+			result = Float.parseFloat(new ScriptEngineManager().getEngineByName("javascript")
+					.eval(expression).toString());
 		} catch (Exception ex) {
-			throw new ParserException(null, -1, "Unable to parse \""
-					+ expression + "\" to an integer value");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression
+					+ "\" to an integer value");
 		}
 		// System.out.print(result);
 
@@ -307,33 +423,34 @@ public class Generator {
 		 */
 	}
 
-	public static boolean encodeBooleanExpression(Context context,
-			String expression) throws GeneratorException {
+	public static boolean encodeBooleanExpression(Context context, String expression)
+			throws GeneratorException {
 
+		expression = encodeIntMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
 		try {
-			return Boolean.parseBoolean(new ScriptEngineManager()
-					.getEngineByName("javascript").eval(expression).toString());
+			return Boolean.parseBoolean(new ScriptEngineManager().getEngineByName("javascript")
+					.eval(expression).toString());
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new ParserException(null, -1, "Unable to parse \""
-					+ expression + "\" to a boolean value");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression
+					+ "\" to a boolean value");
 		}
 	}
 
-	public static String encodeStringExpression(Context context,
-			String expression) throws GeneratorException {
+	public static String encodeStringExpression(Context context, String expression)
+			throws GeneratorException {
 
 		expression = encodeVariables(context, expression);
 
 		try {
-			return new ScriptEngineManager().getEngineByName("javascript")
-					.eval(expression).toString();
+			return new ScriptEngineManager().getEngineByName("javascript").eval(expression)
+					.toString();
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new ParserException(null, -1, "Unable to parse \""
-					+ expression + "\" to a string");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression
+					+ "\" to a string");
 		}
 	}
 
