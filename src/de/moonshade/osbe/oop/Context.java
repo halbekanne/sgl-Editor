@@ -37,6 +37,8 @@ public abstract class Context {
 	public Variable searchVariable(String variableName) {
 		// TODO Auto-generated method stub
 		
+		System.out.println("suche variable " + variableName);
+		
 		//Suche Variable hier
 		System.out.println(this.getClass().getName());
 		ListIterator<Variable> i = variables.listIterator();
@@ -62,7 +64,6 @@ public abstract class Context {
 			
 			currentContext = currentContext.getParentContext();
 		}
-		System.out.println("d'oh");
 		System.out.println("Variable " + variableName + " wurde nicht gefunden :(");
 		return null;
 	}

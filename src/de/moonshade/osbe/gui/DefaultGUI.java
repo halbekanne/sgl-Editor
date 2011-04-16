@@ -56,6 +56,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 
+import org.fife.ui.autocomplete.AutoCompletion;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -275,6 +276,20 @@ public class DefaultGUI implements GUI {
 	private RSyntaxTextArea getObjectContentArea() {
 		if (objectContentArea == null) {
 			objectContentArea = new RSyntaxTextArea();
+			
+			// Adding Auto-Completition
+			AutoCompletion ac = new AutoCompletion(SGLCompletitionProvider.getProvider());
+			ac.setAutoActivationEnabled(true);
+			//ac.setAutoActivationDelay(500);
+			ac.setParameterAssistanceEnabled(true);
+			ac.setShowDescWindow(true);
+			ac.setAutoCompleteEnabled(true);
+			ac.setListCellRenderer(new SGLCellRenderer());
+			ac.setAutoCompleteSingleChoices(false);
+			ac.setChoicesWindowSize(420, 150);
+			ac.setDescriptionWindowSize(350, 250);
+			ac.install(objectContentArea);
+			
 			/*
 			 * Note: At this point, I set my syntax highlighter for osu files.
 			 * It was created with the TokenTokenMaker, so it's not that
@@ -286,7 +301,7 @@ public class DefaultGUI implements GUI {
 			//objectContentArea.setText("\n Sprite test = new Sprite(\"sb/test\")\n test.move(10,20)\n test.move(100,20,40)\n test.move(100,200,20,40,30,60)");
 			//objectContentArea.setText(" Sprite test = new Sprite(\"sb/test\")\n at (100) test.move(20,40)");
 			//objectContentArea.setText(" int t = 1\n int x = rand(t,2)");
-			objectContentArea.setText("if (2 == 2) {\n  Sprite test = new Sprite(\"sb/test\")\n  at (rand(1,10)*100) test.move(rand(10,20),30)\n}");
+			objectContentArea.setText("if (2 == 2) {\n  Sprite test = new Sprite(\"sb/test\")\n  at (rand(1,10)*100) test.move(rand(10,20),30)\n  test.moveSpeedUp(100, 200, 10, 20, 10, 30)\n}");
 			
 		}
 		return objectContentArea;

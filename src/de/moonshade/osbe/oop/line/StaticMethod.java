@@ -71,7 +71,13 @@ public class StaticMethod extends Line {
 			int endTime = absoluteTime;
 			int easing = 0;
 			
-			if (name.equals("move")) {
+			if (name.endsWith("SlowDown")) {
+				easing = 1;
+			} else if (name.endsWith("SpeedUp")) {
+				easing = 2;
+			}
+			
+			if (name.equals("move") || name.equals("moveSpeedUp") || name.equals("moveSlowDown")) {
 				System.out.println(6);
 				int startX = 0, startY = 0, endX = 0, endY = 0;
 				if (parameter.length == 2) {

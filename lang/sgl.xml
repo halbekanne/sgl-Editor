@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<api language="SGL">
+	<environment paramStartChar="(" paramEndChar=")"
+		paramSeparator=", " />
+
+
+	<keywords>
+		<keyword name="TopLeft" type="constant" returnType="Origin" />
+		<keyword name="TopCentre" type="constant" returnType="Origin" />
+		<keyword name="TopRight" type="constant" returnType="Origin" />
+		<keyword name="CentreLeft" type="constant" returnType="Origin" />
+		<keyword name="Centre" type="constant" returnType="Origin" />
+		<keyword name="CentreRight" type="constant" returnType="Origin" />
+		<keyword name="BottomLeft" type="constant" returnType="Origin" />
+		<keyword name="BottomCentre" type="constant" returnType="Origin" />
+		<keyword name="BottomRight" type="constant" returnType="Origin" />
+
+		<keyword name="Background" type="constant" returnType="Layer" />
+		<keyword name="Fail" type="constant" returnType="Layer" />
+		<keyword name="Pass" type="constant" returnType="Layer" />
+		<keyword name="Foreground" type="constant" returnType="Layer" />
+
+
+		<keyword name="rand" type="function" returnType="int">
+			<params>
+				<param type="int" name="start">
+					<desc>Pointer to a file structure.</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Returns a random value between <em>start</em> and <em>end</em>.<br>
+rand(1,10) will create a random value between 1 and 10]]></desc>
+		</keyword>
+
+		<keyword name="move" type="function">
+			<params>
+				<param type="int" name="x">
+					<desc>The new x position. (Playfield: 0-640)</desc>
+				</param>
+				<param type="int" name="y">
+					<desc>The new y position. (Playfield: 0-420)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Moves an object to a specific position.<br>
+The time will be 0.]]></desc>
+		</keyword>
+		<keyword name="move" type="function">
+			<params>
+				<param type="int" name="time">
+					<desc>The time in ms at which the movement should take place.
+					</desc>
+				</param>
+				<param type="int" name="x">
+					<desc>The new x position. (Playfield: 0-640)</desc>
+				</param>
+				<param type="int" name="y">
+					<desc>The new y position. (Playfield: 0-420)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Moves an object to a specific position.]]></desc>
+		</keyword>
+		<keyword name="move" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="startX">
+					<desc>The x position at the beginning of the animation. (Playfield:
+						0-640)</desc>
+				</param>
+				<param type="int" name="startY">
+					<desc>The y position at the beginning of the animation. (Playfield:
+						0-420)</desc>
+				</param>
+				<param type="int" name="endX">
+					<desc>The x position at the end of the animation. (Playfield:
+						0-640)</desc>
+				</param>
+				<param type="int" name="endY">
+					<desc>The y position at the end of the animation. (Playfield:
+						0-420)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Moves an object from and to a specific position.]]></desc>
+		</keyword>
+
+		<keyword name="moveSpeedUp" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="startX">
+					<desc>The x position at the beginning of the animation. (Playfield:
+						0-640)</desc>
+				</param>
+				<param type="int" name="startY">
+					<desc>The y position at the beginning of the animation. (Playfield:
+						0-420)</desc>
+				</param>
+				<param type="int" name="endX">
+					<desc>The x position at the end of the animation. (Playfield:
+						0-640)</desc>
+				</param>
+				<param type="int" name="endY">
+					<desc>The y position at the end of the animation. (Playfield:
+						0-420)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Moves an object from and to a specific position. Animation will start slow and speed up.]]></desc>
+		</keyword>
+		
+		<keyword name="moveSlowDown" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="startX">
+					<desc>The x position at the beginning of the animation. (Playfield:
+						0-640)</desc>
+				</param>
+				<param type="int" name="startY">
+					<desc>The y position at the beginning of the animation. (Playfield:
+						0-420)</desc>
+				</param>
+				<param type="int" name="endX">
+					<desc>The x position at the end of the animation. (Playfield:
+						0-640)</desc>
+				</param>
+				<param type="int" name="endY">
+					<desc>The y position at the end of the animation. (Playfield:
+						0-420)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Moves an object from and a specific position. Animation will start fast and slow down.]]></desc>
+		</keyword>
+
+		<keyword name="Sprite" type="function">
+			<params>
+				<param type="String" name="imagePath">
+					<desc>Relative path to the image.</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Creates a sprite/an image in the storyboard.<br>
+			<em>layer</em> will be Foreground, and <em>origin</em> will be Centre]]></desc>
+		</keyword>
+
+		<keyword name="Sprite" type="function">
+			<params>
+				<param type="String" name="imagePath">
+					<desc>Relative path to the image.</desc>
+				</param>
+				<param type="Layer" name="layer">
+					<desc>One of the following: Background, Fail, Pass, Foreground
+					</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Creates a sprite/an image in the storyboard.<br>
+			<em>origin</em> will be Centre]]></desc>
+		</keyword>
+
+		<keyword name="Sprite" type="function">
+			<params>
+				<param type="String" name="imagePath">
+					<desc>Relative path to the image.</desc>
+				</param>
+				<param type="Layer" name="layer">
+					<desc>One of the following: Background, Fail, Pass, Foreground
+					</desc>
+				</param>
+				<param type="Origin" name="origin">
+					<desc>One of the following: TopLeft, TopCentre, TopRight,
+						CentreLeft, Centre, CentreRight, BottomLeft, BottomCentre,
+						BottomRight</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Creates a sprite/an image in the storyboard.]]></desc>
+		</keyword>
+	</keywords>
+
+</api>
