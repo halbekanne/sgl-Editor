@@ -20,7 +20,7 @@ public class SGLCompletitionProvider {
 	public static CompletionProvider getProvider() {
 		
 		DefaultCompletionProvider provider = new DefaultCompletionProvider();
-		provider.setAutoActivationRules(true, ".(),");
+		provider.setAutoActivationRules(false, ".");
 		
 		LanguageAwareCompletionProvider languageProvider = new LanguageAwareCompletionProvider(provider);
 		

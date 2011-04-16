@@ -30,7 +30,7 @@ public class Generator {
 		// Löschen eines evt. alten Root Elements
 		root = new Root();
 		this.gui = gui;
-		
+
 		// Löschen des outputs
 		output = "";
 
@@ -127,8 +127,8 @@ public class Generator {
 
 						if (line.endsWith("{")) {
 							System.out.println("This is an else-if-Block with brackets");
-							block = new IfCondition(context, line.substring(line.indexOf("if")),
-									lastCondition, absoluteTime);
+							block = new IfCondition(context, line.substring(line.indexOf("if")), lastCondition,
+									absoluteTime);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
@@ -167,8 +167,7 @@ public class Generator {
 					// Jetzt soll die entsprechende Zeile analysiert werden
 					if (codeItem == null) {
 						this.setOutput(new String());
-						throw new GeneratorException("Main", lineCounter,
-								"Unable to understand this line in Main");
+						throw new GeneratorException("Main", lineCounter, "Unable to understand this line in Main");
 					}
 					try {
 						codeItem.analyse();
@@ -198,8 +197,8 @@ public class Generator {
 			Variable var = variables.get(i.nextIndex());
 			if (var instanceof SpriteVariable) {
 				SpriteVariable sprite = (SpriteVariable) var;
-				Generator.output += "Sprite," + sprite.getLayer() + "," + sprite.getOrigin() + ","
-						+ sprite.getPath() + ",320,240\n";
+				Generator.output += "Sprite," + sprite.getLayer() + "," + sprite.getOrigin() + "," + sprite.getPath()
+						+ ",320,240\n";
 				Generator.output += sprite.getStoryboard();
 			}
 
@@ -221,8 +220,7 @@ public class Generator {
 
 	}
 
-	private static String encodeVariables(Context context, String expression)
-			throws GeneratorException {
+	private static String encodeVariables(Context context, String expression) throws GeneratorException {
 
 		boolean found;
 		do {
@@ -256,8 +254,7 @@ public class Generator {
 		return expression;
 	}
 
-	private static String encodeIntMethods(Context context, String expression)
-			throws GeneratorException {
+	private static String encodeIntMethods(Context context, String expression) throws GeneratorException {
 
 		boolean found;
 		do {
@@ -293,8 +290,7 @@ public class Generator {
 				String methodName = methodString.substring(0, firstBracket);
 				String methodParameters = methodString.substring(firstBracket + 1, lastBracket);
 
-				System.out
-						.println(methodName + " ist eine Methode. Parameter: " + methodParameters);
+				System.out.println(methodName + " ist eine Methode. Parameter: " + methodParameters);
 
 				expression = expression.substring(0, matcher.start())
 						+ intMethods(context, methodName, splitParameters(methodParameters))
@@ -337,8 +333,7 @@ public class Generator {
 		return parameterList.toArray(new String[0]);
 	}
 
-	private static int intMethods(Context context, String name, String[] parameter)
-			throws GeneratorException {
+	private static int intMethods(Context context, String name, String[] parameter) throws GeneratorException {
 
 		if (name.equals("rand")) {
 			if (parameter.length == 2) {
@@ -352,19 +347,17 @@ public class Generator {
 		throw new GeneratorException(null, -1, "Cannot find integer method \"" + name + "\"");
 	}
 
-	public static int encodeIntegerExpression(Context context, String expression)
-			throws GeneratorException {
+	public static int encodeIntegerExpression(Context context, String expression) throws GeneratorException {
 
 		expression = encodeIntMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
 		float result;
 		try {
-			result = Float.parseFloat(new ScriptEngineManager().getEngineByName("javascript")
-					.eval(expression).toString());
+			result = Float.parseFloat(new ScriptEngineManager().getEngineByName("javascript").eval(expression)
+					.toString());
 		} catch (Exception ex) {
-			throw new ParserException(null, -1, "Unable to parse \"" + expression
-					+ "\" to an integer value");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to an integer value");
 		}
 		// System.out.print(result);
 
@@ -423,34 +416,44 @@ public class Generator {
 		 */
 	}
 
-	public static boolean encodeBooleanExpression(Context context, String expression)
-			throws GeneratorException {
+	public static float encodeFloatExpression(Context context, String expression) throws GeneratorException {
+
+		expression = encodeIntMethods(context, expression);
+		expression = encodeVariables(context, expression);
+
+		float result;
+		try {
+			result = Float.parseFloat(new ScriptEngineManager().getEngineByName("javascript").eval(expression)
+					.toString());
+		} catch (Exception ex) {
+			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to an integer value");
+		}
+		return result;
+	}
+
+	public static boolean encodeBooleanExpression(Context context, String expression) throws GeneratorException {
 
 		expression = encodeIntMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
 		try {
-			return Boolean.parseBoolean(new ScriptEngineManager().getEngineByName("javascript")
-					.eval(expression).toString());
+			return Boolean.parseBoolean(new ScriptEngineManager().getEngineByName("javascript").eval(expression)
+					.toString());
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new ParserException(null, -1, "Unable to parse \"" + expression
-					+ "\" to a boolean value");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to a boolean value");
 		}
 	}
 
-	public static String encodeStringExpression(Context context, String expression)
-			throws GeneratorException {
+	public static String encodeStringExpression(Context context, String expression) throws GeneratorException {
 
 		expression = encodeVariables(context, expression);
 
 		try {
-			return new ScriptEngineManager().getEngineByName("javascript").eval(expression)
-					.toString();
+			return new ScriptEngineManager().getEngineByName("javascript").eval(expression).toString();
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new ParserException(null, -1, "Unable to parse \"" + expression
-					+ "\" to a string");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to a string");
 		}
 	}
 
