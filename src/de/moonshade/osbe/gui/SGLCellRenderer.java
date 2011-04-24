@@ -1,6 +1,17 @@
 /*
- * 01/07/2009
- *
+ * Copyright (c) 2011 Dominik Halfkann.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Dominik Halfkann
+*/
+
+/*
  * CCellRenderer.java - A cell renderer for C completions.
  * Copyright (C) 2008 Robert Futrell
  * robert_futrell at users.sourceforge.net
@@ -28,6 +39,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
@@ -46,9 +58,40 @@ import org.fife.ui.autocomplete.VariableCompletion;
  */
 class SGLCellRenderer extends CompletionCellRenderer {
 
+	/**
+	 * An standard icon that doesn't paint anything. This can be used to take up
+	 * an icon's space when no icon is specified.
+	 * 
+	 * @author Robert Futrell
+	 * @version 1.0
+	 */
+	private static class EmptyIcon implements Icon, Serializable {
+
+		private int size;
+
+		public EmptyIcon(int size) {
+			this.size = size;
+		}
+
+		@Override
+		public int getIconHeight() {
+			return size;
+		}
+
+		@Override
+		public int getIconWidth() {
+			return size;
+		}
+
+		@Override
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+		}
+
+	}
 	private Icon variableIcon;
 	private Icon functionIcon;
 	private Icon constructorIcon;
+
 	private Icon emptyIcon;
 
 	/**
@@ -86,24 +129,7 @@ class SGLCellRenderer extends CompletionCellRenderer {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected void prepareForOtherCompletion(JList list, Completion c, int index, boolean selected,
-			boolean hasFocus) {
-		super.prepareForOtherCompletion(list, c, index, selected, hasFocus);
-		setIcon(emptyIcon);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected void prepareForVariableCompletion(JList list, VariableCompletion vc, int index,
-			boolean selected, boolean hasFocus) {
-		super.prepareForVariableCompletion(list, vc, index, selected, hasFocus);
-		setIcon(variableIcon);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	protected void prepareForFunctionCompletion(JList list, FunctionCompletion fc, int index,
 			boolean selected, boolean hasFocus) {
 		super.prepareForFunctionCompletion(list, fc, index, selected, hasFocus);
@@ -115,31 +141,23 @@ class SGLCellRenderer extends CompletionCellRenderer {
 	}
 
 	/**
-	 * An standard icon that doesn't paint anything. This can be used to take up
-	 * an icon's space when no icon is specified.
-	 * 
-	 * @author Robert Futrell
-	 * @version 1.0
+	 * {@inheritDoc}
 	 */
-	private static class EmptyIcon implements Icon, Serializable {
+	@Override
+	protected void prepareForOtherCompletion(JList list, Completion c, int index, boolean selected,
+			boolean hasFocus) {
+		super.prepareForOtherCompletion(list, c, index, selected, hasFocus);
+		setIcon(emptyIcon);
+	}
 
-		private int size;
-
-		public EmptyIcon(int size) {
-			this.size = size;
-		}
-
-		public int getIconHeight() {
-			return size;
-		}
-
-		public int getIconWidth() {
-			return size;
-		}
-
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-		}
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void prepareForVariableCompletion(JList list, VariableCompletion vc, int index,
+			boolean selected, boolean hasFocus) {
+		super.prepareForVariableCompletion(list, vc, index, selected, hasFocus);
+		setIcon(variableIcon);
 	}
 
 }

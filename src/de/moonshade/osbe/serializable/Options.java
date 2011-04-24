@@ -9,7 +9,7 @@
  * 
  * Contributors:
  *     Dominik Halfkann
- */
+*/
 
 /**
  * 
@@ -18,12 +18,6 @@ package de.moonshade.osbe.serializable;
 
 import java.awt.Point;
 import java.io.Serializable;
-import java.util.Iterator;
-
-import ca.beq.util.win32.registry.KeyIterator;
-import ca.beq.util.win32.registry.RegistryKey;
-import ca.beq.util.win32.registry.RegistryValue;
-import ca.beq.util.win32.registry.RootKey;
 
 /**
  * @author Dominik Halfkann
@@ -43,36 +37,17 @@ public class Options implements Serializable {
 	public Options() {
 		// set initial lastPath
 		/*
-		if (System.getProperty("os.name").startsWith("Windows")) {
-			RegistryKey r = new RegistryKey(RootKey.HKEY_CLASSES_ROOT,
-					"osu!\\shell\\open\\command");
-			if (r.hasValues()) {
-				Iterator i = r.values();
-				while (i.hasNext()) {
-					RegistryValue v = (RegistryValue) i.next();
-					lastPath = v.getStringValue().substring(1,v.getStringValue().indexOf("osu!") + 4) + "\\songs";
-				}
-			}
-		} else {
-		*/
-			lastPath = System.getProperty("user.home");
-			
-		//}
-	}
+		 * if (System.getProperty("os.name").startsWith("Windows")) {
+		 * RegistryKey r = new RegistryKey(RootKey.HKEY_CLASSES_ROOT,
+		 * "osu!\\shell\\open\\command"); if (r.hasValues()) { Iterator i =
+		 * r.values(); while (i.hasNext()) { RegistryValue v = (RegistryValue)
+		 * i.next(); lastPath =
+		 * v.getStringValue().substring(1,v.getStringValue().indexOf("osu!") +
+		 * 4) + "\\songs"; } } } else {
+		 */
+		lastPath = System.getProperty("user.home");
 
-	/**
-	 * @return the lastWidth
-	 */
-	public int getLastWidth() {
-		return lastWidth;
-	}
-
-	/**
-	 * @param lastWidth
-	 *            the lastWidth to set
-	 */
-	public void setLastWidth(int lastWidth) {
-		this.lastWidth = lastWidth;
+		// }
 	}
 
 	/**
@@ -83,18 +58,29 @@ public class Options implements Serializable {
 	}
 
 	/**
+	 * @return the lastLocation
+	 */
+	public Point getLastLocation() {
+		return lastLocation;
+	}
+
+	public String getLastPath() {
+		return lastPath;
+	}
+
+	/**
+	 * @return the lastWidth
+	 */
+	public int getLastWidth() {
+		return lastWidth;
+	}
+
+	/**
 	 * @param lastHeight
 	 *            the lastHeight to set
 	 */
 	public void setLastHeight(int lastHeight) {
 		this.lastHeight = lastHeight;
-	}
-
-	/**
-	 * @return the lastLocation
-	 */
-	public Point getLastLocation() {
-		return lastLocation;
 	}
 
 	/**
@@ -109,8 +95,12 @@ public class Options implements Serializable {
 		this.lastPath = lastPath;
 	}
 
-	public String getLastPath() {
-		return lastPath;
+	/**
+	 * @param lastWidth
+	 *            the lastWidth to set
+	 */
+	public void setLastWidth(int lastWidth) {
+		this.lastWidth = lastWidth;
 	}
 
 }

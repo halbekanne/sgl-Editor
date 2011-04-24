@@ -19,6 +19,8 @@ package de.moonshade.osbe.gui;
 import java.awt.Point;
 import java.io.File;
 
+import javax.swing.JPanel;
+
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import de.moonshade.osbe.Main;
@@ -30,7 +32,47 @@ import de.moonshade.osbe.menuhandler.MenuHandler;
  * 
  */
 public interface GUI {
-	
+
+	/**
+	 * Creates a new menu in the menu bar.
+	 * 
+	 * @param title
+	 *            The title of the new menu
+	 */
+	public void createMenu(String title);
+
+	/**
+	 *
+	 */
+	public void createMenuItem(String title, int id, final Action effect);
+
+	public RSyntaxTextArea getContentArea();
+
+	public JPanel getContentPanel();
+
+	/**
+	 * Returns the current height of the main frame
+	 * 
+	 * @return
+	 */
+	public int getHeight();
+
+	/**
+	 * Returns the current location of the main frame
+	 * 
+	 * @return
+	 */
+	public Point getLocation();
+
+	public String getMainClassContent();
+
+	/**
+	 * Returns the current width of the main frame
+	 * 
+	 * @return
+	 */
+	public int getWidth();
+
 	/**
 	 * Initializes the GUI, hopefully builds some basic GUI stuff so that one
 	 * can add some objects.
@@ -41,11 +83,6 @@ public interface GUI {
 	 *            The Position of the Frame
 	 */
 	public void init(String title);
-
-	/**
-	 * Makes the GUI visible for the user
-	 */
-	public void start();
 
 	/**
 	 * Defines an Object which has an onGUIClosed() method in order to save
@@ -64,47 +101,6 @@ public interface GUI {
 	public void setMenuHandler(MenuHandler handler);
 
 	/**
-	 * Creates a new menu in the menu bar.
-	 * 
-	 * @param title
-	 *            The title of the new menu
-	 */
-	public void createMenu(String title);
-
-	/**
-	 *
-	 */
-	public void createMenuItem(String title, int id, final Action effect);
-	
-	
-	
-	public String getMainClassContent();
-	
-	
-	/**
-	 * Returns the current height of the main frame
-	 * 
-	 * @return
-	 */
-	public int getHeight();
-
-	/**
-	 * Returns the current width of the main frame
-	 * 
-	 * @return
-	 */
-	public int getWidth();
-
-	/**
-	 * Returns the current location of the main frame
-	 * 
-	 * @return
-	 */
-	public Point getLocation();
-
-	public RSyntaxTextArea getContentArea();
-
-	/**
 	 * Shows a FileChooser dialog, returns the chosen file.
 	 * 
 	 * @param title
@@ -113,5 +109,10 @@ public interface GUI {
 	 *         null
 	 */
 	public File showFileChooser(String title);
+
+	/**
+	 * Makes the GUI visible for the user
+	 */
+	public void start();
 
 }

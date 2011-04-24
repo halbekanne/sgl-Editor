@@ -15,11 +15,42 @@ package de.moonshade.osbe.oop;
 
 import de.moonshade.osbe.oop.exception.GeneratorException;
 
-public abstract class CodeItem extends Context {
+public class FloatVariable implements Variable {
 
-	protected String content;
+	private String name;
+	private float value;
 
-	public void analyse() throws GeneratorException {
+	public FloatVariable(String name, float value) {
+		this.name = name;
+		this.value = value;
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return this.name;
+	}
+
+	@Override
+	public String getStringValue() throws GeneratorException {
+		// TODO Auto-generated method stub
+		return String.valueOf(getValue());
+	}
+
+	public float getValue() {
+		// TODO Auto-generated method stub
+		return value;
+	}
+
+	@Override
+	public void setName(String name) {
+		// TODO Auto-generated method stub
+		this.name = name;
+	}
+
+	public void setValue(float value) {
+		// TODO Auto-generated method stub
+		this.value = value;
 	}
 
 }

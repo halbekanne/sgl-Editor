@@ -13,6 +13,7 @@
 
 package de.moonshade.osbe.menuhandler;
 
+import de.moonshade.osbe.Main;
 import de.moonshade.osbe.gui.GUI;
 
 public class MenuHandler {
@@ -24,28 +25,26 @@ public class MenuHandler {
 		switch (action) {
 		case New:
 			menuAction = new ActionNew();
-			System.out.println("New clicked");
+			if (Main.debug) System.out.println("New clicked");
 			break;
 		case Open:
 			menuAction = new ActionOpen();
-			System.out.println("Open clicked");
+			if (Main.debug) System.out.println("Open clicked");
 			break;
 		case Save:
-			System.out.println("Save clicked");
+			if (Main.debug) System.out.println("Save clicked");
 			break;
 		case GenerateStoryboard:
 			menuAction = new ActionGenerateStoryboard();
-			System.out.println("Generate clicked");
+			if (Main.debug) System.out.println("Generate clicked");
 			break;
-                case ParseOosbl:
+		case ParseOosbl:
 			menuAction = new ActionParseOosbl();
-			System.out.println("Oosbl clicked");
-                        break;
+			if (Main.debug) System.out.println("Oosbl clicked");
+			break;
 		}
 
-
-                
-		System.out.println("something clicked");
+		if (Main.debug) System.out.println("something clicked");
 
 		if (menuAction != null) {
 			menuAction.onClick(gui);

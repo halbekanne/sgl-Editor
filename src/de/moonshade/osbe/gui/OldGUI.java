@@ -14,7 +14,6 @@
 package de.moonshade.osbe.gui;
 
 import java.awt.BorderLayout;
-
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.FlowLayout;
@@ -57,6 +56,29 @@ import org.fife.ui.rtextarea.RTextScrollPane;
  */
 public class OldGUI {
 
+	/**
+	 * Launches this application
+	 */
+	public static void main(final String[] args) {
+
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				OldGUI application;
+				try {
+					// If a file should be opened with this application
+					application = new OldGUI(args[0]);
+				} catch (Exception ex) {
+					// Normal startup (I know this isn't the best way to do it
+					// ;)
+					application = new OldGUI();
+				}
+
+				application.getJFrame().setVisible(true);
+			}
+		});
+
+	}
 	/* Variables for the GUI */
 	private JFrame jFrame = null;
 	private JPanel jContentPane = null;
@@ -96,187 +118,48 @@ public class OldGUI {
 	private JMenuItem undoMenuItem = null;
 	private JMenuItem redoMenuItem = null;
 	private JMenuItem saveAsMenuItem = null;
-	private JLabel aboutCopyrightLabel = null;
 
+	private JLabel aboutCopyrightLabel = null;
 	/* Other Variables */
 	private float bpm = 100;
 	private File currentFile = null; // @jve:decl-index=0:
 	private String lastPath = System.getProperty("user.home");
 	boolean saved = false;
+
 	String openFile = null;
 
 	public OldGUI() {
 
 	}
 
+	// Here comes the swing-stuff, it's more or less unsorted cause it was made
+	// by a wysiwyg sort of gui editor
+
 	public OldGUI(String file) {
 		// Cunstructor, if the Application should open a file on startup
 		openFile = file;
 	}
 
-	// Here comes the swing-stuff, it's more or less unsorted cause it was made
-	// by a wysiwyg sort of gui editor
-
 	/**
-	 * This method initializes jFrame
+	 * Converts measures to milliseconds
 	 * 
-	 * @return javax.swing.JFrame
+	 * @param measures
+	 * @return ms
 	 */
-	public JFrame getJFrame() {
-		if (jFrame == null) {
-			jFrame = new JFrame();
-			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			jFrame.setJMenuBar(getJJMenuBar());
-			jFrame.setSize(800, 600);
-			jFrame.setLocationByPlatform(true);
-			jFrame.setContentPane(getJContentPane());
-
-			jFrame.setTitle("osu! Storyboard Script Editor");
-		}
-
-		return jFrame;
+	private int convertMeasuresToMs(float measure) {
+		double temp = 60000 * 4 * measure;
+		return (int) Math.round(temp / bpm);
 	}
 
 	/**
-	 * This method initializes jContentPane
+	 * Converts milliseconds to measures
 	 * 
-	 * @return javax.swing.JPanel
+	 * @param ms
+	 * @return measures
 	 */
-	private JPanel getJContentPane() {
-		if (jContentPane == null) {
-			BorderLayout borderLayout = new BorderLayout();
-			borderLayout.setHgap(2);
-			jContentPane = new JPanel();
-			jContentPane.setLayout(borderLayout);
-			jContentPane.add(getFileContentScroll(), BorderLayout.CENTER);
-			jContentPane.add(getStatusBar(), BorderLayout.SOUTH);
-			jContentPane.add(getToolBar(), BorderLayout.NORTH);
-		}
-		return jContentPane;
-	}
-
-	/**
-	 * This method initializes jJMenuBar
-	 * 
-	 * @return javax.swing.JMenuBar
-	 */
-	private JMenuBar getJJMenuBar() {
-		if (jJMenuBar == null) {
-			jJMenuBar = new JMenuBar();
-			jJMenuBar.add(getFileMenu());
-			jJMenuBar.add(getEditMenu());
-			jJMenuBar.add(getOptionsMenu());
-			jJMenuBar.add(getHelpMenu());
-		}
-		return jJMenuBar;
-	}
-
-	/**
-	 * This method initializes jMenu
-	 * 
-	 * @return javax.swing.JMenu
-	 */
-	private JMenu getFileMenu() {
-		if (fileMenu == null) {
-			fileMenu = new JMenu();
-			fileMenu.setText("File");
-			fileMenu.add(getOpenMenuItem());
-			fileMenu.add(getSaveMenuItem());
-			fileMenu.add(getSaveAsMenuItem());
-			fileMenu.add(getExitMenuItem());
-		}
-		return fileMenu;
-	}
-
-	/**
-	 * This method initializes jMenu
-	 * 
-	 * @return javax.swing.JMenu
-	 */
-	private JMenu getEditMenu() {
-		if (editMenu == null) {
-			editMenu = new JMenu();
-			editMenu.setText("Edit");
-			editMenu.add(getUndoMenuItem());
-			editMenu.add(getRedoMenuItem());
-			editMenu.addSeparator();
-			editMenu.add(getCutMenuItem());
-			editMenu.add(getCopyMenuItem());
-			editMenu.add(getPasteMenuItem());
-		}
-		return editMenu;
-	}
-
-	/**
-	 * This method initializes jMenu
-	 * 
-	 * @return javax.swing.JMenu
-	 */
-	private JMenu getHelpMenu() {
-		if (helpMenu == null) {
-			helpMenu = new JMenu();
-			helpMenu.setText("Help");
-			helpMenu.add(getAboutMenuItem());
-		}
-		return helpMenu;
-	}
-
-	/**
-	 * This method initializes jMenuItem
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getExitMenuItem() {
-		if (exitMenuItem == null) {
-			exitMenuItem = new JMenuItem();
-			exitMenuItem.setText("Exit");
-			exitMenuItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					System.exit(0);
-				}
-			});
-		}
-		return exitMenuItem;
-	}
-
-	/**
-	 * This method initializes jMenuItem
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getAboutMenuItem() {
-		if (aboutMenuItem == null) {
-			aboutMenuItem = new JMenuItem();
-			aboutMenuItem.setText("About");
-			aboutMenuItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					JDialog aboutDialog = getAboutDialog();
-					aboutDialog.pack();
-					Point loc = getJFrame().getLocation();
-					loc.translate(getJFrame().getWidth() / 2 - 20, getJFrame()
-							.getHeight() / 2 - 20);
-					aboutDialog.setLocation(loc);
-					aboutDialog.setVisible(true);
-				}
-			});
-		}
-		return aboutMenuItem;
-	}
-
-	/**
-	 * This method initializes aboutDialog
-	 * 
-	 * @return javax.swing.JDialog
-	 */
-	private JDialog getAboutDialog() {
-		if (aboutDialog == null) {
-			aboutDialog = new JDialog(getJFrame(), true);
-			aboutDialog.setTitle("About");
-			aboutDialog.setContentPane(getAboutContentPane());
-		}
-		return aboutDialog;
+	private float convertMsToMeasures(int ms) {
+		// TODO Auto-generated method stub
+		return ms * 1.0f * bpm / (60000 * 4);
 	}
 
 	/**
@@ -302,6 +185,44 @@ public class OldGUI {
 	}
 
 	/**
+	 * This method initializes aboutDialog
+	 * 
+	 * @return javax.swing.JDialog
+	 */
+	private JDialog getAboutDialog() {
+		if (aboutDialog == null) {
+			aboutDialog = new JDialog(getJFrame(), true);
+			aboutDialog.setTitle("About");
+			aboutDialog.setContentPane(getAboutContentPane());
+		}
+		return aboutDialog;
+	}
+
+	/**
+	 * This method initializes jMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	private JMenuItem getAboutMenuItem() {
+		if (aboutMenuItem == null) {
+			aboutMenuItem = new JMenuItem();
+			aboutMenuItem.setText("About");
+			aboutMenuItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					JDialog aboutDialog = getAboutDialog();
+					aboutDialog.pack();
+					Point loc = getJFrame().getLocation();
+					loc.translate(getJFrame().getWidth() / 2 - 20, getJFrame().getHeight() / 2 - 20);
+					aboutDialog.setLocation(loc);
+					aboutDialog.setVisible(true);
+				}
+			});
+		}
+		return aboutMenuItem;
+	}
+
+	/**
 	 * This method initializes aboutVersionLabel
 	 * 
 	 * @return javax.swing.JLabel
@@ -309,469 +230,10 @@ public class OldGUI {
 	private JLabel getAboutVersionLabel() {
 		if (aboutVersionLabel == null) {
 			aboutVersionLabel = new JLabel();
-			aboutVersionLabel
-					.setText("    osu! Storyboard Script Editor v. 1.0.1    ");
+			aboutVersionLabel.setText("    osu! Storyboard Script Editor v. 1.0.1    ");
 			aboutVersionLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		}
 		return aboutVersionLabel;
-	}
-
-	/**
-	 * This method initializes jMenuItem
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getCutMenuItem() {
-		if (cutMenuItem == null) {
-			cutMenuItem = new JMenuItem();
-			cutMenuItem.setText("Cut");
-			cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-					Event.CTRL_MASK, true));
-			cutMenuItem.addActionListener(new java.awt.event.ActionListener() {
-				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					fileContentArea.cut();
-				}
-			});
-		}
-		return cutMenuItem;
-	}
-
-	/**
-	 * This method initializes jMenuItem
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getCopyMenuItem() {
-		if (copyMenuItem == null) {
-			copyMenuItem = new JMenuItem();
-			copyMenuItem.setText("Copy");
-			copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-					Event.CTRL_MASK, true));
-			copyMenuItem.addActionListener(new java.awt.event.ActionListener() {
-				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					fileContentArea.copy();
-				}
-			});
-		}
-		return copyMenuItem;
-	}
-
-	/**
-	 * This method initializes jMenuItem
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getPasteMenuItem() {
-		if (pasteMenuItem == null) {
-			pasteMenuItem = new JMenuItem();
-			pasteMenuItem.setText("Paste");
-			pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-					Event.CTRL_MASK, true));
-			pasteMenuItem
-					.addActionListener(new java.awt.event.ActionListener() {
-						@Override
-						public void actionPerformed(java.awt.event.ActionEvent e) {
-							fileContentArea.paste();
-						}
-					});
-		}
-		return pasteMenuItem;
-	}
-
-	/**
-	 * This method initializes jMenuItem
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getSaveMenuItem() {
-		if (saveMenuItem == null) {
-			saveMenuItem = new JMenuItem();
-			saveMenuItem.setText("Save");
-			saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-					Event.CTRL_MASK, true));
-			saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
-				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (currentFile == null) {
-						// Show save-dialog
-						JFileChooser fc = new JFileChooser(lastPath);
-						int rc = fc.showDialog(getJFrame(), "Save");
-						if (rc == JFileChooser.APPROVE_OPTION) {
-							File file = fc.getSelectedFile();
-							try {
-								currentFile = file;
-								lastPath = file.getParentFile()
-										.getAbsolutePath();
-								// Saves the file
-								FileOutputStream fstream = new FileOutputStream(
-										currentFile);
-								fstream.write(fileContentArea.getText()
-										.getBytes());
-								fstream.close();
-								jFrame.setTitle("osu! Storyboard Script Editor - "
-										+ file.getName() + " - saved");
-								// Unlocks the file
-								file.setReadable(true);
-								file.setWritable(true);
-								saved = true;
-							} catch (FileNotFoundException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-
-						}
-					} else {
-						try {
-							// Saves the file directly
-							FileOutputStream fstream = new FileOutputStream(
-									currentFile);
-							fstream.write(fileContentArea.getText().getBytes());
-							fstream.close();
-							jFrame.setTitle("osu! Storyboard Script Editor - "
-									+ currentFile.getName() + " - saved");
-							// Unlocks the file
-							currentFile.setReadable(true);
-							currentFile.setWritable(true);
-							saved = true;
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-
-				}
-			});
-		}
-		return saveMenuItem;
-	}
-
-	/**
-	 * This method initializes fileContentScroll
-	 * 
-	 * @return javax.swing.JScrollPane
-	 */
-	private RTextScrollPane getFileContentScroll() {
-		if (fileContentScroll == null) {
-			fileContentScroll = new RTextScrollPane();
-			fileContentScroll.setViewportView(getFileContentArea());
-			fileContentScroll.setLineNumbersEnabled(true);
-		}
-		return fileContentScroll;
-	}
-
-	/**
-	 * This method initializes fileContentArea
-	 * 
-	 * @return org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-	 */
-	private RSyntaxTextArea getFileContentArea() {
-		if (fileContentArea == null) {
-			fileContentArea = new RSyntaxTextArea();
-			/*
-			 * Note: At this point, I set my syntax highlighter for osu files.
-			 * It was created with the TokenTokenMaker, so it's not that
-			 * perfect.
-			 */
-			fileContentArea
-					.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_OSU);
-
-			// If the application should open a file on startup
-			if (openFile != null) {
-				FileReader fr = null;
-				try {
-					fr = new FileReader(openFile);
-					fileContentArea.read(fr, null);
-					File file = new File(openFile);
-					currentFile = file;
-					lastPath = file.getParentFile().getAbsolutePath();
-					jFrame.setTitle("osu! Storyboard Script Editor - "
-							+ file.getName());
-				} catch (FileNotFoundException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-			}
-			fileContentArea.addKeyListener(new java.awt.event.KeyAdapter() {
-				@Override
-				public void keyTyped(java.awt.event.KeyEvent e) {
-					// Just to delete (saved) in the title, if changes were made
-					if (saved) {
-						jFrame.setTitle("osu! Storyboard Script Editor - "
-								+ currentFile.getName());
-						saved = false;
-					}
-				}
-			});
-		}
-
-		return fileContentArea;
-
-	}
-
-	/**
-	 * This method initializes StatusBar
-	 * 
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getStatusBar() {
-		if (StatusBar == null) {
-			GridLayout gridLayout = new GridLayout();
-			gridLayout.setRows(1);
-			gridLayout.setHgap(10);
-			gridLayout.setVgap(0);
-			gridLayout.setColumns(5);
-			labelBPM = new JLabel();
-			labelBPM.setText("BPM: 100 (default)");
-			StatusBar = new JPanel();
-			StatusBar.setLayout(gridLayout);
-			StatusBar.add(labelBPM, null);
-
-		}
-		return StatusBar;
-	}
-
-	/**
-	 * This method initializes openMenuItem
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getOpenMenuItem() {
-		if (openMenuItem == null) {
-			openMenuItem = new JMenuItem();
-			openMenuItem.setText("Open");
-			openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-					Event.CTRL_MASK, true));
-
-			openMenuItem.addActionListener(new java.awt.event.ActionListener() {
-				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					// Show the open dialog
-					JFileChooser fc = new JFileChooser(lastPath);
-					int rc = fc.showDialog(getJFrame(), "Open");
-					if (rc == JFileChooser.APPROVE_OPTION) {
-						File file = fc.getSelectedFile();
-						lastPath = file.getParentFile().getAbsolutePath();
-						try {
-							// Read the file
-							fileContentArea.read(new FileReader(file), null);
-							currentFile = file;
-							jFrame.setTitle("osu! Storyboard Script Editor - "
-									+ file.getName());
-						} catch (FileNotFoundException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-
-					}
-				}
-			});
-		}
-		return openMenuItem;
-	}
-
-	/**
-	 * This method initializes toolBar
-	 * 
-	 * @return JPanel
-	 */
-	private JPanel getToolBar() {
-		if (toolBar == null) {
-			labeltickInfo = new JLabel();
-			labeltickInfo.setText("");
-			labelMeasure = new JLabel();
-			labelMeasure.setText("measures");
-			labelms = new JLabel();
-			labelms.setText("ms / ");
-			toolBar = new JPanel();
-			toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 4, 4));
-			toolBar.add(getToolTimeSetSlider(), getToolTimeSetSlider()
-					.getName());
-			toolBar.add(getToolTimeSetField());
-			toolBar.add(labelms);
-			toolBar.add(getToolMeasureSetField(), null);
-			toolBar.add(labelMeasure, null);
-			toolBar.add(getToolNextButton());
-			toolBar.add(labeltickInfo, null);
-
-		}
-		return toolBar;
-	}
-
-	/**
-	 * This method initializes toolTimeSetSlider
-	 * 
-	 * @return javax.swing.JSlider
-	 */
-	private JSlider getToolTimeSetSlider() {
-		if (toolTimeSetSlider == null) {
-			toolTimeSetSlider = new JSlider(-10, 10);
-			toolTimeSetSlider.setPreferredSize(new Dimension(300, 35));
-			toolTimeSetSlider.setPaintTicks(true);
-			toolTimeSetSlider.setMinorTickSpacing(1);
-			toolTimeSetSlider.setSnapToTicks(true);
-
-			toolTimeSetSlider
-					.addChangeListener(new javax.swing.event.ChangeListener() {
-						@Override
-						public void stateChanged(javax.swing.event.ChangeEvent e) {
-							// If the slider changed, make some calculation and
-							// show ms/measures
-							float measure = getMeasureFromSlider(toolTimeSetSlider
-									.getValue());
-							toolMeasureSetField.setText(String.valueOf(measure));
-							int ms = convertMeasuresToMs(measure);
-							toolTimeSetField.setText(String.valueOf(ms));
-						}
-
-					});
-
-		}
-		return toolTimeSetSlider;
-	}
-
-	/**
-	 * This method initializes toolTimeSetField
-	 * 
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getToolTimeSetField() {
-		if (toolTimeSetField == null) {
-			toolTimeSetField = new JTextField();
-			toolTimeSetField.setPreferredSize(new Dimension(80, 24));
-			toolTimeSetField.setHorizontalAlignment(SwingConstants.RIGHT);
-			toolTimeSetField.setText("0");
-			toolTimeSetField.addKeyListener(new java.awt.event.KeyAdapter() {
-				@Override
-				public void keyReleased(java.awt.event.KeyEvent e) {
-					// If the ms-field content changed, make some calculation
-					// and show measures
-					int ms = Integer.parseInt(toolTimeSetField.getText());
-					float measure = convertMsToMeasures(ms);
-					DecimalFormat df = new DecimalFormat("0.####");
-					toolMeasureSetField.setText(df.format(measure));
-				}
-
-			});
-		}
-		return toolTimeSetField;
-	}
-
-	/**
-	 * This method initializes toolNextButton
-	 * 
-	 * @return javax.swing.JButton
-	 */
-	private JButton getToolNextButton() {
-		if (toolNextButton == null) {
-			toolNextButton = new JButton();
-			toolNextButton.setText("Shift");
-			toolNextButton.setToolTipText("Shift the marked Lines in Time");
-			toolNextButton
-					.addActionListener(new java.awt.event.ActionListener() {
-						@Override
-						public void actionPerformed(java.awt.event.ActionEvent e) {
-							if (fileContentArea.getSelectedText() != null) {
-								// Shift marked lines on click
-								shiftLines();
-							}
-						}
-
-					});
-		}
-		return toolNextButton;
-	}
-
-	/**
-	 * This method initializes optionsMenu
-	 * 
-	 * @return javax.swing.JMenu
-	 */
-	private JMenu getOptionsMenu() {
-		if (optionsMenu == null) {
-			optionsMenu = new JMenu();
-			optionsMenu.setText("Options");
-			optionsMenu.add(getBpmMenuItem());
-		}
-		return optionsMenu;
-	}
-
-	/**
-	 * This method initializes bpmMenuItem
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getBpmMenuItem() {
-		if (bpmMenuItem == null) {
-			bpmMenuItem = new JMenuItem();
-			bpmMenuItem.setText("Set Map's BPM");
-			bpmMenuItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					bpmDialog = getBpmDialog();
-					bpmDialog.pack();
-					Point loc = getJFrame().getLocation();
-					loc.translate(getJFrame().getWidth() / 2 - 20, getJFrame()
-							.getHeight() / 2 - 20);
-					bpmDialog.setLocation(loc);
-					bpmDialog.setVisible(true);
-				}
-			});
-		}
-		return bpmMenuItem;
-	}
-
-	/**
-	 * This method initializes toolMeasureSetField
-	 * 
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getToolMeasureSetField() {
-		if (toolMeasureSetField == null) {
-			toolMeasureSetField = new JTextField();
-			toolMeasureSetField.setPreferredSize(new Dimension(60, 24));
-			toolMeasureSetField.setHorizontalAlignment(SwingConstants.RIGHT);
-			toolMeasureSetField.setText("0");
-			toolMeasureSetField.addKeyListener(new java.awt.event.KeyAdapter() {
-				@Override
-				public void keyReleased(java.awt.event.KeyEvent e) {
-					// If the measure-field content changed, make some
-					// calculation and show ms
-					float measure = Float.parseFloat(toolMeasureSetField
-							.getText());
-					int ms = convertMeasuresToMs(measure);
-					toolTimeSetField.setText(String.valueOf(ms));
-				}
-
-			});
-		}
-		return toolMeasureSetField;
-	}
-
-	/**
-	 * This method initializes bpmDialog
-	 * 
-	 * @return javax.swing.JPanel
-	 */
-	private JDialog getBpmDialog() {
-		if (bpmDialog == null) {
-			bpmDialog = new JDialog(getJFrame(), true);
-			bpmDialog.setTitle("Set Map's BPM");
-			bpmDialog.setSize(200, 74);
-			bpmDialog.setContentPane(getBpmContentPane());
-		}
-		return bpmDialog;
 	}
 
 	/**
@@ -796,18 +258,42 @@ public class OldGUI {
 	}
 
 	/**
-	 * This method initializes bpmSetField
+	 * This method initializes bpmDialog
 	 * 
-	 * @return javax.swing.JTextField
+	 * @return javax.swing.JPanel
 	 */
-	private JTextField getBpmSetField() {
-		if (bpmSetField == null) {
-			bpmSetField = new JTextField();
-			bpmSetField.setPreferredSize(new Dimension(60, 25));
-			bpmSetField.setText(Float.toString(bpm));
-			bpmSetField.setHorizontalAlignment(SwingConstants.RIGHT);
+	private JDialog getBpmDialog() {
+		if (bpmDialog == null) {
+			bpmDialog = new JDialog(getJFrame(), true);
+			bpmDialog.setTitle("Set Map's BPM");
+			bpmDialog.setSize(200, 74);
+			bpmDialog.setContentPane(getBpmContentPane());
 		}
-		return bpmSetField;
+		return bpmDialog;
+	}
+
+	/**
+	 * This method initializes bpmMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	private JMenuItem getBpmMenuItem() {
+		if (bpmMenuItem == null) {
+			bpmMenuItem = new JMenuItem();
+			bpmMenuItem.setText("Set Map's BPM");
+			bpmMenuItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					bpmDialog = getBpmDialog();
+					bpmDialog.pack();
+					Point loc = getJFrame().getLocation();
+					loc.translate(getJFrame().getWidth() / 2 - 20, getJFrame().getHeight() / 2 - 20);
+					bpmDialog.setLocation(loc);
+					bpmDialog.setVisible(true);
+				}
+			});
+		}
+		return bpmMenuItem;
 	}
 
 	/**
@@ -827,11 +313,9 @@ public class OldGUI {
 						labelBPM.setText("BPM: " + bpm);
 						bpmDialog.dispose();
 					} catch (NumberFormatException e2) {
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Number must be in Format XXX or XXX.XXX, e.g. 120 or 120.354",
-										"Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null,
+								"Number must be in Format XXX or XXX.XXX, e.g. 120 or 120.354",
+								"Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			});
@@ -840,120 +324,248 @@ public class OldGUI {
 	}
 
 	/**
-	 * This method initializes undoMenuItem
+	 * This method initializes bpmSetField
+	 * 
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getBpmSetField() {
+		if (bpmSetField == null) {
+			bpmSetField = new JTextField();
+			bpmSetField.setPreferredSize(new Dimension(60, 25));
+			bpmSetField.setText(Float.toString(bpm));
+			bpmSetField.setHorizontalAlignment(SwingConstants.RIGHT);
+		}
+		return bpmSetField;
+	}
+
+	/**
+	 * This method initializes jMenuItem
 	 * 
 	 * @return javax.swing.JMenuItem
 	 */
-	private JMenuItem getUndoMenuItem() {
-		if (undoMenuItem == null) {
-			undoMenuItem = new JMenuItem();
-			undoMenuItem.setText("Undo");
-			undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
-					Event.CTRL_MASK, true));
-			undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+	private JMenuItem getCopyMenuItem() {
+		if (copyMenuItem == null) {
+			copyMenuItem = new JMenuItem();
+			copyMenuItem.setText("Copy");
+			copyMenuItem.setAccelerator(KeyStroke
+					.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK, true));
+			copyMenuItem.addActionListener(new java.awt.event.ActionListener() {
 				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					fileContentArea.undoLastAction();
+					fileContentArea.copy();
 				}
 			});
 		}
-		return undoMenuItem;
+		return copyMenuItem;
 	}
 
 	/**
-	 * This method initializes redoMenuItem
+	 * This method initializes jMenuItem
 	 * 
 	 * @return javax.swing.JMenuItem
 	 */
-	private JMenuItem getRedoMenuItem() {
-		if (redoMenuItem == null) {
-			redoMenuItem = new JMenuItem();
-			redoMenuItem.setText("Redo");
-			redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
-					Event.CTRL_MASK, true));
-			redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+	private JMenuItem getCutMenuItem() {
+		if (cutMenuItem == null) {
+			cutMenuItem = new JMenuItem();
+			cutMenuItem.setText("Cut");
+			cutMenuItem
+					.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK, true));
+			cutMenuItem.addActionListener(new java.awt.event.ActionListener() {
 				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					fileContentArea.redoLastAction();
+					fileContentArea.cut();
 				}
 			});
 		}
-		return redoMenuItem;
+		return cutMenuItem;
 	}
 
 	/**
-	 * This method initializes saveAsMenuItem
+	 * This method initializes jMenu
+	 * 
+	 * @return javax.swing.JMenu
+	 */
+	private JMenu getEditMenu() {
+		if (editMenu == null) {
+			editMenu = new JMenu();
+			editMenu.setText("Edit");
+			editMenu.add(getUndoMenuItem());
+			editMenu.add(getRedoMenuItem());
+			editMenu.addSeparator();
+			editMenu.add(getCutMenuItem());
+			editMenu.add(getCopyMenuItem());
+			editMenu.add(getPasteMenuItem());
+		}
+		return editMenu;
+	}
+
+	/**
+	 * This method initializes jMenuItem
 	 * 
 	 * @return javax.swing.JMenuItem
 	 */
-	private JMenuItem getSaveAsMenuItem() {
-		if (saveAsMenuItem == null) {
-			saveAsMenuItem = new JMenuItem();
-			saveAsMenuItem.setText("Save As...");
-			saveAsMenuItem
-					.addActionListener(new java.awt.event.ActionListener() {
-						@Override
-						public void actionPerformed(java.awt.event.ActionEvent e) {
-							// Show save-dialog
-							JFileChooser fc = new JFileChooser(lastPath);
-							int rc = fc.showDialog(getJFrame(), "Save");
-							if (rc == JFileChooser.APPROVE_OPTION) {
-								File file = fc.getSelectedFile();
-								lastPath = file.getParentFile()
-										.getAbsolutePath();
-								try {
-									// Saves the file
-									fileContentArea.write(new FileWriter(
-											currentFile));
-									currentFile = file;
-									jFrame.setTitle("osu! Storyboard Script Editor - "
-											+ file.getName() + " - saved");
-									saved = true;
-									// Unlocks the file
-									file.setReadable(true);
-									file.setWritable(true);
-								} catch (FileNotFoundException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								} catch (IOException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-
-							}
-
-						}
-					});
-
+	private JMenuItem getExitMenuItem() {
+		if (exitMenuItem == null) {
+			exitMenuItem = new JMenuItem();
+			exitMenuItem.setText("Exit");
+			exitMenuItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.exit(0);
+				}
+			});
 		}
-		return saveAsMenuItem;
+		return exitMenuItem;
 	}
 
 	/**
-	 * Launches this application
+	 * This method initializes fileContentArea
+	 * 
+	 * @return org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 	 */
-	public static void main(final String[] args) {
+	private RSyntaxTextArea getFileContentArea() {
+		if (fileContentArea == null) {
+			fileContentArea = new RSyntaxTextArea();
+			/*
+			 * Note: At this point, I set my syntax highlighter for osu files.
+			 * It was created with the TokenTokenMaker, so it's not that
+			 * perfect.
+			 */
+			fileContentArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_OSU);
 
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				OldGUI application;
+			// If the application should open a file on startup
+			if (openFile != null) {
+				FileReader fr = null;
 				try {
-					// If a file should be opened with this application
-					application = new OldGUI(args[0]);
-				} catch (Exception ex) {
-					// Normal startup (I know this isn't the best way to do it
-					// ;)
-					application = new OldGUI();
+					fr = new FileReader(openFile);
+					fileContentArea.read(fr, null);
+					File file = new File(openFile);
+					currentFile = file;
+					lastPath = file.getParentFile().getAbsolutePath();
+					jFrame.setTitle("osu! Storyboard Script Editor - " + file.getName());
+				} catch (FileNotFoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 
-				application.getJFrame().setVisible(true);
 			}
-		});
+			fileContentArea.addKeyListener(new java.awt.event.KeyAdapter() {
+				@Override
+				public void keyTyped(java.awt.event.KeyEvent e) {
+					// Just to delete (saved) in the title, if changes were made
+					if (saved) {
+						jFrame.setTitle("osu! Storyboard Script Editor - " + currentFile.getName());
+						saved = false;
+					}
+				}
+			});
+		}
+
+		return fileContentArea;
 
 	}
 
-	/* Other Functions */
+	/**
+	 * This method initializes fileContentScroll
+	 * 
+	 * @return javax.swing.JScrollPane
+	 */
+	private RTextScrollPane getFileContentScroll() {
+		if (fileContentScroll == null) {
+			fileContentScroll = new RTextScrollPane();
+			fileContentScroll.setViewportView(getFileContentArea());
+			fileContentScroll.setLineNumbersEnabled(true);
+		}
+		return fileContentScroll;
+	}
+
+	/**
+	 * This method initializes jMenu
+	 * 
+	 * @return javax.swing.JMenu
+	 */
+	private JMenu getFileMenu() {
+		if (fileMenu == null) {
+			fileMenu = new JMenu();
+			fileMenu.setText("File");
+			fileMenu.add(getOpenMenuItem());
+			fileMenu.add(getSaveMenuItem());
+			fileMenu.add(getSaveAsMenuItem());
+			fileMenu.add(getExitMenuItem());
+		}
+		return fileMenu;
+	}
+
+	/**
+	 * This method initializes jMenu
+	 * 
+	 * @return javax.swing.JMenu
+	 */
+	private JMenu getHelpMenu() {
+		if (helpMenu == null) {
+			helpMenu = new JMenu();
+			helpMenu.setText("Help");
+			helpMenu.add(getAboutMenuItem());
+		}
+		return helpMenu;
+	}
+
+	/**
+	 * This method initializes jContentPane
+	 * 
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJContentPane() {
+		if (jContentPane == null) {
+			BorderLayout borderLayout = new BorderLayout();
+			borderLayout.setHgap(2);
+			jContentPane = new JPanel();
+			jContentPane.setLayout(borderLayout);
+			jContentPane.add(getFileContentScroll(), BorderLayout.CENTER);
+			jContentPane.add(getStatusBar(), BorderLayout.SOUTH);
+			jContentPane.add(getToolBar(), BorderLayout.NORTH);
+		}
+		return jContentPane;
+	}
+
+	/**
+	 * This method initializes jFrame
+	 * 
+	 * @return javax.swing.JFrame
+	 */
+	public JFrame getJFrame() {
+		if (jFrame == null) {
+			jFrame = new JFrame();
+			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			jFrame.setJMenuBar(getJJMenuBar());
+			jFrame.setSize(800, 600);
+			jFrame.setLocationByPlatform(true);
+			jFrame.setContentPane(getJContentPane());
+
+			jFrame.setTitle("osu! Storyboard Script Editor");
+		}
+
+		return jFrame;
+	}
+
+	/**
+	 * This method initializes jJMenuBar
+	 * 
+	 * @return javax.swing.JMenuBar
+	 */
+	private JMenuBar getJJMenuBar() {
+		if (jJMenuBar == null) {
+			jJMenuBar = new JMenuBar();
+			jJMenuBar.add(getFileMenu());
+			jJMenuBar.add(getEditMenu());
+			jJMenuBar.add(getOptionsMenu());
+			jJMenuBar.add(getHelpMenu());
+		}
+		return jJMenuBar;
+	}
 
 	/**
 	 * Show the amount of ticks, returns the amount of measures
@@ -1002,8 +614,7 @@ public class OldGUI {
 		}
 
 		if (slider >= 7) {
-			labeltickInfo.setText("Shift by " + (slider - 6) * 4
-					+ " white ticks");
+			labeltickInfo.setText("Shift by " + (slider - 6) * 4 + " white ticks");
 			return slider - 6;
 		}
 		labeltickInfo.setText("Shift by " + (slider + 6) * 4 + " white ticks");
@@ -1011,37 +622,390 @@ public class OldGUI {
 	}
 
 	/**
-	 * Converts measures to milliseconds
+	 * This method initializes openMenuItem
 	 * 
-	 * @param measures
-	 * @return ms
+	 * @return javax.swing.JMenuItem
 	 */
-	private int convertMeasuresToMs(float measure) {
-		double temp = 60000 * 4 * measure;
-		return (int) Math.round(temp / bpm);
+	private JMenuItem getOpenMenuItem() {
+		if (openMenuItem == null) {
+			openMenuItem = new JMenuItem();
+			openMenuItem.setText("Open");
+			openMenuItem.setAccelerator(KeyStroke
+					.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK, true));
+
+			openMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				@Override
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					// Show the open dialog
+					JFileChooser fc = new JFileChooser(lastPath);
+					int rc = fc.showDialog(getJFrame(), "Open");
+					if (rc == JFileChooser.APPROVE_OPTION) {
+						File file = fc.getSelectedFile();
+						lastPath = file.getParentFile().getAbsolutePath();
+						try {
+							// Read the file
+							fileContentArea.read(new FileReader(file), null);
+							currentFile = file;
+							jFrame.setTitle("osu! Storyboard Script Editor - " + file.getName());
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+
+					}
+				}
+			});
+		}
+		return openMenuItem;
 	}
 
 	/**
-	 * Converts milliseconds to measures
+	 * This method initializes optionsMenu
 	 * 
-	 * @param ms
-	 * @return measures
+	 * @return javax.swing.JMenu
 	 */
-	private float convertMsToMeasures(int ms) {
-		// TODO Auto-generated method stub
-		return ms * 1.0f * bpm / (60000 * 4);
+	private JMenu getOptionsMenu() {
+		if (optionsMenu == null) {
+			optionsMenu = new JMenu();
+			optionsMenu.setText("Options");
+			optionsMenu.add(getBpmMenuItem());
+		}
+		return optionsMenu;
 	}
 
-	private void shiftLines() {
-		int ms = Integer.parseInt(toolTimeSetField.getText());
-		String shiftedCommands = shiftCommands(ms);
-		// fileContentArea.setText(newtext);
-		int selstart = fileContentArea.getSelectionStart();
-		int selend = fileContentArea.getSelectionEnd();
-		fileContentArea.replaceRange(shiftedCommands,
-				fileContentArea.getSelectionStart(),
-				fileContentArea.getSelectionEnd());
-		fileContentArea.select(selstart, selend);
+	/**
+	 * This method initializes jMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	private JMenuItem getPasteMenuItem() {
+		if (pasteMenuItem == null) {
+			pasteMenuItem = new JMenuItem();
+			pasteMenuItem.setText("Paste");
+			pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK,
+					true));
+			pasteMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				@Override
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					fileContentArea.paste();
+				}
+			});
+		}
+		return pasteMenuItem;
+	}
+
+	/**
+	 * This method initializes redoMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	private JMenuItem getRedoMenuItem() {
+		if (redoMenuItem == null) {
+			redoMenuItem = new JMenuItem();
+			redoMenuItem.setText("Redo");
+			redoMenuItem.setAccelerator(KeyStroke
+					.getKeyStroke(KeyEvent.VK_Y, Event.CTRL_MASK, true));
+			redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				@Override
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					fileContentArea.redoLastAction();
+				}
+			});
+		}
+		return redoMenuItem;
+	}
+
+	/**
+	 * This method initializes saveAsMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	private JMenuItem getSaveAsMenuItem() {
+		if (saveAsMenuItem == null) {
+			saveAsMenuItem = new JMenuItem();
+			saveAsMenuItem.setText("Save As...");
+			saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				@Override
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					// Show save-dialog
+					JFileChooser fc = new JFileChooser(lastPath);
+					int rc = fc.showDialog(getJFrame(), "Save");
+					if (rc == JFileChooser.APPROVE_OPTION) {
+						File file = fc.getSelectedFile();
+						lastPath = file.getParentFile().getAbsolutePath();
+						try {
+							// Saves the file
+							fileContentArea.write(new FileWriter(currentFile));
+							currentFile = file;
+							jFrame.setTitle("osu! Storyboard Script Editor - " + file.getName()
+									+ " - saved");
+							saved = true;
+							// Unlocks the file
+							file.setReadable(true);
+							file.setWritable(true);
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+
+					}
+
+				}
+			});
+
+		}
+		return saveAsMenuItem;
+	}
+
+	/**
+	 * This method initializes jMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	private JMenuItem getSaveMenuItem() {
+		if (saveMenuItem == null) {
+			saveMenuItem = new JMenuItem();
+			saveMenuItem.setText("Save");
+			saveMenuItem.setAccelerator(KeyStroke
+					.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK, true));
+			saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				@Override
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					if (currentFile == null) {
+						// Show save-dialog
+						JFileChooser fc = new JFileChooser(lastPath);
+						int rc = fc.showDialog(getJFrame(), "Save");
+						if (rc == JFileChooser.APPROVE_OPTION) {
+							File file = fc.getSelectedFile();
+							try {
+								currentFile = file;
+								lastPath = file.getParentFile().getAbsolutePath();
+								// Saves the file
+								FileOutputStream fstream = new FileOutputStream(currentFile);
+								fstream.write(fileContentArea.getText().getBytes());
+								fstream.close();
+								jFrame.setTitle("osu! Storyboard Script Editor - " + file.getName()
+										+ " - saved");
+								// Unlocks the file
+								file.setReadable(true);
+								file.setWritable(true);
+								saved = true;
+							} catch (FileNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+
+						}
+					} else {
+						try {
+							// Saves the file directly
+							FileOutputStream fstream = new FileOutputStream(currentFile);
+							fstream.write(fileContentArea.getText().getBytes());
+							fstream.close();
+							jFrame.setTitle("osu! Storyboard Script Editor - "
+									+ currentFile.getName() + " - saved");
+							// Unlocks the file
+							currentFile.setReadable(true);
+							currentFile.setWritable(true);
+							saved = true;
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+
+				}
+			});
+		}
+		return saveMenuItem;
+	}
+
+	/**
+	 * This method initializes StatusBar
+	 * 
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getStatusBar() {
+		if (StatusBar == null) {
+			GridLayout gridLayout = new GridLayout();
+			gridLayout.setRows(1);
+			gridLayout.setHgap(10);
+			gridLayout.setVgap(0);
+			gridLayout.setColumns(5);
+			labelBPM = new JLabel();
+			labelBPM.setText("BPM: 100 (default)");
+			StatusBar = new JPanel();
+			StatusBar.setLayout(gridLayout);
+			StatusBar.add(labelBPM, null);
+
+		}
+		return StatusBar;
+	}
+
+	/**
+	 * This method initializes toolBar
+	 * 
+	 * @return JPanel
+	 */
+	private JPanel getToolBar() {
+		if (toolBar == null) {
+			labeltickInfo = new JLabel();
+			labeltickInfo.setText("");
+			labelMeasure = new JLabel();
+			labelMeasure.setText("measures");
+			labelms = new JLabel();
+			labelms.setText("ms / ");
+			toolBar = new JPanel();
+			toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 4, 4));
+			toolBar.add(getToolTimeSetSlider(), getToolTimeSetSlider().getName());
+			toolBar.add(getToolTimeSetField());
+			toolBar.add(labelms);
+			toolBar.add(getToolMeasureSetField(), null);
+			toolBar.add(labelMeasure, null);
+			toolBar.add(getToolNextButton());
+			toolBar.add(labeltickInfo, null);
+
+		}
+		return toolBar;
+	}
+
+	/**
+	 * This method initializes toolMeasureSetField
+	 * 
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getToolMeasureSetField() {
+		if (toolMeasureSetField == null) {
+			toolMeasureSetField = new JTextField();
+			toolMeasureSetField.setPreferredSize(new Dimension(60, 24));
+			toolMeasureSetField.setHorizontalAlignment(SwingConstants.RIGHT);
+			toolMeasureSetField.setText("0");
+			toolMeasureSetField.addKeyListener(new java.awt.event.KeyAdapter() {
+				@Override
+				public void keyReleased(java.awt.event.KeyEvent e) {
+					// If the measure-field content changed, make some
+					// calculation and show ms
+					float measure = Float.parseFloat(toolMeasureSetField.getText());
+					int ms = convertMeasuresToMs(measure);
+					toolTimeSetField.setText(String.valueOf(ms));
+				}
+
+			});
+		}
+		return toolMeasureSetField;
+	}
+
+	/**
+	 * This method initializes toolNextButton
+	 * 
+	 * @return javax.swing.JButton
+	 */
+	private JButton getToolNextButton() {
+		if (toolNextButton == null) {
+			toolNextButton = new JButton();
+			toolNextButton.setText("Shift");
+			toolNextButton.setToolTipText("Shift the marked Lines in Time");
+			toolNextButton.addActionListener(new java.awt.event.ActionListener() {
+				@Override
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					if (fileContentArea.getSelectedText() != null) {
+						// Shift marked lines on click
+						shiftLines();
+					}
+				}
+
+			});
+		}
+		return toolNextButton;
+	}
+
+	/* Other Functions */
+
+	/**
+	 * This method initializes toolTimeSetField
+	 * 
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getToolTimeSetField() {
+		if (toolTimeSetField == null) {
+			toolTimeSetField = new JTextField();
+			toolTimeSetField.setPreferredSize(new Dimension(80, 24));
+			toolTimeSetField.setHorizontalAlignment(SwingConstants.RIGHT);
+			toolTimeSetField.setText("0");
+			toolTimeSetField.addKeyListener(new java.awt.event.KeyAdapter() {
+				@Override
+				public void keyReleased(java.awt.event.KeyEvent e) {
+					// If the ms-field content changed, make some calculation
+					// and show measures
+					int ms = Integer.parseInt(toolTimeSetField.getText());
+					float measure = convertMsToMeasures(ms);
+					DecimalFormat df = new DecimalFormat("0.####");
+					toolMeasureSetField.setText(df.format(measure));
+				}
+
+			});
+		}
+		return toolTimeSetField;
+	}
+
+	/**
+	 * This method initializes toolTimeSetSlider
+	 * 
+	 * @return javax.swing.JSlider
+	 */
+	private JSlider getToolTimeSetSlider() {
+		if (toolTimeSetSlider == null) {
+			toolTimeSetSlider = new JSlider(-10, 10);
+			toolTimeSetSlider.setPreferredSize(new Dimension(300, 35));
+			toolTimeSetSlider.setPaintTicks(true);
+			toolTimeSetSlider.setMinorTickSpacing(1);
+			toolTimeSetSlider.setSnapToTicks(true);
+
+			toolTimeSetSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+				@Override
+				public void stateChanged(javax.swing.event.ChangeEvent e) {
+					// If the slider changed, make some calculation and
+					// show ms/measures
+					float measure = getMeasureFromSlider(toolTimeSetSlider.getValue());
+					toolMeasureSetField.setText(String.valueOf(measure));
+					int ms = convertMeasuresToMs(measure);
+					toolTimeSetField.setText(String.valueOf(ms));
+				}
+
+			});
+
+		}
+		return toolTimeSetSlider;
+	}
+
+	/**
+	 * This method initializes undoMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	private JMenuItem getUndoMenuItem() {
+		if (undoMenuItem == null) {
+			undoMenuItem = new JMenuItem();
+			undoMenuItem.setText("Undo");
+			undoMenuItem.setAccelerator(KeyStroke
+					.getKeyStroke(KeyEvent.VK_Z, Event.CTRL_MASK, true));
+			undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				@Override
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					fileContentArea.undoLastAction();
+				}
+			});
+		}
+		return undoMenuItem;
 	}
 
 	private String shiftCommands(int ms) {
@@ -1075,8 +1039,7 @@ public class OldGUI {
 				}
 				if (shift) {
 					try {
-						parts[b] = String
-								.valueOf((Integer.parseInt(parts[b]) + ms));
+						parts[b] = String.valueOf((Integer.parseInt(parts[b]) + ms));
 					} catch (Exception ex) {
 						// not interesting
 					}
@@ -1089,6 +1052,17 @@ public class OldGUI {
 		}
 		newtext = newtext.substring(0, newtext.length() - 1);
 		return newtext;
+	}
+
+	private void shiftLines() {
+		int ms = Integer.parseInt(toolTimeSetField.getText());
+		String shiftedCommands = shiftCommands(ms);
+		// fileContentArea.setText(newtext);
+		int selstart = fileContentArea.getSelectionStart();
+		int selend = fileContentArea.getSelectionEnd();
+		fileContentArea.replaceRange(shiftedCommands, fileContentArea.getSelectionStart(),
+				fileContentArea.getSelectionEnd());
+		fileContentArea.select(selstart, selend);
 	}
 
 }

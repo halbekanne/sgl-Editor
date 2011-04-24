@@ -16,6 +16,9 @@
  */
 package de.moonshade.osbe;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
 /**
  * @author Dominik Halfkann
  * 
@@ -27,6 +30,18 @@ public class Run {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
+		java.io.FileOutputStream outstream = null;
+		try {
+			outstream = new java.io.FileOutputStream("error.txt");
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		System.setErr(new PrintStream(outstream));
+		System.setOut(new PrintStream(outstream));
+		
 		Main main = new Main();
 		main.start(args);
 	}

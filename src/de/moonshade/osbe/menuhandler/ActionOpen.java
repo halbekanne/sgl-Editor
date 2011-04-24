@@ -9,7 +9,7 @@
  * 
  * Contributors:
  *     Dominik Halfkann
- */
+*/
 
 package de.moonshade.osbe.menuhandler;
 

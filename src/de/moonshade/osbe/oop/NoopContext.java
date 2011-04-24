@@ -13,13 +13,10 @@
 
 package de.moonshade.osbe.oop;
 
-import de.moonshade.osbe.oop.exception.GeneratorException;
+public class NoopContext extends Context {
 
-public abstract class CodeItem extends Context {
-
-	protected String content;
-
-	public void analyse() throws GeneratorException {
+	public NoopContext(Context context) {
+		this.parentContext = context;
 	}
 
 }

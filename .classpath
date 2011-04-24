@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_22"/>
-	<classpathentry kind="lib" path="ext/jRegistryKey.dll"/>
-	<classpathentry kind="lib" path="ext/jRegistryKey.jar"/>
-	<classpathentry kind="lib" path="ext/rsyntaxtextarea.jar"/>
-	<classpathentry kind="lib" path="ext/autocomplete.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://javadoc.fifesoft.com/autocomplete/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_20"/>
+	<classpathentry exported="true" kind="lib" path="lib/autocomplete.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/rsyntaxtextarea.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
