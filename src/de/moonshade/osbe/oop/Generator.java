@@ -28,6 +28,8 @@ import de.moonshade.osbe.Main;
 import de.moonshade.osbe.gui.GUI;
 import de.moonshade.osbe.oop.block.IfCondition;
 import de.moonshade.osbe.oop.block.Loop;
+import de.moonshade.osbe.oop.block.Method;
+import de.moonshade.osbe.oop.block.NoopBlock;
 import de.moonshade.osbe.oop.block.TimeBlock;
 import de.moonshade.osbe.oop.exception.GeneratorException;
 import de.moonshade.osbe.oop.exception.ParserException;
@@ -36,56 +38,46 @@ import de.moonshade.osbe.oop.line.StaticMethod;
 import de.moonshade.osbe.oop.line.VariableDefinition;
 
 public class Generator {
-	
-	
-	public static boolean encodeBooleanExpression(Context context, String expression)
-			throws GeneratorException {
+
+	public static boolean encodeBooleanExpression(Context context, String expression) throws GeneratorException {
 
 		System.out.println(expression);
-		
+
 		expression = encodeValueMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
 		try {
-			return Boolean.parseBoolean(Main.javaScriptEvaluator
-					.eval(expression).toString());
+			return Boolean.parseBoolean(Main.javaScriptEvaluator.eval(expression).toString());
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new ParserException(null, -1, "Unable to parse \"" + expression
-					+ "\" to a boolean value");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to a boolean value");
 		}
 	}
 
-	public static float encodeFloatExpression(Context context, String expression)
-			throws GeneratorException {
+	public static float encodeFloatExpression(Context context, String expression) throws GeneratorException {
 
 		expression = encodeValueMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
 		float result;
 		try {
-			result = Float.parseFloat(Main.javaScriptEvaluator
-					.eval(expression).toString());
+			result = Float.parseFloat(Main.javaScriptEvaluator.eval(expression).toString());
 		} catch (Exception ex) {
-			throw new ParserException(null, -1, "Unable to parse \"" + expression
-					+ "\" to a float value");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to a float value");
 		}
 		return result;
 	}
 
-	public static int encodeIntegerExpression(Context context, String expression)
-			throws GeneratorException {
+	public static int encodeIntegerExpression(Context context, String expression) throws GeneratorException {
 
 		expression = encodeValueMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
 		float result;
 		try {
-			result = Float.parseFloat(Main.javaScriptEvaluator
-					.eval(expression).toString());
+			result = Float.parseFloat(Main.javaScriptEvaluator.eval(expression).toString());
 		} catch (Exception ex) {
-			throw new ParserException(null, -1, "Unable to parse \"" + expression
-					+ "\" to an integer value");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to an integer value");
 		}
 		// if (Main.debug) System.out.print(result);
 
@@ -144,8 +136,7 @@ public class Generator {
 		 */
 	}
 
-	private static String encodeValueMethods(Context context, String expression)
-			throws GeneratorException {
+	private static String encodeValueMethods(Context context, String expression) throws GeneratorException {
 
 		boolean found;
 		do {
@@ -181,12 +172,14 @@ public class Generator {
 				String methodName = methodString.substring(0, firstBracket);
 				String methodParameters = methodString.substring(firstBracket + 1, lastBracket);
 
-				if (Main.debug) System.out.println(methodName + " ist eine Methode. Parameter: " + methodParameters);
+				if (Main.debug)
+					System.out.println(methodName + " ist eine Methode. Parameter: " + methodParameters);
 
 				expression = expression.substring(0, matcher.start())
 						+ valueMethods(context, methodName, splitParameters(methodParameters))
 						+ expression.substring(matcher.start() + lastBracket + 1);
-				if (Main.debug) System.out.println("Neue Expression: " + expression);
+				if (Main.debug)
+					System.out.println("Neue Expression: " + expression);
 
 				found = true;
 			}
@@ -195,23 +188,19 @@ public class Generator {
 		return expression;
 	}
 
-	public static String encodeStringExpression(Context context, String expression)
-			throws GeneratorException {
+	public static String encodeStringExpression(Context context, String expression) throws GeneratorException {
 
 		expression = encodeVariables(context, expression);
 
 		try {
-			return Main.javaScriptEvaluator.eval(expression)
-					.toString();
+			return Main.javaScriptEvaluator.eval(expression).toString();
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new ParserException(null, -1, "Unable to parse \"" + expression
-					+ "\" to a string");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to a string");
 		}
 	}
 
-	private static String encodeVariables(Context context, String expression)
-			throws GeneratorException {
+	private static String encodeVariables(Context context, String expression) throws GeneratorException {
 
 		boolean found;
 		do {
@@ -224,21 +213,25 @@ public class Generator {
 			if (matcher.find()) {
 				String variableName = expression.substring(matcher.start(), matcher.end()).trim();
 
-				if (Main.debug) System.out.println("1: " + variableName);
+				if (Main.debug)
+					System.out.println("1: " + variableName);
 
 				int ende = matcher.end();
 				if (variableName.endsWith("\\W")) {
 					variableName = expression.substring(matcher.start(), matcher.end() - 1).trim();
 					ende -= 1;
 				}
-				if (Main.debug) System.out.println("2: " + variableName);
+				if (Main.debug)
+					System.out.println("2: " + variableName);
 
-				if (Main.debug) System.out.println(variableName + " ist eine Variable. Suche Wert...");
+				if (Main.debug)
+					System.out.println(variableName + " ist eine Variable. Suche Wert...");
 				Variable variable = context.searchVariable(variableName);
 				if (variable != null) {
-					expression = expression.substring(0, matcher.start())
-							+ variable.getStringValue() + expression.substring(ende);
-					if (Main.debug) System.out.println("Neue Expression: " + expression);
+					expression = expression.substring(0, matcher.start()) + variable.getStringValue()
+							+ expression.substring(ende);
+					if (Main.debug)
+						System.out.println("Neue Expression: " + expression);
 					found = true;
 				}
 			}
@@ -253,13 +246,13 @@ public class Generator {
 
 	}
 
-	private static String valueMethods(Context context, String name, String[] parameter)
-			throws GeneratorException {
+	private static String valueMethods(Context context, String name, String[] parameter) throws GeneratorException {
 
 		// if (Main.debug) System.out.println(1);
 		if (name.equals("rand")) {
 			if (parameter.length == 0) {
-				if (Main.debug) System.out.println(3);
+				if (Main.debug)
+					System.out.println(3);
 				Random generator = new Random();
 				return String.valueOf(generator.nextFloat());
 			} else if (parameter.length == 2) {
@@ -268,8 +261,7 @@ public class Generator {
 				int end = Generator.encodeIntegerExpression(context, parameter[1]);
 				return String.valueOf(start + generator.nextInt(end - start + 1));
 			} else {
-				throw new GeneratorException(null, -1, "Method \"" + name
-						+ "\" - too few or too much parameters.");
+				throw new GeneratorException(null, -1, "Method \"" + name + "\" - too few or too much parameters.");
 			}
 		} else if (name.equals("max")) {
 			if (parameter.length == 2) {
@@ -277,8 +269,7 @@ public class Generator {
 				float value2 = Generator.encodeFloatExpression(context, parameter[1]);
 				return String.valueOf(value1 >= value2 ? value1 : value2);
 			} else {
-				throw new GeneratorException(null, -1, "Method \"" + name
-						+ "\" - too few or too much parameters.");
+				throw new GeneratorException(null, -1, "Method \"" + name + "\" - too few or too much parameters.");
 			}
 		} else if (name.equals("min")) {
 			if (parameter.length == 2) {
@@ -286,8 +277,7 @@ public class Generator {
 				float value2 = Generator.encodeFloatExpression(context, parameter[1]);
 				return String.valueOf(value1 <= value2 ? value1 : value2);
 			} else {
-				throw new GeneratorException(null, -1, "Method \"" + name
-						+ "\" - too few or too much parameters.");
+				throw new GeneratorException(null, -1, "Method \"" + name + "\" - too few or too much parameters.");
 			}
 		}
 
@@ -319,7 +309,7 @@ public class Generator {
 
 		}
 		if (!buffer.equals("")) {
-			parameterList.add(buffer);
+			parameterList.add(buffer.trim());
 		}
 		return parameterList.toArray(new String[0]);
 	}
@@ -331,10 +321,10 @@ public class Generator {
 		return array;
 	}
 
-	Root root = new Root();
+	public static Root root = new Root();
 
-	
-	// Wir benutzen einen StringBuilder, da wir evt. viele Code-Zeilen in ihm speichern wollen, und das Programm so schneller wird
+	// Wir benutzen einen StringBuilder, da wir evt. viele Code-Zeilen in ihm
+	// speichern wollen, und das Programm so schneller wird
 	public static StringBuilder output = new StringBuilder();
 
 	private GUI gui;
@@ -350,9 +340,9 @@ public class Generator {
 
 	public void compile(Context context, String input, int absoluteTime) throws GeneratorException {
 
-		// Wir gehen systematisch durch den Code und analysieren ihn grob
 		String[] lines = input.split("\\n");
 		totalLines = lines.length;
+
 		int lineCounter = 1;
 		boolean isBlock = false;
 		Block block = null;
@@ -372,12 +362,14 @@ public class Generator {
 
 			while (analyseTwice && !abortGeneration) {
 				if (isBlock) {
-					if (Main.debug) System.out.println("analysiere Zeile " + lineCounter + ": " + line);
+					if (Main.debug)
+						System.out.println("analysiere Zeile " + lineCounter + ": " + line);
 					if (line.startsWith("}"))
 						bracketCounter--;
 
 					if (bracketCounter <= -1) {
-						if (Main.debug) System.out.println("Block end reached, block will now be analysed...");
+						if (Main.debug)
+							System.out.println("Block end reached, block will now be analysed...");
 						// Block ist zu Ende, Block wird analysiert
 						isBlock = false;
 						CodeItem codeItem = block;
@@ -398,7 +390,8 @@ public class Generator {
 						continue;
 
 					} else {
-						// if (Main.debug) System.out.println("4: " + bracketCounter);
+						// if (Main.debug) System.out.println("4: " +
+						// bracketCounter);
 						block.contentAdd(line);
 						analyseTwice = false;
 					}
@@ -409,102 +402,125 @@ public class Generator {
 				} else {
 
 					CodeItem codeItem = null;
-					if (Main.debug) System.out.println();
-					if (Main.debug) System.out.println("Line " + lineCounter + ": \"" + line + "\"");
+					if (Main.debug)
+						System.out.println();
+					if (Main.debug)
+						System.out.println("Line " + lineCounter + ": \"" + line + "\"");
 
 					if (line.matches("if\\s*\\(.*")) {
-						// if (Main.debug) System.out.println("This is an if-Block");
+						// if (Main.debug)
+						// System.out.println("This is an if-Block");
 
 						if (line.endsWith("{")) {
-							if (Main.debug) System.out.println("This is an if-Block with brackets");
+							if (Main.debug)
+								System.out.println("This is an if-Block with brackets");
 							block = new IfCondition(context, line, false, absoluteTime, false);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
 						} else {
-							if (Main.debug) System.out.println("This is a single-line if-Condition");
+							if (Main.debug)
+								System.out.println("This is a single-line if-Condition");
 							codeItem = new IfCondition(context, line, false, absoluteTime, true);
 						}
 					} else if (line.matches("\\}?\\s*else if\\s*\\(.*")) {
-						// if (Main.debug) System.out.println("This is an else-if-Block");
+						// if (Main.debug)
+						// System.out.println("This is an else-if-Block");
 
 						if (line.endsWith("{")) {
-							if (Main.debug) System.out.println("This is an else-if-Block with brackets");
-							block = new IfCondition(context, line, lastCondition, absoluteTime,
-									false);
+							if (Main.debug)
+								System.out.println("This is an else-if-Block with brackets");
+							block = new IfCondition(context, line, lastCondition, absoluteTime, false);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
 						} else {
-							if (Main.debug) System.out.println("This is a single-line if-else-Condition");
-							codeItem = new IfCondition(context, line, lastCondition, absoluteTime,
-									true);
+							if (Main.debug)
+								System.out.println("This is a single-line if-else-Condition");
+							codeItem = new IfCondition(context, line, lastCondition, absoluteTime, true);
 						}
 					} else if (line.matches("\\}?\\s*else\\s*.+")) {
-						// if (Main.debug) System.out.println("This is an else-Block");
+						// if (Main.debug)
+						// System.out.println("This is an else-Block");
 
 						if (line.endsWith("{")) {
-							if (Main.debug) System.out.println("This is an else-Block with brackets");
-							block = new IfCondition(context, line.substring(line.indexOf("else")),
-									lastCondition, absoluteTime, false, true);
+							if (Main.debug)
+								System.out.println("This is an else-Block with brackets");
+							block = new IfCondition(context, line.substring(line.indexOf("else")), lastCondition,
+									absoluteTime, false, true);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
 						} else {
-							if (Main.debug) System.out.println("This is a single-line else-Condition");
-							codeItem = new IfCondition(context,
-									line.substring(line.indexOf("else")), lastCondition,
+							if (Main.debug)
+								System.out.println("This is a single-line else-Condition");
+							codeItem = new IfCondition(context, line.substring(line.indexOf("else")), lastCondition,
 									absoluteTime, true, true);
 						}
 					} else if (line.matches("at\\s*\\(.*")) {
 						// at-block
 						if (line.endsWith("{")) {
-							if (Main.debug) System.out.println("This is a Time-Block with brackets");
+							if (Main.debug)
+								System.out.println("This is a Time-Block with brackets");
 							block = new TimeBlock(context, line, absoluteTime, false);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
 						} else {
-							if (Main.debug) System.out.println("This is a single-line Time-Block");
+							if (Main.debug)
+								System.out.println("This is a single-line Time-Block");
 							codeItem = new TimeBlock(context, line, absoluteTime, true);
 						}
 
 					} else if (line.matches("loop\\s*\\(.*")) {
 						// at-block
 						if (line.endsWith("{")) {
-							if (Main.debug) System.out.println("This is a Time-Block with brackets");
+							if (Main.debug)
+								System.out.println("This is a Time-Block with brackets");
 							block = new Loop(context, line, absoluteTime, false);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
 						} else {
-							if (Main.debug) System.out.println("This is a single-line Time-Block");
+							if (Main.debug)
+								System.out.println("This is a single-line Time-Block");
 							codeItem = new TimeBlock(context, line, absoluteTime, true);
 						}
 
+					} else if (line.matches("method\\s+.*")) {
+						// method-block
+						if (Main.debug)
+							System.out.println("This is a Method-Block");
+						block = new NoopBlock();
+						isBlock = true;
+						lineCounter++;
+						continue eachline;
 					} else if (line.matches("\\S+\\s+\\S+\\s*=\\s*\\S+.*")) {
-						if (Main.debug) System.out.println("This is a NEW Variable + definition");
+						if (Main.debug)
+							System.out.println("This is a NEW Variable + definition");
 						codeItem = new NewVariableDefinition(context, line);
 					} else if (line.matches("\\S+\\s*=\\s*\\S*.*")) {
-						if (Main.debug) System.out.println("This is a Variable definition");
+						if (Main.debug)
+							System.out.println("This is a Variable definition");
 						codeItem = new VariableDefinition(context, line);
 
 					} else if (line.matches("\\S+\\.\\S+\\(.*\\)")) {
-						if (Main.debug) System.out.println("This is a static Method");
+						if (Main.debug)
+							System.out.println("This is a static Method");
 						codeItem = new StaticMethod(context, line, absoluteTime);
 
 					} else if (line.equals("}")) {
 						lineCounter++;
 						continue eachline;
 					} else {
-						if (Main.debug) System.out.println("WTF is this? D:");
+						if (Main.debug)
+							System.out.println("WTF is this? D:");
 					}
 
 					// Jetzt soll die entsprechende Zeile analysiert werden
 					if (codeItem == null) {
 						this.setOutput(new String());
-						throw new GeneratorException("Main", lineCounter,
-								"Unable to understand this line in Main");
+						throw new GeneratorException("Main", lineCounter, "Unable to understand this line in Main");
 					}
 					try {
 						codeItem.analyse();
@@ -533,10 +549,10 @@ public class Generator {
 			ListIterator<Variable> i = variables.listIterator();
 			while (i.hasNext()) {
 				Variable var = variables.get(i.nextIndex());
-				if (var instanceof SpriteVariable) {
+				if (var instanceof SpriteVariable && !(context instanceof Method && var.getName().equals("object"))) {
 					SpriteVariable sprite = (SpriteVariable) var;
-					Generator.output.append("Sprite," + sprite.getLayer() + "," + sprite.getOrigin()
-							+ "," + sprite.getPath() + ",320,240\n");
+					Generator.output.append("Sprite," + sprite.getLayer() + "," + sprite.getOrigin() + ","
+							+ sprite.getPath() + ",320,240\n");
 					Generator.output.append(sprite.getStoryboard());
 				}
 
@@ -562,6 +578,7 @@ public class Generator {
 		output = new StringBuilder();
 
 		// Compilieren der Main-Klasse
+		compileMethods(gui.getMainClassContent());
 		compile(root.getMain(), gui.getMainClassContent(), 0);
 
 		// In output sollte jetzt schöner Storyboard-Code zu finden sein, tragen
@@ -569,6 +586,78 @@ public class Generator {
 
 		this.setOutput(output.toString());
 
+	}
+
+	private void compileMethods(String input) throws GeneratorException {
+		// TODO Auto-generated method stub
+		// Pre-Compilation für Methoden
+
+		// Wir gehen systematisch durch den Code und analysieren ihn grob
+		String[] lines = input.split("\\n");
+		totalLines = lines.length;
+
+		// Pre-Compilation für Methoden
+		boolean isMethod = false;
+		Method method = null;
+		int lineCounter = 1;
+		int bracketCounter = 0;
+
+		for (String line : lines) {
+			System.out.println("0");
+			line = line.trim();
+			if (line == null || line.length() == 0) {
+				lineCounter++;
+				continue;
+			}
+
+			// In einer Methode drinn
+			if (isMethod) {
+				if (Main.debug)
+					System.out.println("füge Zeile " + lineCounter + " hinzu: " + line);
+				if (line.startsWith("}"))
+					bracketCounter--;
+
+				if (bracketCounter <= -1) {
+					if (Main.debug)
+						System.out.println("Method end reached, method will now be added to Root");
+					
+					Root temproot = root;
+					root.addMethod(method);
+					
+					isMethod = false;
+					method = null;
+					
+					continue;
+
+				} else {
+					// if (Main.debug) System.out.println("4: " +
+					// bracketCounter);
+					method.contentAdd(line);
+				}
+
+				if (line.endsWith("{"))
+					bracketCounter++;
+
+			} else {
+
+				// Finde Methoden und füge sie hinzu
+				if (line.matches("method\\s+.*")) {
+
+					System.out.println("Methode gefunden");
+					try {
+						method = new Method(line);
+						isMethod = true;
+					} catch (GeneratorException e) {
+						e.setContext("Main");
+						e.setLine(lineCounter);
+						throw e;
+					}
+
+				}
+
+			}
+			lineCounter++;
+		}
 	}
 
 }

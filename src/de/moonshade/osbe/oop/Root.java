@@ -15,17 +15,21 @@ package de.moonshade.osbe.oop;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
+
+import de.moonshade.osbe.Main;
+import de.moonshade.osbe.oop.block.Method;
 
 public class Root {
 
 	private MainClass main = new MainClass();
-	private List<Class> classes = new ArrayList<Class>();
+	private List<Method> methods = new ArrayList<Method>();
 
 	/**
 	 * @return the classes
 	 */
-	public List<Class> getClasses() {
-		return classes;
+	public List<Method> getMethods() {
+		return methods;
 	}
 
 	/**
@@ -39,8 +43,33 @@ public class Root {
 	 * @param classes
 	 *            the classes to set
 	 */
-	public void setClasses(List<Class> classes) {
-		this.classes = classes;
+	public void setMethods(List<Method> methods) {
+		this.methods = methods;
+	}
+	
+	public void addMethod(Method method) {
+		this.methods.add(method);
+		System.out.println();
+	}
+	
+	public Method searchMethod(String name) {
+		
+		if (Main.debug) System.out.println("suche methode " + name);
+
+		// Suche Variable hier
+		if (Main.debug) System.out.println(this.getClass().getName());
+		ListIterator<Method> i = methods.listIterator();
+		while (i.hasNext()) {
+			if (Main.debug) System.out.println(methods.get(i.nextIndex()).getName());
+			if (Main.debug) System.out.println(name);
+			if (methods.get(i.nextIndex()).getName().equals(name)) {
+				return methods.get(i.nextIndex());
+			}
+			i.next();
+		}
+		
+		
+		return null;
 	}
 
 	/**

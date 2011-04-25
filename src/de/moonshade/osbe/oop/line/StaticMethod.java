@@ -13,6 +13,8 @@
 
 package de.moonshade.osbe.oop.line;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +23,9 @@ import de.moonshade.osbe.oop.Generator;
 import de.moonshade.osbe.oop.Line;
 import de.moonshade.osbe.oop.SpriteVariable;
 import de.moonshade.osbe.oop.Variable;
+import de.moonshade.osbe.oop.block.Method;
 import de.moonshade.osbe.oop.exception.GeneratorException;
+import de.moonshade.osbe.oop.exception.UnknownTypeException;
 
 public class StaticMethod extends Line {
 
@@ -99,7 +103,7 @@ public class StaticMethod extends Line {
 					endY = startY;
 				} else if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
-					endTime += startTime;
+					endTime = startTime;
 					startX = Generator.encodeIntegerExpression(parentContext, parameter[1]);
 					startY = Generator.encodeIntegerExpression(parentContext, parameter[2]);
 					endX = startX;
@@ -178,7 +182,7 @@ public class StaticMethod extends Line {
 					endX = startX;
 				} else if (parameter.length == 2) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
-					endTime += startTime;
+					endTime = startTime;
 					startX = Generator.encodeIntegerExpression(parentContext, parameter[1]);
 					endX = startX;
 				} else if (parameter.length == 4) {
@@ -246,7 +250,7 @@ public class StaticMethod extends Line {
 					endY = startY;
 				} else if (parameter.length == 2) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
-					endTime += startTime;
+					endTime = startTime;
 					startY = Generator.encodeIntegerExpression(parentContext, parameter[1]);
 					endY = startY;
 				} else if (parameter.length == 4) {
@@ -314,7 +318,7 @@ public class StaticMethod extends Line {
 					endOp = startOp;
 				} else if (parameter.length == 2) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
-					endTime += startTime;
+					endTime = startTime;
 					startOp = Generator.encodeFloatExpression(parentContext, parameter[1]);
 					endOp = startOp;
 				} else if (parameter.length == 4) {
@@ -382,7 +386,7 @@ public class StaticMethod extends Line {
 					endScale = startScale;
 				} else if (parameter.length == 2) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
-					endTime += startTime;
+					endTime = startTime;
 					startScale = Generator.encodeFloatExpression(parentContext, parameter[1]);
 					endScale = startScale;
 				} else if (parameter.length == 4) {
@@ -450,7 +454,7 @@ public class StaticMethod extends Line {
 					endAngle = startAngle;
 				} else if (parameter.length == 2) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
-					endTime += startTime;
+					endTime = startTime;
 					startAngle = Generator.encodeFloatExpression(parentContext, parameter[1]);
 					endAngle = startAngle;
 				} else if (parameter.length == 4) {
@@ -508,6 +512,42 @@ public class StaticMethod extends Line {
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
 				sprite.addStoryboard(" R," + easing + "," + startTime + "," + endTime + ","
 						+ startAngle + "," + endAngle);
+			} else {
+				Method method = Generator.root.searchMethod(name);
+				if (method == null) {
+					throw new GeneratorException(null, -1, "Unable to find method " + name);
+				}
+				
+				List<String> paramName = method.getParamName();
+				List<String> paramType = method.getParamType();
+				
+				
+				// Wir encoden jetzt die übergebenen Werte für die in der Methode spezifizierten Typen von Variablen
+				String[] methodParameters = new String[paramName.size()];
+				
+				for (int a = 0; a < methodParameters.length; a++) {
+					if (paramType.get(a).equals("int")) {
+						methodParameters[a] = String.valueOf(Generator.encodeIntegerExpression(parentContext, parameter[a]));
+					} else if (paramType.get(a).equals("float")) {
+						methodParameters[a] = String.valueOf(Generator.encodeFloatExpression(parentContext, parameter[a]));
+					} else if (paramType.get(a).equals("boolean")) {
+						methodParameters[a] = String.valueOf(Generator.encodeBooleanExpression(parentContext, parameter[a]));
+					} else {
+						throw new UnknownTypeException(null, -1, "Parameter type " + paramType.get(a) + " is unknown or not supported");
+					}
+				}
+				
+				method.setCurrentParameters(methodParameters);
+				
+				// Da die Methode zusammen mit einem Objekt verwendet wird, wird das Objekt übergeben
+				method.setCurrentObject(sprite);
+				
+				// Jetzt noch die absoluteTime setzen
+				method.setAbsoluteTime(absoluteTime);
+				
+				// Und ausführen
+				method.analyse();
+				
 			}
 
 		}

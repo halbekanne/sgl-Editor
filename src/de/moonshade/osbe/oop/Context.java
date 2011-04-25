@@ -23,6 +23,7 @@ import de.moonshade.osbe.oop.exception.GeneratorException;
 public abstract class Context {
 
 	private List<Variable> variables = new ArrayList<Variable>();
+	private List<String> altVatiableNames = new ArrayList<String>();
 	private int time = 0;
 	protected Context parentContext = null;
 
@@ -38,6 +39,8 @@ public abstract class Context {
 					+ "\" has already been created");
 		}
 	}
+	
+
 
 	public void createVariable(String name, boolean value) throws GeneratorException {
 		// TODO Auto-generated method stub
@@ -107,6 +110,9 @@ public abstract class Context {
 
 		if (Main.debug) System.out.println("suche variable " + variableName);
 
+	
+		
+		
 		// Suche Variable hier
 		if (Main.debug) System.out.println(this.getClass().getName());
 		ListIterator<Variable> i = variables.listIterator();
@@ -115,6 +121,14 @@ public abstract class Context {
 			if (Main.debug) System.out.println(variableName);
 			if (variables.get(i.nextIndex()).getName().equals(variableName)) {
 				return variables.get(i.nextIndex());
+			}
+			// Suche Variable hier, unter alternativen Namen
+			else {
+				if (altVatiableNames.size() > i.nextIndex() && altVatiableNames.get(i.nextIndex()) != null && altVatiableNames.get(i.nextIndex()).equals("")) {
+					if (altVatiableNames.get(i.nextIndex()).equals(variableName)) {
+						return variables.get(i.nextIndex());
+					}
+				}
 			}
 			i.next();
 		}
