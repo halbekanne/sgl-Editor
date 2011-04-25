@@ -56,8 +56,9 @@ public class Method extends Block {
 
 		// Setze Variablenreferenz für ein mit der Methode verbundenes Object
 		// (call by reference)
-		String originalName = currentObject.getName();
+		String originalName = "";
 		if (this.currentObject != null) {
+			originalName = currentObject.getName();
 			currentObject.setName("object");
 			this.createVariable(currentObject);
 		}
@@ -70,6 +71,8 @@ public class Method extends Block {
 		if (this.currentObject != null) {
 			currentObject.setName(originalName);
 		}
+		currentParameters = null;
+		
 	}
 	
 	

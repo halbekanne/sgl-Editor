@@ -33,6 +33,7 @@ import de.moonshade.osbe.oop.block.NoopBlock;
 import de.moonshade.osbe.oop.block.TimeBlock;
 import de.moonshade.osbe.oop.exception.GeneratorException;
 import de.moonshade.osbe.oop.exception.ParserException;
+import de.moonshade.osbe.oop.line.CustomMethod;
 import de.moonshade.osbe.oop.line.NewVariableDefinition;
 import de.moonshade.osbe.oop.line.StaticMethod;
 import de.moonshade.osbe.oop.line.VariableDefinition;
@@ -351,7 +352,7 @@ public class Generator {
 
 		eachline: for (String line : lines) {
 			line = line.trim();
-			if (line == null || line.length() == 0) {
+			if (line == null || line.length() == 0 || line.startsWith("//")) {
 				lineCounter++;
 				continue;
 			}
@@ -509,6 +510,11 @@ public class Generator {
 							System.out.println("This is a static Method");
 						codeItem = new StaticMethod(context, line, absoluteTime);
 
+					} else if (line.matches("\\S+\\(.*\\)")) {
+						if (Main.debug)
+							System.out.println("This is an own Method");
+							codeItem = new CustomMethod(context, line, absoluteTime);
+
 					} else if (line.equals("}")) {
 						lineCounter++;
 						continue eachline;
@@ -605,7 +611,7 @@ public class Generator {
 		for (String line : lines) {
 			System.out.println("0");
 			line = line.trim();
-			if (line == null || line.length() == 0) {
+			if (line == null || line.length() == 0 || line.startsWith("//")) {
 				lineCounter++;
 				continue;
 			}
