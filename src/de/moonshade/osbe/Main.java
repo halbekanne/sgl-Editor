@@ -41,8 +41,8 @@ import de.moonshade.osbe.serializable.Options;
 
 public class Main {
 
-	public static boolean debug = true;
-	public static boolean errorToFile = false;
+	public static boolean debug = false;
+	public static boolean errorToFile = true;
 	
 	private GUI gui = null;
 	private MenuHandler handler = null;

@@ -9,7 +9,7 @@
  * 
  * Contributors:
  *     Dominik Halfkann
-*/
+ */
 
 package de.moonshade.osbe.menuhandler;
 
@@ -39,13 +39,17 @@ public class ProgressDialogThread implements Runnable {
 			// if (Main.debug) System.out.println(generator.currentLine +
 			// "-------------------------------------------" +
 			// generator.currentLine / generator.totalLines * 100);
-			int progress = (int) Math
-					.round((generator.currentLine / (generator.totalLines * 1.0)) * 100.0);
+			int progress = (int) ((generator.currentLine / (generator.totalLines * 1.0)) * 100.0);
 			if (progress >= 100) {
 				progress = 99;
 			}
 			pm.setProgress(progress);
-			pm.setNote("Analysing line " + generator.currentLine + " / " + generator.totalLines);
+			if (Generator.loop) {
+				pm.setNote("Analysing line " + generator.currentLine + " / " + generator.totalLines + " (Loop "
+						+ Generator.currentLoopCount + " / " + Generator.totalLoopCount + ")");
+			} else {
+				pm.setNote("Analysing line " + generator.currentLine + " / " + generator.totalLines);
+			}
 
 			if (pm.isCanceled()) {
 				Generator.abortGeneration = true;

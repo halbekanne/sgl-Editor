@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.swing.JOptionPane;
 
 import de.moonshade.osbe.Main;
 import de.moonshade.osbe.gui.GUI;
@@ -42,11 +43,25 @@ public class Generator {
 
 	public static boolean encodeBooleanExpression(Context context, String expression) throws GeneratorException {
 
-		System.out.println(expression);
+		if (Main.debug)
+			System.out.println(expression);
+		
+		// Performance Inhancement
+		try {
+			return Boolean.parseBoolean(expression);
+		} catch (Exception ex) {
+		}
 
 		expression = encodeValueMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
+		// Performance Inhancement
+		try {
+			return Boolean.parseBoolean(expression);
+		} catch (Exception ex) {
+		}
+		
+		// In case of an arithmetic expression, we let the JavaScript Evaluator encode this expression
 		try {
 			return Boolean.parseBoolean(Main.javaScriptEvaluator.eval(expression).toString());
 		} catch (ScriptException e) {
@@ -57,9 +72,22 @@ public class Generator {
 
 	public static float encodeFloatExpression(Context context, String expression) throws GeneratorException {
 
+		// Performance Inhancement
+		try {
+			return Float.parseFloat(expression);
+		} catch (Exception ex) {
+		}
+		
 		expression = encodeValueMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
+		// Performance Inhancement
+		try {
+			return Float.parseFloat(expression);
+		} catch (Exception ex) {
+		}
+		
+		// In case of an arithmetic expression, we let the JavaScript Evaluator encode this expression
 		float result;
 		try {
 			result = Float.parseFloat(Main.javaScriptEvaluator.eval(expression).toString());
@@ -71,18 +99,31 @@ public class Generator {
 
 	public static int encodeIntegerExpression(Context context, String expression) throws GeneratorException {
 
+		// Performance Inhancement
+		try {
+			return Integer.parseInt(expression);
+		} catch (Exception ex) {
+		}
+		
 		expression = encodeValueMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
+		// Performance Inhancement
+		try {
+			return Integer.parseInt(expression);
+		} catch (Exception ex) {
+		}
+
+		// In case of an arithmetic expression, we let the JavaScript Evaluator encode this expression
 		float result;
 		try {
 			result = Float.parseFloat(Main.javaScriptEvaluator.eval(expression).toString());
-		} catch (Exception ex) {
+		} catch (Exception ex2) {
 			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to an integer value");
 		}
-		// if (Main.debug) System.out.print(result);
+		return (int) result;
 
-		return Math.round(result);
+		// if (Main.debug) System.out.print(result);
 
 		/*
 		 * Pattern pattern; Matcher matcher;
@@ -336,6 +377,12 @@ public class Generator {
 	public int currentLine = 0;
 
 	public boolean finished = false;
+	
+	public static boolean loop = false;
+	
+	public static int totalLoopCount = 1;
+	
+	public static int currentLoopCount = 0;
 
 	public static boolean abortGeneration = false;
 
@@ -513,7 +560,7 @@ public class Generator {
 					} else if (line.matches("\\S+\\(.*\\)")) {
 						if (Main.debug)
 							System.out.println("This is an own Method");
-							codeItem = new CustomMethod(context, line, absoluteTime);
+						codeItem = new CustomMethod(context, line, absoluteTime);
 
 					} else if (line.equals("}")) {
 						lineCounter++;
@@ -591,6 +638,11 @@ public class Generator {
 		// wir es doch in unser Textfenster ein
 
 		this.setOutput(output.toString());
+		
+		JOptionPane.showMessageDialog(
+				gui.getContentPanel(),
+				"Storyboard-Generation completed without errors.", "Generation Completed",
+				JOptionPane.INFORMATION_MESSAGE);
 
 	}
 
@@ -609,7 +661,8 @@ public class Generator {
 		int bracketCounter = 0;
 
 		for (String line : lines) {
-			System.out.println("0");
+			if (Main.debug)
+				System.out.println("0");
 			line = line.trim();
 			if (line == null || line.length() == 0 || line.startsWith("//")) {
 				lineCounter++;
@@ -626,13 +679,14 @@ public class Generator {
 				if (bracketCounter <= -1) {
 					if (Main.debug)
 						System.out.println("Method end reached, method will now be added to Root");
-					
-					Root temproot = root;
+
 					root.addMethod(method);
-					
+
 					isMethod = false;
 					method = null;
-					
+					bracketCounter = 0;
+					lineCounter++;
+
 					continue;
 
 				} else {
@@ -649,7 +703,8 @@ public class Generator {
 				// Finde Methoden und füge sie hinzu
 				if (line.matches("method\\s+.*")) {
 
-					System.out.println("Methode gefunden");
+					if (Main.debug)
+						System.out.println("Methode gefunden");
 					try {
 						method = new Method(line);
 						isMethod = true;

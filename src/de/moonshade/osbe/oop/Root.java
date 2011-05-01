@@ -49,7 +49,7 @@ public class Root {
 	
 	public void addMethod(Method method) {
 		this.methods.add(method);
-		System.out.println();
+		if (Main.debug) System.out.println();
 	}
 	
 	public Method searchMethod(String name) {

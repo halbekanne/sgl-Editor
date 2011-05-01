@@ -9,7 +9,7 @@
  * 
  * Contributors:
  *     Dominik Halfkann
-*/
+ */
 
 package de.moonshade.osbe.oop;
 
@@ -27,30 +27,37 @@ public abstract class Context {
 	private int time = 0;
 	protected Context parentContext = null;
 
+	public List<String> getAltVatiableNames() {
+		return altVatiableNames;
+	}
+	
+	public void clearVariables() {
+		// TODO Auto-generated method stub
+		variables = new ArrayList<Variable>();
+		altVatiableNames = new ArrayList<String>();
+	}
+
 	public void createVariable(SpriteVariable sprite) throws GeneratorException {
 		// TODO Auto-generated method stub
 		Variable sameVariable = this.searchVariable(sprite.getName());
 		if (sameVariable == null) {
 			variables.add(sprite);
-			if (Main.debug) System.out.println("Sprite Variable angelegt: " + sprite.getName() + " = "
-					+ sprite.getPath());
+			if (Main.debug)
+				System.out.println("Sprite Variable angelegt: " + sprite.getName() + " = " + sprite.getPath());
 		} else {
-			throw new GeneratorException(null, -1, "The variable \"" + sprite.getName()
-					+ "\" has already been created");
+			throw new GeneratorException(null, -1, "The variable \"" + sprite.getName() + "\" has already been created");
 		}
 	}
-	
-
 
 	public void createVariable(String name, boolean value) throws GeneratorException {
 		// TODO Auto-generated method stub
 		Variable sameVariable = this.searchVariable(name);
 		if (sameVariable == null) {
 			variables.add(new BooleanVariable(name, value));
-			if (Main.debug) System.out.println("Boolean Variable angelegt: " + name + " = " + value);
+			if (Main.debug)
+				System.out.println("Boolean Variable angelegt: " + name + " = " + value);
 		} else {
-			throw new GeneratorException(null, -1, "The variable \"" + name
-					+ "\" has already been created");
+			throw new GeneratorException(null, -1, "The variable \"" + name + "\" has already been created");
 		}
 	}
 
@@ -58,10 +65,10 @@ public abstract class Context {
 		Variable sameVariable = this.searchVariable(name);
 		if (sameVariable == null) {
 			variables.add(new FloatVariable(name, value));
-			if (Main.debug) System.out.println("Float Variable angelegt: " + name + " = " + value);
+			if (Main.debug)
+				System.out.println("Float Variable angelegt: " + name + " = " + value);
 		} else {
-			throw new GeneratorException(null, -1, "The variable \"" + name
-					+ "\" has already been created");
+			throw new GeneratorException(null, -1, "The variable \"" + name + "\" has already been created");
 		}
 	}
 
@@ -70,10 +77,10 @@ public abstract class Context {
 		Variable sameVariable = this.searchVariable(name);
 		if (sameVariable == null) {
 			variables.add(new IntVariable(name, value));
-			if (Main.debug) System.out.println("Int Variable angelegt: " + name + " = " + value);
+			if (Main.debug)
+				System.out.println("Int Variable angelegt: " + name + " = " + value);
 		} else {
-			throw new GeneratorException(null, -1, "The variable \"" + name
-					+ "\" has already been created");
+			throw new GeneratorException(null, -1, "The variable \"" + name + "\" has already been created");
 		}
 	}
 
@@ -88,10 +95,10 @@ public abstract class Context {
 		Variable sameVariable = this.searchVariable(name);
 		if (sameVariable == null) {
 			variables.add(new StringVariable(name, value));
-			if (Main.debug) System.out.println("String Variable angelegt: " + name + " = " + value);
+			if (Main.debug)
+				System.out.println("String Variable angelegt: " + name + " = " + value);
 		} else {
-			throw new GeneratorException(null, -1, "The variable \"" + name
-					+ "\" has already been created");
+			throw new GeneratorException(null, -1, "The variable \"" + name + "\" has already been created");
 		}
 	}
 
@@ -100,32 +107,39 @@ public abstract class Context {
 	}
 
 	public Context getParentContext() {
-		if (Main.debug) System.out.println("This context " + this.getClass().getName() + " has parent context "
-				+ parentContext);
+		if (Main.debug)
+			System.out.println("This context " + this.getClass().getName() + " has parent context " + parentContext);
 		return parentContext;
 	}
 
 	public Variable searchVariable(String variableName) {
 		// TODO Auto-generated method stub
 
-		if (Main.debug) System.out.println("suche variable " + variableName);
+		if (Main.debug)
+			System.out.println("suche variable " + variableName);
 
-	
-		
+		if (Main.debug) System.out.println("waaaaaa 0");
 		
 		// Suche Variable hier
-		if (Main.debug) System.out.println(this.getClass().getName());
+		if (Main.debug)
+			System.out.println(this.getClass().getName());
 		ListIterator<Variable> i = variables.listIterator();
 		while (i.hasNext()) {
-			if (Main.debug) System.out.println(variables.get(i.nextIndex()).getName());
-			if (Main.debug) System.out.println(variableName);
+			if (Main.debug) System.out.println("waaaaaa 0.1");
+			if (Main.debug)
+				System.out.println(variables.get(i.nextIndex()).getName());
+			if (Main.debug)
+				System.out.println(variableName);
 			if (variables.get(i.nextIndex()).getName().equals(variableName)) {
+				if (Main.debug) System.out.println("waaaaaa 1");
 				return variables.get(i.nextIndex());
 			}
 			// Suche Variable hier, unter alternativen Namen
 			else {
-				if (altVatiableNames.size() > i.nextIndex() && altVatiableNames.get(i.nextIndex()) != null && altVatiableNames.get(i.nextIndex()).equals("")) {
+				if (altVatiableNames.size() > i.nextIndex() && altVatiableNames.get(i.nextIndex()) != null
+						&& altVatiableNames.get(i.nextIndex()).equals("")) {
 					if (altVatiableNames.get(i.nextIndex()).equals(variableName)) {
+						if (Main.debug) System.out.println("waaaaaa 2");
 						return variables.get(i.nextIndex());
 					}
 				}
@@ -136,45 +150,64 @@ public abstract class Context {
 		// Suche im übergeordneten context, rekursiver Aufruf
 		Context currentContext = this.getParentContext();
 		while (currentContext != null) {
-			if (Main.debug) System.out.println(currentContext.getClass().getName());
+			if (Main.debug) System.out.println("waaaaaa");
+			if (Main.debug)
+				System.out.println(currentContext.getClass().getName());
 
 			ListIterator<Variable> iPar = currentContext.getAllVariables().listIterator();
 			while (iPar.hasNext()) {
-				if (currentContext.getAllVariables().get(iPar.nextIndex()).getName()
-						.equals(variableName)) {
+				if (currentContext.getAllVariables().get(iPar.nextIndex()).getName().equals(variableName)) {
+					if (Main.debug) System.out.println("waaaaaa 3");
 					return currentContext.getAllVariables().get(iPar.nextIndex());
+				}
+				// Suche Variable im Parent, unter alternativen Namen
+				else {
+					if (currentContext.getAltVatiableNames().size() > iPar.nextIndex()
+							&& currentContext.getAltVatiableNames().get(iPar.nextIndex()) != null
+							&& currentContext.getAltVatiableNames().get(iPar.nextIndex()).equals("")) {
+						if (currentContext.getAltVatiableNames().get(iPar.nextIndex()).equals(variableName)) {
+							if (Main.debug) System.out.println("waaaaaa 4");
+							return currentContext.getAllVariables().get(iPar.nextIndex());
+						}
+					}
 				}
 				iPar.next();
 			}
 
 			currentContext = currentContext.getParentContext();
-			if (Main.debug) System.out.println("context: " + currentContext);
+			if (Main.debug)
+				System.out.println("context: " + currentContext);
 		}
-		if (Main.debug) System.out.println("Variable " + variableName + " wurde nicht gefunden :(");
+		if (Main.debug)
+			System.out.println("Variable " + variableName + " wurde nicht gefunden :(");
 		return null;
 	}
 
 	public void setVariable(Variable variable, boolean value) {
-		((BooleanVariable) variables.get(variables.indexOf(variable))).setValue(value);
-		if (Main.debug) System.out.println("Boolean Variable verändert: " + variable.getName() + " = " + value);
+		((BooleanVariable) variable).setValue(value);
+		if (Main.debug)
+			System.out.println("Boolean Variable verändert: " + variable.getName() + " = " + value);
 	}
 
 	public void setVariable(Variable variable, float value) {
-		((FloatVariable) variables.get(variables.indexOf(variable))).setValue(value);
-		if (Main.debug) System.out.println("Float Variable verändert: " + variable.getName() + " = " + value);
+		((FloatVariable) variable).setValue(value);
+		if (Main.debug)
+			System.out.println("Float Variable verändert: " + variable.getName() + " = " + value);
 	}
 
 	public void setVariable(Variable variable, int value) {
-		//System.out.println(variable.getClass().getDeclaringClass());
-		//((IntVariable) variables.get(variables.indexOf(variable))).setValue(value);
+		// System.out.println(variable.getClass().getDeclaringClass());
+		// ((IntVariable)
+		// variables.get(variables.indexOf(variable))).setValue(value);
 		((IntVariable) variable).setValue(value);
-		if (Main.debug) System.out.println("Int Variable verändert: " + variable.getName() + " = " + value);
+		if (Main.debug)
+			System.out.println("Int Variable verändert: " + variable.getName() + " = " + value);
 	}
 
 	public void setVariable(Variable variable, String value) {
 		((StringVariable) variables.get(variables.indexOf(variable))).setValue(value);
-		if (Main.debug) System.out.println("String Variable verändert: " + variable.getName() + " = " + value);
+		if (Main.debug)
+			System.out.println("String Variable verändert: " + variable.getName() + " = " + value);
 	}
-	
 
 }

@@ -27,8 +27,15 @@ public class SpriteVariable implements Variable {
 	private int x = 320;
 	private int y = 240;
 	private float opacity = 1;
-	private float scale = 1;
+	private float scaleX = 1;
+	private float scaleY = 1;
 	private float rotation = 0;
+	private int red = 255;
+	private int green = 255;
+	private int blue = 255;
+	private boolean loop = false;
+	private int loopTime = 0;
+	
 
 	public SpriteVariable(String name, String path) {
 		this.name = name;
@@ -52,7 +59,11 @@ public class SpriteVariable implements Variable {
 	}
 
 	public void addStoryboard(String storyboard) {
-		this.storyboard.append(storyboard + "\n");
+		if (loop) {
+			this.storyboard.append(" " + storyboard + "\n");
+		} else {
+			this.storyboard.append(storyboard + "\n");
+		}
 	}
 
 	/**
@@ -99,8 +110,12 @@ public class SpriteVariable implements Variable {
 	/**
 	 * @return the scale
 	 */
-	public float getScale() {
-		return scale;
+	public float getScaleX() {
+		return scaleX;
+	}
+	
+	public float getScaleY() {
+		return scaleY;
 	}
 
 	public StringBuilder getStoryboard() {
@@ -178,8 +193,12 @@ public class SpriteVariable implements Variable {
 	 * @param scale
 	 *            the scale to set
 	 */
-	public void setScale(float scale) {
-		this.scale = scale;
+	public void setScaleX(float scaleX) {
+		this.scaleX = scaleX;
+	}
+	
+	public void setScaleY(float scaleY) {
+		this.scaleY = scaleY;
 	}
 
 	/**
@@ -204,6 +223,50 @@ public class SpriteVariable implements Variable {
 	 */
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public int getRed() {
+		return red;
+	}
+
+	public void setRed(int red) {
+		this.red = red;
+	}
+
+	public int getGreen() {
+		return green;
+	}
+
+	public void setGreen(int green) {
+		this.green = green;
+	}
+
+	public int getBlue() {
+		return blue;
+	}
+
+	public void setBlue(int blue) {
+		this.blue = blue;
+	}
+
+	public boolean isLoop() {
+		return loop;
+	}
+
+	public void setLoop(boolean loop) {
+		this.loop = loop;
+	}
+	
+	public boolean getLoop() {
+		return loop;
+	}
+
+	public void setLoopTime(int loopTime) {
+		this.loopTime = loopTime;
+	}
+
+	public int getLoopTime() {
+		return loopTime;
 	}
 
 }

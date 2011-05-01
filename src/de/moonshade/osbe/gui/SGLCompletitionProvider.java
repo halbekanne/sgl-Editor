@@ -62,18 +62,14 @@ public class SGLCompletitionProvider {
 				in.close();
 			}
 			else {
-				JOptionPane.showMessageDialog(
-					null,
-					"Nicht gefunden",
-					"blaa", JOptionPane.ERROR_MESSAGE);
 				provider.loadFromXML(new File("sgl.xml"));
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			JOptionPane.showMessageDialog(
 					null,
-					"oh noes",
-					"blaa", JOptionPane.ERROR_MESSAGE);
+					"sgl.xml could not be found, so the code completition is disabled",
+					"Error", JOptionPane.ERROR_MESSAGE);
 			ioe.printStackTrace();
 		}
 		

@@ -143,7 +143,7 @@ public class DefaultGUI implements GUI {
 		if (fileContentContainer == null) {
 			fileContentContainer = new JTabbedPane();
 			fileContentContainer.add("SGL/OOSBL", getObjectContentScroll());
-			fileContentContainer.add("Compiled Source", getSourceContentScroll());
+			fileContentContainer.add("Generated Storyboard Code", getSourceContentScroll());
 
 		}
 		return fileContentContainer;

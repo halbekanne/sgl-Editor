@@ -9,7 +9,7 @@
  * 
  * Contributors:
  *     Dominik Halfkann
-*/
+ */
 
 package de.moonshade.osbe.oop.line;
 
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.moonshade.osbe.Main;
 import de.moonshade.osbe.oop.Context;
 import de.moonshade.osbe.oop.Generator;
 import de.moonshade.osbe.oop.Line;
@@ -60,8 +61,7 @@ public class StaticMethod extends Line {
 			if (matcherBracket.find()) {
 
 				String methodName = method.substring(0, matcherBracket.start());
-				String parameters = method.substring(matcherBracket.start() + 1,
-						matcherBracket.end() - 1);
+				String parameters = method.substring(matcherBracket.start() + 1, matcherBracket.end() - 1);
 				// String[] parameter = parameters.split(",");
 				String[] parameter = Generator.splitParameters(parameters);
 				executeMethod(variableName, methodName, parameter);
@@ -71,9 +71,10 @@ public class StaticMethod extends Line {
 
 	}
 
-	private void executeMethod(String variableName, String name, String[] parameter)
-			throws GeneratorException {
+	private void executeMethod(String variableName, String name, String[] parameter) throws GeneratorException {
 
+		name = name.trim();
+		
 		// Jetzt suchen wir doch erstmal die Variable ^^
 		Variable variable = parentContext.searchVariable(variableName);
 
@@ -86,6 +87,12 @@ public class StaticMethod extends Line {
 
 			int startTime = absoluteTime;
 			int endTime = absoluteTime;
+
+			if (sprite.getLoop()) {
+				startTime -= sprite.getLoopTime();
+				endTime -= sprite.getLoopTime();
+			}
+
 			int easing = 0;
 
 			if (name.endsWith("SlowDown")) {
@@ -124,12 +131,9 @@ public class StaticMethod extends Line {
 				sprite.setY(endY);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" M," + easing + "," + startTime + "," + endTime + ","
-						+ startX + "," + startY + "," + endX + "," + endY);
-			}
-
-			else if (name.equals("moveTo") || name.equals("moveToSpeedUp")
-					|| name.equals("moveToSlowDown")) {
+				sprite.addStoryboard(" M," + easing + "," + startTime + "," + endTime + "," + startX + "," + startY
+						+ "," + endX + "," + endY);
+			} else if (name.equals("moveTo") || name.equals("moveToSpeedUp") || name.equals("moveToSlowDown")) {
 				int startX = 0, startY = 0, endX = 0, endY = 0;
 				if (parameter.length == 4) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -147,18 +151,18 @@ public class StaticMethod extends Line {
 				sprite.setY(endY);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" M," + easing + "," + startTime + "," + endTime + ","
-						+ startX + "," + startY + "," + endX + "," + endY);
+				sprite.addStoryboard(" M," + easing + "," + startTime + "," + endTime + "," + startX + "," + startY
+						+ "," + endX + "," + endY);
 			}
-			
-			else if (name.equals("moveRel") || name.equals("moveRelSpeedUp")
-					|| name.equals("moveRelSlowDown")) {
+
+			else if (name.equals("moveRel") || name.equals("moveRelSpeedUp") || name.equals("moveRelSlowDown")) {
 				int startX = 0, startY = 0, endX = 0, endY = 0;
 				if (parameter.length == 4) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
 					endTime += Generator.encodeIntegerExpression(parentContext, parameter[1]);
 					startX = sprite.getX();
 					startY = sprite.getY();
+					if (Main.debug) System.out.println("---------------------------------------------------------");
 					endX = startX + Generator.encodeIntegerExpression(parentContext, parameter[2]);
 					endY = startY + Generator.encodeIntegerExpression(parentContext, parameter[3]);
 				} else {
@@ -170,12 +174,11 @@ public class StaticMethod extends Line {
 				sprite.setY(endY);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" M," + easing + "," + startTime + "," + endTime + ","
-						+ startX + "," + startY + "," + endX + "," + endY);
+				sprite.addStoryboard(" M," + easing + "," + startTime + "," + endTime + "," + startX + "," + startY
+						+ "," + endX + "," + endY);
 			}
 
-			else if (name.equals("moveX") || name.equals("moveXSpeedUp")
-					|| name.equals("moveXSlowDown")) {
+			else if (name.equals("moveX") || name.equals("moveXSpeedUp") || name.equals("moveXSlowDown")) {
 				int startX = 0, endX = 0;
 				if (parameter.length == 1) {
 					startX = Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -198,12 +201,10 @@ public class StaticMethod extends Line {
 				sprite.setX(endX);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" MX," + easing + "," + startTime + "," + endTime + ","
-						+ startX + "," + endX);
+				sprite.addStoryboard(" MX," + easing + "," + startTime + "," + endTime + "," + startX + "," + endX);
 			}
 
-			else if (name.equals("moveXTo") || name.equals("moveXToSpeedUp")
-					|| name.equals("moveXToSlowDown")) {
+			else if (name.equals("moveXTo") || name.equals("moveXToSpeedUp") || name.equals("moveXToSlowDown")) {
 				int startX = 0, endX = 0;
 				if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -218,12 +219,10 @@ public class StaticMethod extends Line {
 				sprite.setX(endX);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" MX," + easing + "," + startTime + "," + endTime + ","
-						+ startX + "," + endX);
+				sprite.addStoryboard(" MX," + easing + "," + startTime + "," + endTime + "," + startX + "," + endX);
 			}
-			
-			else if (name.equals("moveXRel") || name.equals("moveXRelSpeedUp")
-					|| name.equals("moveXRelSlowDown")) {
+
+			else if (name.equals("moveXRel") || name.equals("moveXRelSpeedUp") || name.equals("moveXRelSlowDown")) {
 				int startX = 0, endX = 0;
 				if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -238,12 +237,10 @@ public class StaticMethod extends Line {
 				sprite.setX(endX);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" MX," + easing + "," + startTime + "," + endTime + ","
-						+ startX + "," + endX);
+				sprite.addStoryboard(" MX," + easing + "," + startTime + "," + endTime + "," + startX + "," + endX);
 			}
 
-			else if (name.equals("moveY") || name.equals("moveYSpeedUp")
-					|| name.equals("moveYSlowDown")) {
+			else if (name.equals("moveY") || name.equals("moveYSpeedUp") || name.equals("moveYSlowDown")) {
 				int startY = 0, endY = 0;
 				if (parameter.length == 1) {
 					startY = Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -266,12 +263,10 @@ public class StaticMethod extends Line {
 				sprite.setY(endY);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" MY," + easing + "," + startTime + "," + endTime + ","
-						+ startY + "," + endY);
+				sprite.addStoryboard(" MY," + easing + "," + startTime + "," + endTime + "," + startY + "," + endY);
 			}
 
-			else if (name.equals("moveYTo") || name.equals("moveYToSpeedUp")
-					|| name.equals("moveYToSlowDown")) {
+			else if (name.equals("moveYTo") || name.equals("moveYToSpeedUp") || name.equals("moveYToSlowDown")) {
 				int startY = 0, endY = 0;
 				if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -286,12 +281,10 @@ public class StaticMethod extends Line {
 				sprite.setY(endY);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" MY," + easing + "," + startTime + "," + endTime + ","
-						+ startY + "," + endY);
+				sprite.addStoryboard(" MY," + easing + "," + startTime + "," + endTime + "," + startY + "," + endY);
 			}
-			
-			else if (name.equals("moveYRel") || name.equals("moveYRelSpeedUp")
-					|| name.equals("moveYRelSlowDown")) {
+
+			else if (name.equals("moveYRel") || name.equals("moveYRelSpeedUp") || name.equals("moveYRelSlowDown")) {
 				int startY = 0, endY = 0;
 				if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -306,12 +299,182 @@ public class StaticMethod extends Line {
 				sprite.setY(endY);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" MY," + easing + "," + startTime + "," + endTime + ","
-						+ startY + "," + endY);
+				sprite.addStoryboard(" MY," + easing + "," + startTime + "," + endTime + "," + startY + "," + endY);
 			}
 
-			else if (name.equals("fade") || name.equals("fadeSpeedUp")
-					|| name.equals("fadeSlowDown")) {
+			// Vector scale
+			else if (name.equals("scaleVec") || name.equals("scaleVecSpeedUp") || name.equals("scaleVecSlowDown")) {
+				float startX = 0, startY = 0, endX = 0, endY = 0;
+				if (parameter.length == 2) {
+					startX = Generator.encodeFloatExpression(parentContext, parameter[0]);
+					startY = Generator.encodeFloatExpression(parentContext, parameter[1]);
+					endX = startX;
+					endY = startY;
+				} else if (parameter.length == 3) {
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					endTime = startTime;
+					startX = Generator.encodeFloatExpression(parentContext, parameter[1]);
+					startY = Generator.encodeFloatExpression(parentContext, parameter[2]);
+					endX = startX;
+					endY = startY;
+				} else if (parameter.length == 6) {
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					endTime += Generator.encodeIntegerExpression(parentContext, parameter[1]);
+					startX = Generator.encodeFloatExpression(parentContext, parameter[2]);
+					startY = Generator.encodeFloatExpression(parentContext, parameter[3]);
+					endX = Generator.encodeFloatExpression(parentContext, parameter[4]);
+					endY = Generator.encodeFloatExpression(parentContext, parameter[5]);
+				} else {
+					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
+				}
+
+				// Sprite aktualisieren
+				sprite.setScaleX(endX);
+				sprite.setScaleY(endY);
+
+				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
+				sprite.addStoryboard(" V," + easing + "," + startTime + "," + endTime + "," + startX + "," + startY
+						+ "," + endX + "," + endY);
+			}
+
+			else if (name.equals("scaleVecTo") || name.equals("scaleVecToSpeedUp") || name.equals("scaleVecToSlowDown")) {
+				float startX = 0, startY = 0, endX = 0, endY = 0;
+				if (parameter.length == 4) {
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					endTime += Generator.encodeIntegerExpression(parentContext, parameter[1]);
+					startX = sprite.getScaleX();
+					startY = sprite.getScaleY();
+					endX = Generator.encodeFloatExpression(parentContext, parameter[2]);
+					endY = Generator.encodeFloatExpression(parentContext, parameter[3]);
+				} else {
+					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
+				}
+
+				// Sprite aktualisieren
+				sprite.setScaleX(endX);
+				sprite.setScaleY(endY);
+
+				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
+				sprite.addStoryboard(" V," + easing + "," + startTime + "," + endTime + "," + startX + "," + startY
+						+ "," + endX + "," + endY);
+			}
+
+			else if (name.equals("scaleVecRel") || name.equals("scaleVecRelSpeedUp")
+					|| name.equals("scaleVecRelSlowDown")) {
+				float startX = 0, startY = 0, endX = 0, endY = 0;
+				if (parameter.length == 4) {
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					endTime += Generator.encodeIntegerExpression(parentContext, parameter[1]);
+					startX = sprite.getScaleX();
+					startY = sprite.getScaleY();
+					endX = startX + Generator.encodeFloatExpression(parentContext, parameter[2]);
+					endY = startY + Generator.encodeFloatExpression(parentContext, parameter[3]);
+				} else {
+					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
+				}
+
+				// Sprite aktualisieren
+				sprite.setScaleX(endX);
+				sprite.setScaleY(endY);
+
+				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
+				sprite.addStoryboard(" V," + easing + "," + startTime + "," + endTime + "," + startX + "," + startY
+						+ "," + endX + "," + endY);
+			}
+
+			// Color
+			else if (name.equals("color") || name.equals("colorSpeedUp") || name.equals("colorSlowDown")) {
+				int startR = 0, startG = 0, startB = 0, endR = 0, endG = 0, endB = 0;
+				if (parameter.length == 3) {
+					startR = Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					startG = Generator.encodeIntegerExpression(parentContext, parameter[1]);
+					startB = Generator.encodeIntegerExpression(parentContext, parameter[2]);
+					endR = startR;
+					endG = startG;
+					endB = startB;
+				} else if (parameter.length == 4) {
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					endTime = startTime;
+					startR = Generator.encodeIntegerExpression(parentContext, parameter[1]);
+					startG = Generator.encodeIntegerExpression(parentContext, parameter[2]);
+					startB = Generator.encodeIntegerExpression(parentContext, parameter[3]);
+					endR = startR;
+					endG = startG;
+					endB = startB;
+				} else if (parameter.length == 8) {
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					endTime += Generator.encodeIntegerExpression(parentContext, parameter[1]);
+					startR = Generator.encodeIntegerExpression(parentContext, parameter[2]);
+					startG = Generator.encodeIntegerExpression(parentContext, parameter[3]);
+					startB = Generator.encodeIntegerExpression(parentContext, parameter[4]);
+					endR = Generator.encodeIntegerExpression(parentContext, parameter[5]);
+					endG = Generator.encodeIntegerExpression(parentContext, parameter[6]);
+					endB = Generator.encodeIntegerExpression(parentContext, parameter[7]);
+				} else {
+					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
+				}
+
+				// Sprite aktualisieren
+				sprite.setRed(endR);
+				sprite.setGreen(endG);
+				sprite.setBlue(endB);
+
+				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
+				sprite.addStoryboard(" C," + easing + "," + startTime + "," + endTime + "," + startR + "," + startG
+						+ "," + startB + "," + endR + "," + endG + "," + endB);
+			}
+
+			else if (name.equals("colorTo") || name.equals("colorToSpeedUp") || name.equals("colorToSlowDown")) {
+				int startR = 0, startG = 0, startB = 0, endR = 0, endG = 0, endB = 0;
+				if (parameter.length == 5) {
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					endTime += Generator.encodeIntegerExpression(parentContext, parameter[1]);
+					startR = sprite.getRed();
+					startG = sprite.getGreen();
+					startB = sprite.getBlue();
+					endR = Generator.encodeIntegerExpression(parentContext, parameter[2]);
+					endG = Generator.encodeIntegerExpression(parentContext, parameter[3]);
+					endB = Generator.encodeIntegerExpression(parentContext, parameter[4]);
+				} else {
+					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
+				}
+
+				// Sprite aktualisieren
+				sprite.setRed(endR);
+				sprite.setGreen(endG);
+				sprite.setBlue(endB);
+
+				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
+				sprite.addStoryboard(" C," + easing + "," + startTime + "," + endTime + "," + startR + "," + startG
+						+ "," + startB + "," + endR + "," + endG + "," + endB);
+			}
+
+			else if (name.equals("colorRel") || name.equals("colorRelSpeedUp") || name.equals("colorRelSlowDown")) {
+				int startR = 0, startG = 0, startB = 0, endR = 0, endG = 0, endB = 0;
+				if (parameter.length == 5) {
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					endTime += Generator.encodeIntegerExpression(parentContext, parameter[1]);
+					startR = sprite.getRed();
+					startG = sprite.getGreen();
+					startB = sprite.getBlue();
+					endR = startR + Generator.encodeIntegerExpression(parentContext, parameter[2]);
+					endG = startG + Generator.encodeIntegerExpression(parentContext, parameter[3]);
+					endB = startB + Generator.encodeIntegerExpression(parentContext, parameter[4]);
+				} else {
+					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
+				}
+
+				// Sprite aktualisieren
+				sprite.setRed(endR);
+				sprite.setGreen(endG);
+				sprite.setBlue(endB);
+
+				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
+				sprite.addStoryboard(" C," + easing + "," + startTime + "," + endTime + "," + startR + "," + startG
+						+ "," + startB + "," + endR + "," + endG + "," + endB);
+			}
+
+			else if (name.equals("fade") || name.equals("fadeSpeedUp") || name.equals("fadeSlowDown")) {
 				float startOp = 0, endOp = 0;
 				if (parameter.length == 1) {
 					startOp = Generator.encodeFloatExpression(parentContext, parameter[0]);
@@ -329,17 +492,15 @@ public class StaticMethod extends Line {
 				} else {
 					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
 				}
-				
+
 				// Sprite aktualisieren
 				sprite.setOpacity(endOp);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" F," + easing + "," + startTime + "," + endTime + ","
-						+ startOp + "," + endOp);
+				sprite.addStoryboard(" F," + easing + "," + startTime + "," + endTime + "," + startOp + "," + endOp);
 			}
-			
-			else if (name.equals("fadeTo") || name.equals("fadeToSpeedUp")
-					|| name.equals("fadeToSlowDown")) {
+
+			else if (name.equals("fadeTo") || name.equals("fadeToSpeedUp") || name.equals("fadeToSlowDown")) {
 				float startOp = 0, endOp = 0;
 				if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -349,17 +510,15 @@ public class StaticMethod extends Line {
 				} else {
 					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
 				}
-				
+
 				// Sprite aktualisieren
 				sprite.setOpacity(endOp);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" F," + easing + "," + startTime + "," + endTime + ","
-						+ startOp + "," + endOp);
+				sprite.addStoryboard(" F," + easing + "," + startTime + "," + endTime + "," + startOp + "," + endOp);
 			}
-			
-			else if (name.equals("fadeRel") || name.equals("fadeRelSpeedUp")
-					|| name.equals("fadeRelSlowDown")) {
+
+			else if (name.equals("fadeRel") || name.equals("fadeRelSpeedUp") || name.equals("fadeRelSlowDown")) {
 				float startOp = 0, endOp = 0;
 				if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -369,17 +528,15 @@ public class StaticMethod extends Line {
 				} else {
 					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
 				}
-				
+
 				// Sprite aktualisieren
 				sprite.setOpacity(endOp);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" F," + easing + "," + startTime + "," + endTime + ","
-						+ startOp + "," + endOp);
+				sprite.addStoryboard(" F," + easing + "," + startTime + "," + endTime + "," + startOp + "," + endOp);
 			}
 
-			else if (name.equals("scale") || name.equals("scaleSpeedUp")
-					|| name.equals("scaleSlowDown")) {
+			else if (name.equals("scale") || name.equals("scaleSpeedUp") || name.equals("scaleSlowDown")) {
 				float startScale = 0, endScale = 0;
 				if (parameter.length == 1) {
 					startScale = Generator.encodeFloatExpression(parentContext, parameter[0]);
@@ -397,57 +554,57 @@ public class StaticMethod extends Line {
 				} else {
 					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
 				}
-				
+
 				// Sprite aktualisieren
-				sprite.setScale(endScale);
+				sprite.setScaleX(endScale);
+				sprite.setScaleY(endScale);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" S," + easing + "," + startTime + "," + endTime + ","
-						+ startScale + "," + endScale);
+				sprite.addStoryboard(" S," + easing + "," + startTime + "," + endTime + "," + startScale + ","
+						+ endScale);
 			}
-			
-			else if (name.equals("scaleTo") || name.equals("scaleToSpeedUp")
-					|| name.equals("scaleToSlowDown")) {
+
+			else if (name.equals("scaleTo") || name.equals("scaleToSpeedUp") || name.equals("scaleToSlowDown")) {
 				float startScale = 0, endScale = 0;
 				if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
 					endTime += Generator.encodeIntegerExpression(parentContext, parameter[1]);
-					startScale = sprite.getScale();
+					startScale = sprite.getScaleX();
 					endScale = Generator.encodeFloatExpression(parentContext, parameter[2]);
 				} else {
 					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
 				}
-				
+
 				// Sprite aktualisieren
-				sprite.setScale(endScale);
+				sprite.setScaleX(endScale);
+				sprite.setScaleY(endScale);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" S," + easing + "," + startTime + "," + endTime + ","
-						+ startScale + "," + endScale);
+				sprite.addStoryboard(" S," + easing + "," + startTime + "," + endTime + "," + startScale + ","
+						+ endScale);
 			}
-			
-			else if (name.equals("scaleRel") || name.equals("scaleRelSpeedUp")
-					|| name.equals("scaleRelSlowDown")) {
+
+			else if (name.equals("scaleRel") || name.equals("scaleRelSpeedUp") || name.equals("scaleRelSlowDown")) {
 				float startScale = 0, endScale = 0;
 				if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
 					endTime += Generator.encodeIntegerExpression(parentContext, parameter[1]);
-					startScale = sprite.getScale();
+					startScale = sprite.getScaleX();
 					endScale = startScale + Generator.encodeFloatExpression(parentContext, parameter[2]);
 				} else {
 					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
 				}
-				
+
 				// Sprite aktualisieren
-				sprite.setScale(endScale);
+				sprite.setScaleX(endScale);
+				sprite.setScaleY(endScale);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" S," + easing + "," + startTime + "," + endTime + ","
-						+ startScale + "," + endScale);
+				sprite.addStoryboard(" S," + easing + "," + startTime + "," + endTime + "," + startScale + ","
+						+ endScale);
 			}
 
-			else if (name.equals("rotate") || name.equals("rotateSpeedUp")
-					|| name.equals("rotateSlowDown")) {
+			else if (name.equals("rotate") || name.equals("rotateSpeedUp") || name.equals("rotateSlowDown")) {
 				float startAngle = 0, endAngle = 0;
 				if (parameter.length == 1) {
 					startAngle = Generator.encodeFloatExpression(parentContext, parameter[0]);
@@ -465,17 +622,16 @@ public class StaticMethod extends Line {
 				} else {
 					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
 				}
-				
+
 				// Sprite aktualisieren
 				sprite.setRotation(endAngle);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" R," + easing + "," + startTime + "," + endTime + ","
-						+ startAngle + "," + endAngle);
+				sprite.addStoryboard(" R," + easing + "," + startTime + "," + endTime + "," + startAngle + ","
+						+ endAngle);
 			}
-			
-			else if (name.equals("rotateTo") || name.equals("rotateToSpeedUp")
-					|| name.equals("rotateToSlowDown")) {
+
+			else if (name.equals("rotateTo") || name.equals("rotateToSpeedUp") || name.equals("rotateToSlowDown")) {
 				float startAngle = 0, endAngle = 0;
 				if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -485,17 +641,16 @@ public class StaticMethod extends Line {
 				} else {
 					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
 				}
-				
+
 				// Sprite aktualisieren
 				sprite.setRotation(endAngle);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" R," + easing + "," + startTime + "," + endTime + ","
-						+ startAngle + "," + endAngle);
+				sprite.addStoryboard(" R," + easing + "," + startTime + "," + endTime + "," + startAngle + ","
+						+ endAngle);
 			}
-			
-			else if (name.equals("rotateRel") || name.equals("rotateRelSpeedUp")
-					|| name.equals("rotateRelSlowDown")) {
+
+			else if (name.equals("rotateRel") || name.equals("rotateRelSpeedUp") || name.equals("rotateRelSlowDown")) {
 				float startAngle = 0, endAngle = 0;
 				if (parameter.length == 3) {
 					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
@@ -505,49 +660,78 @@ public class StaticMethod extends Line {
 				} else {
 					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
 				}
-				
+
 				// Sprite aktualisieren
 				sprite.setRotation(endAngle);
 
 				// Variablen definiert, jetzt geht es zur Codegenerierung ^^
-				sprite.addStoryboard(" R," + easing + "," + startTime + "," + endTime + ","
-						+ startAngle + "," + endAngle);
+				sprite.addStoryboard(" R," + easing + "," + startTime + "," + endTime + "," + startAngle + ","
+						+ endAngle);
+
+			} else if (name.equals("startLoop")) {
+				int loopCount = 0;
+				if (parameter.length == 2) {
+					startTime += Generator.encodeIntegerExpression(parentContext, parameter[0]);
+					loopCount = Generator.encodeIntegerExpression(parentContext, parameter[1]);
+				} else {
+					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
+				}
+
+				sprite.addStoryboard(" L," + startTime + "," + loopCount);
+				sprite.setLoop(true);
+				sprite.setLoopTime(startTime);
+
+			} else if (name.equals("endLoop")) {
+				if (parameter.length == 0) {
+					// noop
+				} else {
+					throw new GeneratorException(null, -1, name + ": Too much or too few parameters");
+				}
+
+				sprite.setLoop(false);
+
 			} else {
+				if (Main.debug) System.out.println("suche eigene methode...");
 				Method method = Generator.root.searchMethod(name);
 				if (method == null) {
 					throw new GeneratorException(null, -1, "Unable to find method " + name);
 				}
-				
+
 				List<String> paramName = method.getParamName();
 				List<String> paramType = method.getParamType();
-				
-				
-				// Wir encoden jetzt die übergebenen Werte für die in der Methode spezifizierten Typen von Variablen
+
+				// Wir encoden jetzt die übergebenen Werte für die in der
+				// Methode spezifizierten Typen von Variablen
 				String[] methodParameters = new String[paramName.size()];
-				
+
 				for (int a = 0; a < methodParameters.length; a++) {
 					if (paramType.get(a).equals("int")) {
-						methodParameters[a] = String.valueOf(Generator.encodeIntegerExpression(parentContext, parameter[a]));
+						methodParameters[a] = String.valueOf(Generator.encodeIntegerExpression(parentContext,
+								parameter[a]));
 					} else if (paramType.get(a).equals("float")) {
-						methodParameters[a] = String.valueOf(Generator.encodeFloatExpression(parentContext, parameter[a]));
+						methodParameters[a] = String.valueOf(Generator.encodeFloatExpression(parentContext,
+								parameter[a]));
 					} else if (paramType.get(a).equals("boolean")) {
-						methodParameters[a] = String.valueOf(Generator.encodeBooleanExpression(parentContext, parameter[a]));
+						methodParameters[a] = String.valueOf(Generator.encodeBooleanExpression(parentContext,
+								parameter[a]));
 					} else {
-						throw new UnknownTypeException(null, -1, "Parameter type " + paramType.get(a) + " is unknown or not supported");
+						throw new UnknownTypeException(null, -1, "Parameter type " + paramType.get(a)
+								+ " is unknown or not supported");
 					}
 				}
-				
+
 				method.setCurrentParameters(methodParameters);
-				
-				// Da die Methode zusammen mit einem Objekt verwendet wird, wird das Objekt übergeben
+
+				// Da die Methode zusammen mit einem Objekt verwendet wird, wird
+				// das Objekt übergeben
 				method.setCurrentObject(sprite);
-				
+
 				// Jetzt noch die absoluteTime setzen
 				method.setAbsoluteTime(absoluteTime);
-				
+
 				// Und ausführen
 				method.analyse();
-				
+
 			}
 
 		}

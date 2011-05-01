@@ -20,7 +20,6 @@ import de.moonshade.osbe.oop.exception.GeneratorException;
 
 public class TimeBlock extends Block {
 
-	Context context;
 	boolean singleLine;
 
 	public TimeBlock(Context context, String line, int absoluteTime, boolean singleLine) {
@@ -54,7 +53,7 @@ public class TimeBlock extends Block {
 		}
 
 		String expression = content.substring(firstBracket + 1, lastBracket);
-		int time = absoluteTime + Generator.encodeIntegerExpression(context, expression);
+		int time = absoluteTime + Generator.encodeIntegerExpression(parentContext, expression);
 
 		Generator generator = new Generator();
 

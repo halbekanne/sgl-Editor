@@ -9,7 +9,7 @@
  * 
  * Contributors:
  *     Dominik Halfkann
-*/
+ */
 
 package de.moonshade.osbe.oop.block;
 
@@ -17,6 +17,7 @@ import de.moonshade.osbe.Main;
 import de.moonshade.osbe.oop.Block;
 import de.moonshade.osbe.oop.Context;
 import de.moonshade.osbe.oop.Generator;
+import de.moonshade.osbe.oop.MainClass;
 import de.moonshade.osbe.oop.NoopContext;
 import de.moonshade.osbe.oop.exception.GeneratorException;
 
@@ -56,8 +57,10 @@ public class Loop extends Block {
 		String expression = content.substring(firstBracket + 1, lastBracket);
 		String parameter[] = Generator.splitParameters(expression);
 
-		if (Main.debug) System.out.println("expression: " + expression);
-		if (Main.debug) System.out.println("content string: " + contentString);
+		if (Main.debug)
+			System.out.println("expression: " + expression);
+		if (Main.debug)
+			System.out.println("content string: " + contentString);
 
 		if (parameter.length != 3) {
 			throw new GeneratorException(null, -1, "Too few or too much parameters");
@@ -67,17 +70,40 @@ public class Loop extends Block {
 		int repeats = Generator.encodeIntegerExpression(this, parameter[1]);
 		int timeAdd = Generator.encodeIntegerExpression(this, parameter[2]);
 
-		if (Main.debug) System.out.println("time: " + time);
-		if (Main.debug) System.out.println("repeats: " + repeats);
-		if (Main.debug) System.out.println("timeAdd: " + timeAdd);
+		// Aktualisierung für die Progressbar
+		boolean progressAkt = false;
+		if (parentContext instanceof MainClass) {
+			progressAkt = true;
+		}
+		if (progressAkt) {
+			Generator.loop = true;
+			Generator.totalLoopCount = repeats;
+		}
+
+		if (Main.debug)
+			System.out.println("time: " + time);
+		if (Main.debug)
+			System.out.println("repeats: " + repeats);
+		if (Main.debug)
+			System.out.println("timeAdd: " + timeAdd);
 
 		for (int a = 1; a <= repeats; a++) {
-			if (Main.debug) System.out.println("Wiederholung: " + a + ", Zeit: " + time);
+			if (progressAkt) {
+				// Aktualisierung für die Progressbar
+				Generator.currentLoopCount = a;
+			}
+			if (Main.debug)
+				System.out.println("Wiederholung: " + a + ", Zeit: " + time);
 			Generator generator = new Generator();
 			generator.compile(new NoopContext(this), contentString, time);
 			time += timeAdd;
 		}
 
+		if (progressAkt) {
+			Generator.loop = false;
+			Generator.totalLoopCount = 1;
+			Generator.currentLoopCount = 0;
+		}
 	}
 
 }

@@ -16,6 +16,7 @@ package de.moonshade.osbe.oop.block;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.moonshade.osbe.Main;
 import de.moonshade.osbe.oop.Block;
 import de.moonshade.osbe.oop.CodeItem;
 import de.moonshade.osbe.oop.Context;
@@ -72,10 +73,13 @@ public class Method extends Block {
 			currentObject.setName(originalName);
 		}
 		currentParameters = null;
+		this.clearVariables();
 		
 	}
 	
-	
+
+
+
 
 	public String getName() {
 		return name;
@@ -96,7 +100,7 @@ public class Method extends Block {
 	}
 
 	private void preCompile() throws GeneratorException {
-		System.out.println("line: " + content);
+		if (Main.debug) System.out.println("line: " + content);
 		// wir suchen das Ende der Methoden-Parametersklammer
 		char[] chars = content.toCharArray();
 		int firstBracket = 0;
@@ -120,12 +124,12 @@ public class Method extends Block {
 		String methodParams = content.substring(firstBracket + 1, lastBracket);
 		this.name = content.substring(0, firstBracket).replace("method", "").trim();
 
-		System.out.println("methodParams: " + methodParams);
-		System.out.println("methodName: " + name);
+		if (Main.debug) System.out.println("methodParams: " + methodParams);
+		if (Main.debug) System.out.println("methodName: " + name);
 
 		String[] parameterDefinitions = Generator.splitParameters(methodParams);
 		for (String paramDef : parameterDefinitions) {
-			System.out.println("Parameter: " + paramDef);
+			if (Main.debug) System.out.println("Parameter: " + paramDef);
 			String[] paramDefSplitted = paramDef.split(" ");
 			if (paramDefSplitted.length == 2) {
 				paramType.add(paramDefSplitted[0]);
@@ -133,7 +137,7 @@ public class Method extends Block {
 			} else {
 				throw new GeneratorException(null, -1, "Error in parameter definition list.");
 			}
-			System.out.println();
+			if (Main.debug) System.out.println();
 		}
 
 	}

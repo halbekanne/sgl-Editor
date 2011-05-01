@@ -112,13 +112,13 @@ public class IfCondition extends Block {
 						.println("Die Bedingung ist falsch oder else-if Block, die Anweisungen werden nicht ausgeführt!");
 			}
 		}
+		
+		if (lastCondition) {
+			condition = true;
+		}
+		
 	}
 
-	@Override
-	public Context getParentContext() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public boolean isTrue() {
 		return condition;
