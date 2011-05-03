@@ -186,7 +186,7 @@ public class Generator {
 
 			Pattern pattern;
 			Matcher matcher;
-			pattern = Pattern.compile("[a-zA-Z]\\w*\\(.*");
+			pattern = Pattern.compile("[a-zA-Z0-9]\\w*\\(.*");
 			matcher = pattern.matcher(expression);
 			if (matcher.find()) {
 				String methodString = expression.substring(matcher.start());
@@ -252,7 +252,7 @@ public class Generator {
 
 			Pattern pattern;
 			Matcher matcher;
-			pattern = Pattern.compile("[a-zA-Z]\\w*(\\W|$)");
+			pattern = Pattern.compile("[a-zA-Z]\\w*");
 			matcher = pattern.matcher(expression);
 			if (matcher.find()) {
 				String variableName = expression.substring(matcher.start(), matcher.end()).trim();
