@@ -881,11 +881,11 @@ The time will be 0.]]></desc>
 		
 		<keyword name="scale" type="function">
 			<params>
-				<param type="int" name="scaling">
-					<desc>The new scaling. (1 = 100%, 2 = 200%, ...)</desc>
+				<param type="int" name="scaling factor">
+					<desc>The new scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object to a specific scaling.<br>
+			<desc><![CDATA[Scales an object to a specific scaling factor.<br>
 The time will be 0.]]></desc>
 		</keyword>
 		<keyword name="scale" type="function">
@@ -894,11 +894,11 @@ The time will be 0.]]></desc>
 					<desc>The time in ms at which the movement should take place.
 					</desc>
 				</param>
-				<param type="float" name="scaling">
-					<desc>The new scaling. (1 = 100%, 2 = 200%, ...)</desc>
+				<param type="float" name="scaling factor">
+					<desc>The new scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object to a specific scaling.]]></desc>
+			<desc><![CDATA[Scales an object to a specific scaling factor.]]></desc>
 		</keyword>
 		<keyword name="scale" type="function">
 			<params>
@@ -911,13 +911,13 @@ The time will be 0.]]></desc>
 					</desc>
 				</param>
 				<param type="float" name="startScaling">
-					<desc>The scaling at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>The scaling factor at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 				<param type="float" name="endScaling">
-					<desc>The scaling at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>The scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object from and to a specific scaling.]]></desc>
+			<desc><![CDATA[Scales an object from and to a specific scaling factor.]]></desc>
 		</keyword>
 
 		<keyword name="scaleSpeedUp" type="function">
@@ -931,13 +931,13 @@ The time will be 0.]]></desc>
 					</desc>
 				</param>
 				<param type="float" name="startScaling">
-					<desc>The scaling at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>The scaling factor at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 				<param type="float" name="endScaling">
-					<desc>The scaling at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>The scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object from and to a specific scaling. Animation will start slow and speed up.]]></desc>
+			<desc><![CDATA[Scales an object from and to a specific scaling factor. Animation will start slow and speed up.]]></desc>
 		</keyword>
 		
 		<keyword name="scaleSlowDown" type="function">
@@ -951,13 +951,13 @@ The time will be 0.]]></desc>
 					</desc>
 				</param>
 				<param type="float" name="startScaling">
-					<desc>The scaling at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>The scaling factor at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 				<param type="float" name="endScaling">
-					<desc>The scaling at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>The scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object from and to a specific scaling. Animation will start fast and slow down.]]></desc>
+			<desc><![CDATA[Scales an object from and to a specific scaling factor. Animation will start fast and slow down.]]></desc>
 		</keyword>
 		
 		<keyword name="scaleTo" type="function">
@@ -971,10 +971,10 @@ The time will be 0.]]></desc>
 					</desc>
 				</param>
 				<param type="float" name="endScaling">
-					<desc>The scaling at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>The scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object from the current object's scaling to a specific scaling.]]></desc>
+			<desc><![CDATA[Scales an object from the current object's scaling factor to a specific scaling factor.]]></desc>
 		</keyword>
 
 		<keyword name="scaleToSpeedUp" type="function">
@@ -988,10 +988,10 @@ The time will be 0.]]></desc>
 					</desc>
 				</param>
 				<param type="float" name="endScaling">
-					<desc>The scaling at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>The scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object from the current object's scaling to a specific scaling. Animation will start slow and speed up.]]></desc>
+			<desc><![CDATA[Scales an object from the current object's scaling factor to a specific scaling factor. Animation will start slow and speed up.]]></desc>
 		</keyword>
 		
 		<keyword name="scaleToSlowDown" type="function">
@@ -1005,10 +1005,10 @@ The time will be 0.]]></desc>
 					</desc>
 				</param>
 				<param type="float" name="endScaling">
-					<desc>The scaling at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>The scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object from the current object's scaling to a specific scaling. Animation will start fast and slow down.]]></desc>
+			<desc><![CDATA[Scales an object from the current object's scaling factor to a specific scaling factor. Animation will start fast and slow down.]]></desc>
 		</keyword>
 		
 		<keyword name="scaleRel" type="function">
@@ -1022,10 +1022,10 @@ The time will be 0.]]></desc>
 					</desc>
 				</param>
 				<param type="float" name="endScaling">
-					<desc>This value will be added to the current scaling. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>This value will be added to the current scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object from the current object's scaling to a relative scaling.]]></desc>
+			<desc><![CDATA[Scales an object from the current object's scaling factor to a relative scaling factor.]]></desc>
 		</keyword>
 
 		<keyword name="scaleRelSpeedUp" type="function">
@@ -1039,10 +1039,10 @@ The time will be 0.]]></desc>
 					</desc>
 				</param>
 				<param type="float" name="endScaling">
-					<desc>This value will be added to the current scaling. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>This value will be added to the current scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object from the current object's scaling to a relative scaling. Animation will start slow and speed up.]]></desc>
+			<desc><![CDATA[Scales an object from the current object's scaling factor to a relative scaling factor. Animation will start slow and speed up.]]></desc>
 		</keyword>
 		
 		<keyword name="scaleRelSlowDown" type="function">
@@ -1056,10 +1056,10 @@ The time will be 0.]]></desc>
 					</desc>
 				</param>
 				<param type="float" name="endScaling">
-					<desc>This value will be added to the current scaling. (1 = 100%, 2 = 200%, ...)</desc>
+					<desc>This value will be added to the current scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
 				</param>
 			</params>
-			<desc><![CDATA[Scales an object from the current object's scaling to a relative scaling. Animation will start fast and slow down.]]></desc>
+			<desc><![CDATA[Scales an object from the current object's scaling factor to a relative scaling factor. Animation will start fast and slow down.]]></desc>
 		</keyword>
 		
 		<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
@@ -1248,6 +1248,514 @@ The time will be 0.]]></desc>
 		</keyword>
 		
 		<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+		
+<keyword name="scaleVec" type="function">
+			<params>
+				<param type="int" name="xScaling">
+					<desc>The new x scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="yScaling">
+					<desc>The new y scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object to a specific scaling factor.<br>
+The time will be 0.]]></desc>
+		</keyword>
+		<keyword name="scaleVec" type="function">
+			<params>
+				<param type="int" name="time">
+					<desc>The time in ms at which the scaling should take place.
+					</desc>
+				</param>
+				<param type="int" name="xScaling">
+					<desc>The new x scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="yScaling">
+					<desc>The new y scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object to a specific scaling factor.]]></desc>
+		</keyword>
+		<keyword name="scaleVec" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="startXScaling">
+					<desc>The x scaling factor at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="startYScaling">
+					<desc>The y scaling factor at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endXScaling">
+					<desc>The x scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endYScaling">
+					<desc>The y scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object from and to a specific scaling factor.]]></desc>
+		</keyword>
+
+		<keyword name="scaleVecSpeedUp" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="startXScaling">
+					<desc>The x scaling factor at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="startYScaling">
+					<desc>The y scaling factor at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endXScaling">
+					<desc>The x scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endYScaling">
+					<desc>The y scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object from and to a specific scaling factor. Animation will start slow and speed up.]]></desc>
+		</keyword>
+		
+		<keyword name="scaleVecSlowDown" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="startXScaling">
+					<desc>The x scaling factor at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="startYScaling">
+					<desc>The y scaling factor at the beginning of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endXScaling">
+					<desc>The x scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endYScaling">
+					<desc>The y scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object from and to a specific scaling factor. Animation will start fast and slow down.]]></desc>
+		</keyword>
+		
+		<keyword name="scaleVecTo" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endXScaling">
+					<desc>The x scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endYScaling">
+					<desc>The y scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object from the current object's scaling factor to a specific scaling factor.]]></desc>
+		</keyword>
+
+		<keyword name="scaleVecToSpeedUp" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endXScaling">
+					<desc>The x scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endYScaling">
+					<desc>The y scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object from the current object's scaling factor to a specific scaling factor. Animation will start slow and speed up.]]></desc>
+		</keyword>
+		
+		<keyword name="scaleVecToSlowDown" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endXScaling">
+					<desc>The x scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endYScaling">
+					<desc>The y scaling factor at the end of the animation. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object from the current object's scaling factor to a specific scaling factor. Animation will start fast and slow down.]]></desc>
+		</keyword>
+		
+		<keyword name="scaleVecRel" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endXScaling">
+					<desc>This value will be added to the current x scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endYScaling">
+					<desc>This value will be added to the current y scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object from the current object's scaling factor to a relative scaling factor.]]></desc>
+		</keyword>
+
+		<keyword name="scaleVecRelSpeedUp" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endXScaling">
+					<desc>This value will be added to the current x scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endYScaling">
+					<desc>This value will be added to the current y scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object from the current object's scaling factor to a relative scaling factor. Animation will start slow and speed up.]]></desc>
+		</keyword>
+		
+		<keyword name="scaleVecRelSlowDown" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endXScaling">
+					<desc>This value will be added to the current x scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+				<param type="int" name="endYScaling">
+					<desc>This value will be added to the current y scaling factor. (1 = 100%, 2 = 200%, ...)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Vector-scales an object from the current object's scaling factor to a relative scaling factor. Animation will start fast and slow down.]]></desc>
+		</keyword>
+		
+		
+		
+		
+		
+		
+		<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+		
+		
+		
+		
+		
+		
+		
+		<keyword name="color" type="function">
+			<params>
+				<param type="int" name="red">
+					<desc>The new red value. (0-255)</desc>
+				</param>
+				<param type="int" name="green">
+					<desc>The new green value. (0-255)</desc>
+				</param>
+				<param type="int" name="blue">
+					<desc>The new blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object to a specific color.<br>
+The time will be 0.]]></desc>
+		</keyword>
+		<keyword name="color" type="function">
+			<params>
+				<param type="int" name="time">
+					<desc>The time in ms at which the scaling should take place.
+					</desc>
+				</param>
+				<param type="int" name="red">
+					<desc>The new red value. (0-255)</desc>
+				</param>
+				<param type="int" name="green">
+					<desc>The new green value. (0-255)</desc>
+				</param>
+				<param type="int" name="blue">
+					<desc>The new blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object to a specific color.]]></desc>
+		</keyword>
+		<keyword name="color" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="startRed">
+					<desc>The red value at the beginning of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="startGreen">
+					<desc>The green value at the beginning of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="startBlue">
+					<desc>The blue value at the beginning of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endRed">
+					<desc>The red value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endGreen">
+					<desc>The green value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endBlue">
+					<desc>This value will be added to the current blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object from and to a specific color.]]></desc>
+		</keyword>
+
+		<keyword name="colorSpeedUp" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="startRed">
+					<desc>The red value at the beginning of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="startGreen">
+					<desc>The green value at the beginning of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="startBlue">
+					<desc>The blue value at the beginning of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endRed">
+					<desc>The red value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endGreen">
+					<desc>The green value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endBlue">
+					<desc>This value will be added to the current blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object from and to a specific color. Animation will start slow and speed up.]]></desc>
+		</keyword>
+		
+		<keyword name="colorSlowDown" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="startRed">
+					<desc>The red value at the beginning of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="startGreen">
+					<desc>The green value at the beginning of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="startBlue">
+					<desc>The blue value at the beginning of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endRed">
+					<desc>The red value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endGreen">
+					<desc>The green value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endBlue">
+					<desc>This value will be added to the current blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object from and to a specific color. Animation will start fast and slow down.]]></desc>
+		</keyword>
+		
+		<keyword name="colorTo" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endRed">
+					<desc>The red value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endGreen">
+					<desc>The green value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endBlue">
+					<desc>This value will be added to the current blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object from the current object's color to a specific color.]]></desc>
+		</keyword>
+
+		<keyword name="colorToSpeedUp" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endRed">
+					<desc>The red value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endGreen">
+					<desc>The green value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endBlue">
+					<desc>This value will be added to the current blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object from the current object's color to a specific color. Animation will start slow and speed up.]]></desc>
+		</keyword>
+		
+		<keyword name="colorToSlowDown" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endRed">
+					<desc>The red value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endGreen">
+					<desc>The green value at the end of the animation. (0-255)</desc>
+				</param>
+				<param type="int" name="endBlue">
+					<desc>This value will be added to the current blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object from the current object's color to a specific color. Animation will start fast and slow down.]]></desc>
+		</keyword>
+		
+		<keyword name="colorRel" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endRed">
+					<desc>This value will be added to the current red value. (0-255)</desc>
+				</param>
+				<param type="int" name="endGreen">
+					<desc>This value will be added to the current green value. (0-255)</desc>
+				</param>
+				<param type="int" name="endBlue">
+					<desc>This value will be added to the current blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object from the current object's color to a relative color.]]></desc>
+		</keyword>
+
+		<keyword name="colorRelSpeedUp" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endRed">
+					<desc>This value will be added to the current red value. (0-255)</desc>
+				</param>
+				<param type="int" name="endGreen">
+					<desc>This value will be added to the current green value. (0-255)</desc>
+				</param>
+				<param type="int" name="endBlue">
+					<desc>This value will be added to the current blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object from the current object's color to a relative color. Animation will start slow and speed up.]]></desc>
+		</keyword>
+		
+		<keyword name="colorRelSlowDown" type="function">
+			<params>
+				<param type="int" name="startTime">
+					<desc>The time in ms at which the animation should start.
+					</desc>
+				</param>
+				<param type="int" name="endTime">
+					<desc>The time in ms at which the animation should end.
+					</desc>
+				</param>
+				<param type="int" name="endRed">
+					<desc>This value will be added to the current red value. (0-255)</desc>
+				</param>
+				<param type="int" name="endGreen">
+					<desc>This value will be added to the current green value. (0-255)</desc>
+				</param>
+				<param type="int" name="endBlue">
+					<desc>This value will be added to the current blue value. (0-255)</desc>
+				</param>
+			</params>
+			<desc><![CDATA[Colors an object from the current object's color to a relative color. Animation will start fast and slow down.]]></desc>
+		</keyword>
+		
+		<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+		
 		
 		<keyword name="Sprite" type="function">
 			<params>
