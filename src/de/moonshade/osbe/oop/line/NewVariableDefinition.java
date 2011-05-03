@@ -32,13 +32,14 @@ public class NewVariableDefinition extends Line {
 
 	int intVar;
 	String stringVar;
-	Context context;
+	boolean global;
 
 	// context
 
-	public NewVariableDefinition(Context context, String line) {
-		this.context = context;
+	public NewVariableDefinition(Context context, String line, boolean global) {
+		this.parentContext = context;
 		this.content = line;
+		this.global = global;
 	}
 
 	@Override
@@ -56,21 +57,24 @@ public class NewVariableDefinition extends Line {
 
 			if (type.equals("int")) {
 				// Parst einen arithmetischen Ausdruck in einen Integer-Wert
-				int value = Generator.encodeIntegerExpression(context, expression);
+				int value = Generator.encodeIntegerExpression(parentContext, expression);
 				if (Main.debug) System.out.println("And the int value is: " + value);
-				context.createVariable(name, value);
+				if (global) Generator.createGlobalVariable(name, value); 
+				else parentContext.createVariable(name, value);
 
 			} else if (type.equals("float")) {
 				// Parst einen boolschen Ausdruck in einen float-Wert
-				float value = Generator.encodeFloatExpression(context, expression);
+				float value = Generator.encodeFloatExpression(parentContext, expression);
 				if (Main.debug) System.out.println("And the float value is: " + value);
-				context.createVariable(name, value);
+				if (global) Generator.createGlobalVariable(name, value); 
+				else parentContext.createVariable(name, value);
 
 			} else if (type.equals("boolean")) {
 				// Parst einen boolschen Ausdruck in einen boolean-Wert
-				boolean value = Generator.encodeBooleanExpression(context, expression);
+				boolean value = Generator.encodeBooleanExpression(parentContext, expression);
 				if (Main.debug) System.out.println("And the boolean value is: " + value);
-				context.createVariable(name, value);
+				if (global) Generator.createGlobalVariable(name, value); 
+				else parentContext.createVariable(name, value);
 
 			} else if (type.equals("Sprite")) {
 				// Parst ein Sprite-Objekt
@@ -93,17 +97,20 @@ public class NewVariableDefinition extends Line {
 					SpriteVariable sprite;
 
 					if (parameter.length == 1) {
-						sprite = new SpriteVariable(name, parameter[0]);
+						sprite = new SpriteVariable(name, Generator.encodeStringExpression(parentContext, parameter[0]));
 					} else if (parameter.length == 2) {
-						sprite = new SpriteVariable(name, parameter[0], parameter[1]);
+						sprite = new SpriteVariable(name, Generator.encodeStringExpression(parentContext, parameter[0]), parameter[1]);
 					} else if (parameter.length == 3) {
-						sprite = new SpriteVariable(name, parameter[0], parameter[1], parameter[2]);
+						sprite = new SpriteVariable(name, Generator.encodeStringExpression(parentContext, parameter[0]), parameter[1], parameter[2]);
 					} else {
 						throw new GeneratorException(null, -1,
 								"In order to create a Sprite, you need 1-3 parameters");
 					}
 
-					context.createVariable(sprite);
+					if (global) Generator.createGlobalVariable(sprite);
+					else parentContext.createVariable(sprite);
+					
+					
 				}
 
 			}

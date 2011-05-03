@@ -41,43 +41,37 @@ import de.moonshade.osbe.oop.line.VariableDefinition;
 
 public class Generator {
 
-	public static boolean encodeBooleanExpression(Context context, String expression) throws GeneratorException {
+	public static List<Variable> variables = new ArrayList<Variable>();
+
+	public static boolean encodeBooleanExpression(Context context, String expression)
+			throws GeneratorException {
 
 		if (Main.debug)
 			System.out.println(expression);
-		
-		// Performance Inhancement
-		try {
-			return Boolean.parseBoolean(expression);
-		} catch (Exception ex) {
-		}
 
 		expression = encodeValueMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
-		// Performance Inhancement
-		try {
-			return Boolean.parseBoolean(expression);
-		} catch (Exception ex) {
-		}
-		
-		// In case of an arithmetic expression, we let the JavaScript Evaluator encode this expression
+		// In case of an arithmetic expression, we let the JavaScript Evaluator
+		// encode this expression
 		try {
 			return Boolean.parseBoolean(Main.javaScriptEvaluator.eval(expression).toString());
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to a boolean value");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression
+					+ "\" to a boolean value");
 		}
 	}
 
-	public static float encodeFloatExpression(Context context, String expression) throws GeneratorException {
+	public static float encodeFloatExpression(Context context, String expression)
+			throws GeneratorException {
 
 		// Performance Inhancement
 		try {
 			return Float.parseFloat(expression);
 		} catch (Exception ex) {
 		}
-		
+
 		expression = encodeValueMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
@@ -86,25 +80,28 @@ public class Generator {
 			return Float.parseFloat(expression);
 		} catch (Exception ex) {
 		}
-		
-		// In case of an arithmetic expression, we let the JavaScript Evaluator encode this expression
+
+		// In case of an arithmetic expression, we let the JavaScript Evaluator
+		// encode this expression
 		float result;
 		try {
 			result = Float.parseFloat(Main.javaScriptEvaluator.eval(expression).toString());
 		} catch (Exception ex) {
-			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to a float value");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression
+					+ "\" to a float value");
 		}
 		return result;
 	}
 
-	public static int encodeIntegerExpression(Context context, String expression) throws GeneratorException {
+	public static int encodeIntegerExpression(Context context, String expression)
+			throws GeneratorException {
 
 		// Performance Inhancement
 		try {
 			return Integer.parseInt(expression);
 		} catch (Exception ex) {
 		}
-		
+
 		expression = encodeValueMethods(context, expression);
 		expression = encodeVariables(context, expression);
 
@@ -114,12 +111,14 @@ public class Generator {
 		} catch (Exception ex) {
 		}
 
-		// In case of an arithmetic expression, we let the JavaScript Evaluator encode this expression
+		// In case of an arithmetic expression, we let the JavaScript Evaluator
+		// encode this expression
 		float result;
 		try {
 			result = Float.parseFloat(Main.javaScriptEvaluator.eval(expression).toString());
 		} catch (Exception ex2) {
-			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to an integer value");
+			throw new ParserException(null, -1, "Unable to parse \"" + expression
+					+ "\" to an integer value");
 		}
 		return (int) result;
 
@@ -178,7 +177,8 @@ public class Generator {
 		 */
 	}
 
-	private static String encodeValueMethods(Context context, String expression) throws GeneratorException {
+	private static String encodeValueMethods(Context context, String expression)
+			throws GeneratorException {
 
 		boolean found;
 		do {
@@ -215,7 +215,8 @@ public class Generator {
 				String methodParameters = methodString.substring(firstBracket + 1, lastBracket);
 
 				if (Main.debug)
-					System.out.println(methodName + " ist eine Methode. Parameter: " + methodParameters);
+					System.out.println(methodName + " ist eine Methode. Parameter: "
+							+ methodParameters);
 
 				expression = expression.substring(0, matcher.start())
 						+ valueMethods(context, methodName, splitParameters(methodParameters))
@@ -230,19 +231,20 @@ public class Generator {
 		return expression;
 	}
 
-	public static String encodeStringExpression(Context context, String expression) throws GeneratorException {
+	public static String encodeStringExpression(Context context, String expression)
+			throws GeneratorException {
 
-		expression = encodeVariables(context, expression);
-
-		try {
-			return Main.javaScriptEvaluator.eval(expression).toString();
-		} catch (ScriptException e) {
-			e.printStackTrace();
-			throw new ParserException(null, -1, "Unable to parse \"" + expression + "\" to a string");
+		if (expression.matches("^\"[^\"]*\"$")) {
+			return expression;
 		}
+
+		expression = encodeStringVariables(context, expression);
+
+		return expression;
 	}
 
-	private static String encodeVariables(Context context, String expression) throws GeneratorException {
+	private static String encodeVariables(Context context, String expression)
+			throws GeneratorException {
 
 		boolean found;
 		do {
@@ -270,8 +272,8 @@ public class Generator {
 					System.out.println(variableName + " ist eine Variable. Suche Wert...");
 				Variable variable = context.searchVariable(variableName);
 				if (variable != null) {
-					expression = expression.substring(0, matcher.start()) + variable.getStringValue()
-							+ expression.substring(ende);
+					expression = expression.substring(0, matcher.start())
+							+ variable.getStringValue() + expression.substring(ende);
 					if (Main.debug)
 						System.out.println("Neue Expression: " + expression);
 					found = true;
@@ -283,12 +285,12 @@ public class Generator {
 	}
 
 	public static Variable getVariable(Context context, String variableName) {
-
 		return context.searchVariable(variableName);
 
 	}
 
-	private static String valueMethods(Context context, String name, String[] parameter) throws GeneratorException {
+	private static String valueMethods(Context context, String name, String[] parameter)
+			throws GeneratorException {
 
 		// if (Main.debug) System.out.println(1);
 		if (name.equals("rand")) {
@@ -303,7 +305,8 @@ public class Generator {
 				int end = Generator.encodeIntegerExpression(context, parameter[1]);
 				return String.valueOf(start + generator.nextInt(end - start + 1));
 			} else {
-				throw new GeneratorException(null, -1, "Method \"" + name + "\" - too few or too much parameters.");
+				throw new GeneratorException(null, -1, "Method \"" + name
+						+ "\" - too few or too much parameters.");
 			}
 		} else if (name.equals("max")) {
 			if (parameter.length == 2) {
@@ -311,7 +314,8 @@ public class Generator {
 				float value2 = Generator.encodeFloatExpression(context, parameter[1]);
 				return String.valueOf(value1 >= value2 ? value1 : value2);
 			} else {
-				throw new GeneratorException(null, -1, "Method \"" + name + "\" - too few or too much parameters.");
+				throw new GeneratorException(null, -1, "Method \"" + name
+						+ "\" - too few or too much parameters.");
 			}
 		} else if (name.equals("min")) {
 			if (parameter.length == 2) {
@@ -319,7 +323,8 @@ public class Generator {
 				float value2 = Generator.encodeFloatExpression(context, parameter[1]);
 				return String.valueOf(value1 <= value2 ? value1 : value2);
 			} else {
-				throw new GeneratorException(null, -1, "Method \"" + name + "\" - too few or too much parameters.");
+				throw new GeneratorException(null, -1, "Method \"" + name
+						+ "\" - too few or too much parameters.");
 			}
 		}
 
@@ -356,6 +361,66 @@ public class Generator {
 		return parameterList.toArray(new String[0]);
 	}
 
+	private static String encodeStringVariables(Context context, String expression)
+			throws GeneratorException {
+		// and Methods
+
+		boolean isString = false;
+		String newExpression = "";
+		String buffer = "";
+
+		char[] chars = expression.toCharArray();
+		for (int a = 0; a < chars.length; a++) {
+			if (chars[a] == '"') {
+				if (!isString) {
+					isString = true;
+
+					if (!buffer.equals("")) {
+						// Die "+" am Anfang und am Ende rausschneiden
+						buffer = buffer.trim();
+						if (buffer.startsWith("+")) {
+							buffer = buffer.substring(1);
+						}
+						if (buffer.endsWith("+")) {
+							buffer = buffer.substring(0, buffer.length() - 1);
+						}
+						buffer = buffer.trim();
+						newExpression += Generator.encodeIntegerExpression(context, buffer);
+						buffer = "";
+					}
+
+				} else {
+					isString = false;
+				}
+				a++;
+			}
+			if (a < chars.length) {
+				if (!isString) {
+					buffer += chars[a];
+				} else {
+					newExpression += chars[a];
+				}
+			}
+		}
+
+		if (!isString && !buffer.equals("")) {
+			buffer = buffer.trim();
+			if (buffer.startsWith("+")) {
+				buffer = buffer.substring(1);
+			}
+			if (buffer.endsWith("+")) {
+				buffer = buffer.substring(0, buffer.length() - 1);
+			}
+			buffer = buffer.trim();
+			newExpression += Generator.encodeIntegerExpression(context, buffer);
+			buffer = "";
+		}
+
+		System.out.println("Neue Expression: " + newExpression);
+
+		return "\"" + newExpression + "\"";
+	}
+
 	private static String[] trimArray(String[] array) {
 		for (int a = 0; a < array.length; a++) {
 			array[0] = array[0].trim();
@@ -377,11 +442,11 @@ public class Generator {
 	public int currentLine = 0;
 
 	public boolean finished = false;
-	
+
 	public static boolean loop = false;
-	
+
 	public static int totalLoopCount = 1;
-	
+
 	public static int currentLoopCount = 0;
 
 	public static boolean abortGeneration = false;
@@ -478,14 +543,16 @@ public class Generator {
 						if (line.endsWith("{")) {
 							if (Main.debug)
 								System.out.println("This is an else-if-Block with brackets");
-							block = new IfCondition(context, line, lastCondition, absoluteTime, false);
+							block = new IfCondition(context, line, lastCondition, absoluteTime,
+									false);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
 						} else {
 							if (Main.debug)
 								System.out.println("This is a single-line if-else-Condition");
-							codeItem = new IfCondition(context, line, lastCondition, absoluteTime, true);
+							codeItem = new IfCondition(context, line, lastCondition, absoluteTime,
+									true);
 						}
 					} else if (line.matches("\\}?\\s*else\\s*.+")) {
 						// if (Main.debug)
@@ -494,15 +561,16 @@ public class Generator {
 						if (line.endsWith("{")) {
 							if (Main.debug)
 								System.out.println("This is an else-Block with brackets");
-							block = new IfCondition(context, line.substring(line.indexOf("else")), lastCondition,
-									absoluteTime, false, true);
+							block = new IfCondition(context, line.substring(line.indexOf("else")),
+									lastCondition, absoluteTime, false, true);
 							isBlock = true;
 							lineCounter++;
 							continue eachline;
 						} else {
 							if (Main.debug)
 								System.out.println("This is a single-line else-Condition");
-							codeItem = new IfCondition(context, line.substring(line.indexOf("else")), lastCondition,
+							codeItem = new IfCondition(context,
+									line.substring(line.indexOf("else")), lastCondition,
 									absoluteTime, true, true);
 						}
 					} else if (line.matches("at\\s*\\(.*")) {
@@ -543,10 +611,15 @@ public class Generator {
 						isBlock = true;
 						lineCounter++;
 						continue eachline;
+					} else if (line.matches("global\\s+\\S+\\s+\\S+\\s*=\\s*\\S+.*")) {
+						if (Main.debug)
+							System.out.println("This is a GLOBAL NEW Variable + definition");
+						codeItem = new NewVariableDefinition(context, line.replace("global", "")
+								.trim(), true);
 					} else if (line.matches("\\S+\\s+\\S+\\s*=\\s*\\S+.*")) {
 						if (Main.debug)
 							System.out.println("This is a NEW Variable + definition");
-						codeItem = new NewVariableDefinition(context, line);
+						codeItem = new NewVariableDefinition(context, line, false);
 					} else if (line.matches("\\S+\\s*=\\s*\\S*.*")) {
 						if (Main.debug)
 							System.out.println("This is a Variable definition");
@@ -573,7 +646,8 @@ public class Generator {
 					// Jetzt soll die entsprechende Zeile analysiert werden
 					if (codeItem == null) {
 						this.setOutput(new String());
-						throw new GeneratorException("Main", lineCounter, "Unable to understand this line in Main");
+						throw new GeneratorException("Main", lineCounter,
+								"Unable to understand this line in Main");
 					}
 					try {
 						codeItem.analyse();
@@ -602,10 +676,11 @@ public class Generator {
 			ListIterator<Variable> i = variables.listIterator();
 			while (i.hasNext()) {
 				Variable var = variables.get(i.nextIndex());
-				if (var instanceof SpriteVariable && !(context instanceof Method && var.getName().equals("object"))) {
+				if (var instanceof SpriteVariable
+						&& !(context instanceof Method && var.getName().equals("object"))) {
 					SpriteVariable sprite = (SpriteVariable) var;
-					Generator.output.append("Sprite," + sprite.getLayer() + "," + sprite.getOrigin() + ","
-							+ sprite.getPath() + ",320,240\n");
+					Generator.output.append("Sprite," + sprite.getLayer() + ","
+							+ sprite.getOrigin() + "," + sprite.getPath() + ",320,240\n");
 					Generator.output.append(sprite.getStoryboard());
 				}
 
@@ -627,6 +702,9 @@ public class Generator {
 		root = new Root();
 		this.gui = gui;
 
+		// Löschen alter, globaler Variablen
+		variables = new ArrayList<Variable>();
+
 		// Löschen des outputs
 		output = new StringBuilder();
 
@@ -638,9 +716,8 @@ public class Generator {
 		// wir es doch in unser Textfenster ein
 
 		this.setOutput(output.toString());
-		
-		JOptionPane.showMessageDialog(
-				gui.getContentPanel(),
+
+		JOptionPane.showMessageDialog(gui.getContentPanel(),
 				"Storyboard-Generation completed without errors.", "Generation Completed",
 				JOptionPane.INFORMATION_MESSAGE);
 
@@ -719,6 +796,108 @@ public class Generator {
 			}
 			lineCounter++;
 		}
+	}
+
+	public static void createGlobalVariable(SpriteVariable sprite) throws GeneratorException {
+		// TODO Auto-generated method stub
+		Variable sameVariable = searchGlobalVariable(sprite.getName());
+		if (sameVariable == null) {
+			variables.add(sprite);
+			if (Main.debug)
+				System.out.println("Sprite Variable angelegt: " + sprite.getName() + " = "
+						+ sprite.getPath());
+		} else {
+			throw new GeneratorException(null, -1, "The variable \"" + sprite.getName()
+					+ "\" has already been created");
+		}
+	}
+
+	public static void createGlobalVariable(String name, boolean value) throws GeneratorException {
+		// TODO Auto-generated method stub
+		Variable sameVariable = searchGlobalVariable(name);
+		if (sameVariable == null) {
+			variables.add(new BooleanVariable(name, value));
+			if (Main.debug)
+				System.out.println("Boolean Variable angelegt: " + name + " = " + value);
+		} else {
+			throw new GeneratorException(null, -1, "The variable \"" + name
+					+ "\" has already been created");
+		}
+	}
+
+	public static void createGlobalVariable(String name, float value) throws GeneratorException {
+		Variable sameVariable = searchGlobalVariable(name);
+		if (sameVariable == null) {
+			variables.add(new FloatVariable(name, value));
+			if (Main.debug)
+				System.out.println("Float Variable angelegt: " + name + " = " + value);
+		} else {
+			throw new GeneratorException(null, -1, "The variable \"" + name
+					+ "\" has already been created");
+		}
+	}
+
+	public static void createGlobalVariable(String name, int value) throws GeneratorException {
+		// TODO Auto-generated method stub
+		Variable sameVariable = searchGlobalVariable(name);
+		if (sameVariable == null) {
+			variables.add(new IntVariable(name, value));
+			if (Main.debug)
+				System.out.println("Int Variable angelegt: " + name + " = " + value);
+		} else {
+			throw new GeneratorException(null, -1, "The variable \"" + name
+					+ "\" has already been created");
+		}
+	}
+
+	/*
+	 * public void createVariable(String name, Object value) { // TODO
+	 * Auto-generated method stub
+	 * 
+	 * }
+	 */
+
+	public static void createGlobalVariable(String name, String value) throws GeneratorException {
+		Variable sameVariable = searchGlobalVariable(name);
+		if (sameVariable == null) {
+			variables.add(new StringVariable(name, value));
+			if (Main.debug)
+				System.out.println("String Variable angelegt: " + name + " = " + value);
+		} else {
+			throw new GeneratorException(null, -1, "The variable \"" + name
+					+ "\" has already been created");
+		}
+	}
+
+	public static Variable searchGlobalVariable(String variableName) {
+		// TODO Auto-generated method stub
+
+		if (Main.debug)
+			System.out.println("suche variable global " + variableName);
+
+		if (Main.debug)
+			System.out.println("waaaaaa 0");
+
+		// Suche Variable hier
+		ListIterator<Variable> i = variables.listIterator();
+		while (i.hasNext()) {
+			if (Main.debug)
+				System.out.println("waaaaaa 0.1");
+			if (Main.debug)
+				System.out.println(variables.get(i.nextIndex()).getName());
+			if (Main.debug)
+				System.out.println(variableName);
+			if (variables.get(i.nextIndex()).getName().equals(variableName)) {
+				if (Main.debug)
+					System.out.println("waaaaaa 1");
+				return variables.get(i.nextIndex());
+			}
+			i.next();
+		}
+
+		if (Main.debug)
+			System.out.println("Variable " + variableName + " wurde nicht gefunden :(");
+		return null;
 	}
 
 }

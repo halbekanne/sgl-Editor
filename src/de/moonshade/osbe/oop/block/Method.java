@@ -129,6 +129,7 @@ public class Method extends Block {
 
 		String[] parameterDefinitions = Generator.splitParameters(methodParams);
 		for (String paramDef : parameterDefinitions) {
+			paramDef = paramDef.trim();
 			if (Main.debug) System.out.println("Parameter: " + paramDef);
 			String[] paramDefSplitted = paramDef.split(" ");
 			if (paramDefSplitted.length == 2) {

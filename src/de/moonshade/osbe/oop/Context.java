@@ -24,7 +24,6 @@ public abstract class Context {
 
 	private List<Variable> variables = new ArrayList<Variable>();
 	private List<String> altVatiableNames = new ArrayList<String>();
-	private int time = 0;
 	protected Context parentContext = null;
 
 	public List<String> getAltVatiableNames() {
@@ -178,6 +177,16 @@ public abstract class Context {
 			if (Main.debug)
 				System.out.println("context: " + currentContext);
 		}
+		
+		// Suche in den Globalen Variablen
+		Variable tempVar = Generator.searchGlobalVariable(variableName);
+		if (Main.debug)
+			System.out.println("Variable " + variableName + " ist eine globale Variable");
+		if (tempVar != null) {
+			return tempVar;
+		}
+		
+		
 		if (Main.debug)
 			System.out.println("Variable " + variableName + " wurde nicht gefunden :(");
 		return null;

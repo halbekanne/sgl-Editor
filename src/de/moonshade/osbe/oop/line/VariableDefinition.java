@@ -45,7 +45,7 @@ public class VariableDefinition extends Line {
 		if (matcher.find()) {
 			String name = content.substring(0, matcher.start()).trim();
 			String expression = content.substring(matcher.end()).trim();
-			Variable variable = Generator.getVariable(context, name);
+			Variable variable = context.searchVariable(name);
 			if (variable instanceof IntVariable) {
 				// Parst einen arithmetischen Ausdruck in einen Integer-Wert
 				int value = Generator.encodeIntegerExpression(context, expression);

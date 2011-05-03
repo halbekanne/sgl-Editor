@@ -268,7 +268,7 @@ public class DefaultGUI implements GUI {
 			 * It was created with the TokenTokenMaker, so it's not that
 			 * perfect.
 			 */
-			objectContentArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+			objectContentArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SGL);
 			// objectContentArea.setText("\n\nif (2 > 2) {\n   int t = 1\n   t = t + 1\n} else if (2 == 2) {\n   int x = 2\n   x = x + 1\n}");
 			// objectContentArea.setText("\n Sprite test = new Sprite(\"sb/test\")\n test.move(10,20)\n test.move(100,20,40)\n test.move(100,200,20,40,30,60)");
 			// objectContentArea.setText(" Sprite test = new Sprite(\"sb/test\")\n at (100) test.move(20,40)");

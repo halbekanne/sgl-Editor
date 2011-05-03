@@ -41,8 +41,8 @@ import de.moonshade.osbe.serializable.Options;
 
 public class Main {
 
-	public static boolean debug = false;
-	public static boolean errorToFile = true;
+	public static boolean debug = true;
+	public static boolean errorToFile = false;
 	
 	private GUI gui = null;
 	private MenuHandler handler = null;
@@ -75,7 +75,7 @@ public class Main {
 
 			if (line.matches("\\S+\\s+\\S+\\s*=\\s*\\S+.*")) {
 				if (Main.debug) System.out.println("This is a Variable definition for a new Variable");
-				codeItem = new NewVariableDefinition(context, line);
+				codeItem = new NewVariableDefinition(context, line, false);
 			} else if (line.matches("\\S+\\s*=\\s*\\S*.*")) {
 				if (Main.debug) System.out.println("This is a Variable definition");
 				codeItem = new VariableDefinition(context, line);
