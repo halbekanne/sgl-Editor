@@ -11,8 +11,36 @@
  *     Dominik Halfkann
 */
 
-package de.moonshade.osbe.menuhandler;
+package de.moonshade.osbe.gui;
 
-public enum Action {
-	New, Open, Save, SaveAs, TimeShift, GenerateStoryboard, ParseOosbl, ShowOnlineDocs
+import java.io.File;
+
+import javax.swing.filechooser.FileFilter;
+
+public class SGLFileFilter extends FileFilter {
+
+	private final String[] extensions = { ".sgl" };
+
+	@Override
+	public boolean accept(File f) {
+		if (f == null)
+			return false;
+
+		// show directories
+		if (f.isDirectory())
+			return true;
+
+		// true if the file has the correct extension
+		for (String extension : extensions) {
+			return f.getName().toLowerCase().endsWith(extension);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String getDescription() {
+		return "SGL-Datei (*.sgl)";
+	}
+
 }

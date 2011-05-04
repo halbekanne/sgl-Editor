@@ -19,9 +19,9 @@ public class ActionNew extends MenuAction {
 
 	@Override
 	public void start() {
-		// gui.getContentArea().setText("");
-		Thread t1 = new Thread(new AnalyseStructureThread(gui));
-		t1.start();
+		gui.getMainClassContentArea().setText("");
+		gui.getContentArea().setText("");
+		gui.setFileName("");
 	}
 
 }

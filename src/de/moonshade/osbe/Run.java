@@ -16,6 +16,7 @@
  */
 package de.moonshade.osbe;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
@@ -31,6 +32,7 @@ public class Run {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+		
 		if (Main.errorToFile) {
 			java.io.FileOutputStream outstream = null;
 			try {

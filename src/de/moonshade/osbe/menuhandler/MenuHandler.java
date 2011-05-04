@@ -32,8 +32,13 @@ public class MenuHandler {
 			if (Main.debug) System.out.println("Open clicked");
 			break;
 		case Save:
+			menuAction = new ActionSave();
 			if (Main.debug) System.out.println("Save clicked");
 			break;
+		case SaveAs:
+			menuAction = new ActionSaveAs();
+			if (Main.debug) System.out.println("Save as clicked");
+			break;	
 		case GenerateStoryboard:
 			menuAction = new ActionGenerateStoryboard();
 			if (Main.debug) System.out.println("Generate clicked");
@@ -42,9 +47,11 @@ public class MenuHandler {
 			menuAction = new ActionParseOosbl();
 			if (Main.debug) System.out.println("Oosbl clicked");
 			break;
+		case ShowOnlineDocs:
+			menuAction = new ActionOnlineDocs();
+			if (Main.debug) System.out.println("Online Docs clicked");
+			break;	
 		}
-
-		if (Main.debug) System.out.println("something clicked");
 
 		if (menuAction != null) {
 			menuAction.onClick(gui);

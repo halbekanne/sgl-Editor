@@ -9,7 +9,7 @@
  * 
  * Contributors:
  *     Dominik Halfkann
-*/
+ */
 
 package de.moonshade.osbe.oop.block;
 
@@ -62,10 +62,13 @@ public class TimeBlock extends Block {
 			String command = content.substring(lastBracket + 1).trim();
 
 			generator.compile(this, command, time);
+
 			// Befehl wird mit der erforderlichen zeit ausgeführt
 
 		} else {
+
 			generator.compile(this, contentString, time);
+
 		}
 
 	}

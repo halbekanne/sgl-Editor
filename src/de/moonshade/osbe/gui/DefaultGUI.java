@@ -9,7 +9,7 @@
  * 
  * Contributors:
  *     Dominik Halfkann
-*/
+ */
 
 /**
  * 
@@ -18,10 +18,14 @@ package de.moonshade.osbe.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -44,6 +48,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -70,6 +75,8 @@ public class DefaultGUI implements GUI {
 
 	// Some variables
 	private String title;
+	private String filename = "";
+	private String unsaved = "";
 	private Main main;
 	private Main windowClosingHandler = null;
 	private MenuHandler handler = null;
@@ -107,9 +114,10 @@ public class DefaultGUI implements GUI {
 	}
 
 	@Override
-	public void createMenuItem(String title, int id, final Action action) {
+	public void createMenuItem(String title, int id, final Action action, KeyStroke keyStroke) {
 		JMenuItem jmenuitem = new JMenuItem(title);
 		final GUI gui = this;
+		jmenuitem.setAccelerator(keyStroke);
 		jmenuitem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -269,12 +277,27 @@ public class DefaultGUI implements GUI {
 			 * perfect.
 			 */
 			objectContentArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SGL);
+
+			objectContentArea.addKeyListener(new java.awt.event.KeyAdapter() {
+				@Override
+				public void keyTyped(java.awt.event.KeyEvent e) {
+					// Just to delete (saved) in the title, if changes were made
+					unsaved = "";
+					if (filename.equals("")) {
+						mainFrame.setTitle(title);
+					} else {
+						mainFrame.setTitle(title + " - " + filename + unsaved);
+					}
+					
+				}
+			});
+
 			// objectContentArea.setText("\n\nif (2 > 2) {\n   int t = 1\n   t = t + 1\n} else if (2 == 2) {\n   int x = 2\n   x = x + 1\n}");
 			// objectContentArea.setText("\n Sprite test = new Sprite(\"sb/test\")\n test.move(10,20)\n test.move(100,20,40)\n test.move(100,200,20,40,30,60)");
 			// objectContentArea.setText(" Sprite test = new Sprite(\"sb/test\")\n at (100) test.move(20,40)");
 			// objectContentArea.setText(" int t = 1\n int x = rand(t,2)");
-			//objectContentArea
-			//		.setText("if (2 == 2) {\n  Sprite test = new Sprite(\"sb/test\")\n  at (rand(1,10)*100) test.move(rand(10,20),30)\n  test.moveSpeedUp(100, 200, 10, 20, 10, 30)\n}");
+			// objectContentArea
+			// .setText("if (2 == 2) {\n  Sprite test = new Sprite(\"sb/test\")\n  at (rand(1,10)*100) test.move(rand(10,20),30)\n  test.moveSpeedUp(100, 200, 10, 20, 10, 30)\n}");
 
 		}
 		return objectContentArea;
@@ -423,6 +446,7 @@ public class DefaultGUI implements GUI {
 			mainFrame.setSize(options.getLastWidth(), options.getLastHeight());
 			mainFrame.setLocation(options.getLastLocation());
 			mainFrame.setTitle(title);
+			mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage("icons/sgl.png"));
 			this.title = title;
 
 			mainFrame.setJMenuBar(getMenuBar());
@@ -432,8 +456,9 @@ public class DefaultGUI implements GUI {
 	}
 
 	private void initLayout() {
-		//tabbedPaneLeft.add("Explorer", getExplorer());
-		//tabbedPaneCenter.add("something...ing.osb", getFileContentContainer());
+		// tabbedPaneLeft.add("Explorer", getExplorer());
+		// tabbedPaneCenter.add("something...ing.osb",
+		// getFileContentContainer());
 	}
 
 	@Override
@@ -491,9 +516,10 @@ public class DefaultGUI implements GUI {
 
 	@Override
 	public File showFileChooser(String title) {
-		if (Main.debug) System.out.print("clicked");
+		if (Main.debug)
+			System.out.print("clicked");
 		JFileChooser fc = new JFileChooser(options.getLastPath());
-		fc.setFileFilter(new OsuFileFilter());
+		fc.setFileFilter(new SGLFileFilter());
 		fc.setPreferredSize(new Dimension(640, 480));
 		AbstractButton button = SwingUtils.getDescendantOfType(AbstractButton.class, fc, "Icon",
 				UIManager.getIcon("FileChooser.detailsViewIcon"));
@@ -512,6 +538,38 @@ public class DefaultGUI implements GUI {
 	public void start() {
 		mainFrame.setVisible(true);
 
+	}
+
+	@Override
+	public RSyntaxTextArea getMainClassContentArea() {
+		// TODO Auto-generated method stub
+		return objectContentArea;
+	}
+
+	@Override
+	public void setFileName(String name) {
+		// TODO Auto-generated method stub
+		this.filename = name;
+		if (name.equals("")) {
+			mainFrame.setTitle(title);
+		} else {
+			mainFrame.setTitle(title + " - " + filename + unsaved);
+		}
+	}
+
+	@Override
+	public String getFileName() {
+		return filename;
+	}
+
+	@Override
+	public void setSaved(boolean saved) {
+		// TODO Auto-generated method stub
+		if (saved) {
+			unsaved = " (saved)";
+			mainFrame.setTitle(title + " - " + filename + unsaved);
+		} else
+			unsaved = "";
 	}
 
 }

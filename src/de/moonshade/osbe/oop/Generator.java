@@ -434,7 +434,7 @@ public class Generator {
 	// speichern wollen, und das Programm so schneller wird
 	public static StringBuilder output = new StringBuilder();
 
-	private GUI gui;
+	public static GUI gui;
 
 	// für progressbar
 	public int totalLines = 1;
@@ -643,17 +643,23 @@ public class Generator {
 							System.out.println("WTF is this? D:");
 					}
 
+
 					// Jetzt soll die entsprechende Zeile analysiert werden
 					if (codeItem == null) {
-						this.setOutput(new String());
+						this.setOutput("");
 						throw new GeneratorException("Main", lineCounter,
 								"Unable to understand this line in Main");
 					}
+					
+					
+					
 					try {
 						codeItem.analyse();
 					} catch (GeneratorException e) {
-						e.setContext("Main");
-						e.setLine(lineCounter);
+						if (e.getContext() == null)
+							e.setContext("Main");
+						if (e.getLine() == -1)
+							e.setLine(lineCounter);
 						throw e;
 					}
 
@@ -686,6 +692,26 @@ public class Generator {
 
 				i.next();
 			}
+
+			if (context instanceof MainClass) {
+				// Globale Sprite-Variablen ausgeben
+				variables = Generator.getAllGlobalVariables();
+				i = variables.listIterator();
+
+				while (i.hasNext()) {
+					Variable var = variables.get(i.nextIndex());
+					if (var instanceof SpriteVariable
+							&& !(context instanceof Method && var.getName().equals("object"))) {
+						SpriteVariable sprite = (SpriteVariable) var;
+						Generator.output.append("Sprite," + sprite.getLayer() + ","
+								+ sprite.getOrigin() + "," + sprite.getPath() + ",320,240\n");
+						Generator.output.append(sprite.getStoryboard());
+					}
+
+					i.next();
+				}
+			}
+
 		}
 
 		finished = true;
@@ -898,6 +924,17 @@ public class Generator {
 		if (Main.debug)
 			System.out.println("Variable " + variableName + " wurde nicht gefunden :(");
 		return null;
+	}
+
+	public static boolean isGlobal(Variable variable) {
+		if (searchGlobalVariable(variable.getName()) != null) {
+			return true;
+		}
+		return false;
+	}
+
+	public static List<Variable> getAllGlobalVariables() {
+		return Generator.variables;
 	}
 
 }

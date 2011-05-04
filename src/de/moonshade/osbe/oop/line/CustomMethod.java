@@ -60,6 +60,10 @@ public class CustomMethod extends Line {
 		// Wir encoden jetzt die übergebenen Werte für die in der Methode spezifizierten Typen von Variablen
 		String[] methodParameters = new String[paramName.size()];
 		
+		if (methodParameters.length != parameter.length) {
+			throw new GeneratorException(null, -1, "Too few or too much parameters in your method call");
+		}
+		
 		for (int a = 0; a < methodParameters.length; a++) {
 			if (paramType.get(a).equals("int")) {
 				methodParameters[a] = String.valueOf(Generator.encodeIntegerExpression(parentContext, parameter[a]));

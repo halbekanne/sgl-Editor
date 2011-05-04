@@ -9,33 +9,43 @@
  * 
  * Contributors:
  *     Dominik Halfkann
-*/
+ */
 
 package de.moonshade.osbe.menuhandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
-public class ActionOpen extends MenuAction {
+public class ActionSaveAs extends MenuAction {
 
 	@Override
 	public void start() {
-		File file = gui.showFileChooser("Open");
-		if (file != null) {
-			try {
-				gui.getContentArea().setText("");
-				gui.getMainClassContentArea().read(new FileReader(file), null);
-				gui.setFileName(file.getAbsolutePath());
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			File file = gui.showFileChooser("Save");
+			if (file != null) {
+				try {
+					if (!file.getName().contains(".")) {
+						file = new File(file.getAbsolutePath() + ".sgl");
+					}
+					gui.getMainClassContentArea().write(new FileWriter(file));
+					gui.setFileName(file.getAbsolutePath());
+
+					// Unlocks the file
+					file.setReadable(true);
+					file.setWritable(true);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-		}
+		
+		gui.setSaved(true);
 	}
 
 }

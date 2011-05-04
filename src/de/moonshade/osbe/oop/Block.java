@@ -18,6 +18,7 @@ public abstract class Block extends CodeItem {
 
 	protected String contentString = "";
 	protected int absoluteTime = 0;
+	protected int absoluteLine = 0;
 
 	public void contentAdd(String line) {
 		contentString = contentString + "\n" + line;
@@ -26,7 +27,15 @@ public abstract class Block extends CodeItem {
 	public int getAbsoluteTime() {
 		return absoluteTime;
 	}
+	
+	public int getAbsoluteLine() {
+		return absoluteLine;
+	}
 
+	public void setAbsoluteLine(int absoluteLine) {
+		this.absoluteLine = absoluteLine;
+	}
+	
 	public void setAbsoluteTime(int absoluteTime) {
 		this.absoluteTime = absoluteTime;
 	}

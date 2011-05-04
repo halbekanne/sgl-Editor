@@ -61,7 +61,8 @@ public class Method extends Block {
 		if (this.currentObject != null) {
 			originalName = currentObject.getName();
 			currentObject.setName("object");
-			this.createVariable(currentObject);
+			// Nur wenn das Objekt nicht global ist
+			if (!Generator.isGlobal(currentObject)) this.createVariable(currentObject);
 		}
 		
 		// So, jetzt ist alles bereit, damit wir unsere Methode ausführen können

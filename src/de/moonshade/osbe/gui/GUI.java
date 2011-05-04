@@ -20,6 +20,7 @@ import java.awt.Point;
 import java.io.File;
 
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -42,9 +43,10 @@ public interface GUI {
 	public void createMenu(String title);
 
 	/**
+	 * @param keyStroke TODO
 	 *
 	 */
-	public void createMenuItem(String title, int id, final Action effect);
+	public void createMenuItem(String title, int id, final Action effect, KeyStroke keyStroke);
 
 	public RSyntaxTextArea getContentArea();
 
@@ -110,6 +112,14 @@ public interface GUI {
 	 */
 	public File showFileChooser(String title);
 
+	public RSyntaxTextArea getMainClassContentArea();
+	
+	public void setFileName(String name);
+	
+	public void setSaved(boolean saved);
+	
+	public String getFileName();
+	
 	/**
 	 * Makes the GUI visible for the user
 	 */

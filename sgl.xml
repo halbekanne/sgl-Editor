@@ -58,7 +58,7 @@ rand(1,10) will create a random value between 1 and 10]]></desc>
 					<desc>The new x position. (Playfield: 0-640)</desc>
 				</param>
 				<param type="int" name="y">
-					<desc>The new y position. (Playfield: 0-420)</desc>
+					<desc>The new y position. (Playfield: 0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object to a specific position.<br>
@@ -74,7 +74,7 @@ The time will be 0.]]></desc>
 					<desc>The new x position. (Playfield: 0-640)</desc>
 				</param>
 				<param type="int" name="y">
-					<desc>The new y position. (Playfield: 0-420)</desc>
+					<desc>The new y position. (Playfield: 0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object to a specific position.]]></desc>
@@ -95,7 +95,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="startY">
 					<desc>The y position at the beginning of the animation. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 				<param type="int" name="endX">
 					<desc>The x position at the end of the animation. (Playfield:
@@ -103,7 +103,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="endY">
 					<desc>The y position at the end of the animation. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object from and to a specific position.]]></desc>
@@ -125,7 +125,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="startY">
 					<desc>The y position at the beginning of the animation. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 				<param type="int" name="endX">
 					<desc>The x position at the end of the animation. (Playfield:
@@ -133,7 +133,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="endY">
 					<desc>The y position at the end of the animation. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object from and to a specific position. Animation will start slow and speed up.]]></desc>
@@ -155,7 +155,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="startY">
 					<desc>The y position at the beginning of the animation. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 				<param type="int" name="endX">
 					<desc>The x position at the end of the animation. (Playfield:
@@ -163,7 +163,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="endY">
 					<desc>The y position at the end of the animation. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object from and to a specific position. Animation will start fast and slow down.]]></desc>
@@ -185,7 +185,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="endY">
 					<desc>The y position at the end of the animation. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object from the current object's position to a specific position.]]></desc>
@@ -207,7 +207,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="endY">
 					<desc>The y position at the end of the animation. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object from the current object's position to a specific position. Animation will start slow and speed up.]]></desc>
@@ -229,7 +229,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="endY">
 					<desc>The y position at the end of the animation. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object from the current object's position to a specific position. Animation will start fast and slow down.]]></desc>
@@ -251,7 +251,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="endY">
 					<desc>This value will be added to the current y position. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object from the current object's position to a relative position.]]></desc>
@@ -273,7 +273,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="endY">
 					<desc>This value will be added to the current y position. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object from the current object's position to a relative position. Animation will start slow and speed up.]]></desc>
@@ -295,7 +295,7 @@ The time will be 0.]]></desc>
 				</param>
 				<param type="int" name="endY">
 					<desc>This value will be added to the current y position. (Playfield:
-						0-420)</desc>
+						0-480)</desc>
 				</param>
 			</params>
 			<desc><![CDATA[Moves an object from the current object's position to a relative position. Animation will start fast and slow down.]]></desc>

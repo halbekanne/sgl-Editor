@@ -9,15 +9,19 @@
  * 
  * Contributors:
  *     Dominik Halfkann
-*/
+ */
 
 package de.moonshade.osbe;
 
+import java.awt.Event;
+import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,6 +29,7 @@ import java.util.ArrayList;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.swing.KeyStroke;
 
 import de.moonshade.osbe.gui.DefaultGUI;
 import de.moonshade.osbe.gui.GUI;
@@ -41,16 +46,18 @@ import de.moonshade.osbe.serializable.Options;
 
 public class Main {
 
-	public static boolean debug = true;
-	public static boolean errorToFile = false;
-	
+	public static boolean debug = false;
+	public static boolean errorToFile = true;
+
 	private GUI gui = null;
 	private MenuHandler handler = null;
 	private Options options = null;
 	private ArrayList<String> bufferedLines;
 	private Generator generator = new Generator();
-	// Da es viel Zeit braucht, um sich eine ScriptEngine zu holen, wird dies nur einmal am Anfang gemacht
-	public static ScriptEngine javaScriptEvaluator = new ScriptEngineManager().getEngineByName("javascript");
+	// Da es viel Zeit braucht, um sich eine ScriptEngine zu holen, wird dies
+	// nur einmal am Anfang gemacht
+	public static ScriptEngine javaScriptEvaluator = new ScriptEngineManager()
+			.getEngineByName("javascript");
 
 	public void generate() throws GeneratorException {
 		// Aus GUI sollen die erforderlichen Informationen herausgenommen
@@ -74,15 +81,18 @@ public class Main {
 			MainClass context = root.getMain();
 
 			if (line.matches("\\S+\\s+\\S+\\s*=\\s*\\S+.*")) {
-				if (Main.debug) System.out.println("This is a Variable definition for a new Variable");
+				if (Main.debug)
+					System.out.println("This is a Variable definition for a new Variable");
 				codeItem = new NewVariableDefinition(context, line, false);
 			} else if (line.matches("\\S+\\s*=\\s*\\S*.*")) {
-				if (Main.debug) System.out.println("This is a Variable definition");
+				if (Main.debug)
+					System.out.println("This is a Variable definition");
 				codeItem = new VariableDefinition(context, line);
 			}
 
 			else {
-				if (Main.debug) System.out.println("This is not a Variable definition :(");
+				if (Main.debug)
+					System.out.println("This is not a Variable definition :(");
 			}
 
 			// Jetzt soll die entsprechende Zeile analysiert werden+
@@ -137,7 +147,8 @@ public class Main {
 	 * If the main window is about to close, this method will be called
 	 */
 	public void onGUIClosed() {
-		if (Main.debug) System.out.println("blaa");
+		if (Main.debug)
+			System.out.println("blaa");
 		getOptionsCloseUpdate();
 		saveOptions(options);
 	}
@@ -165,6 +176,7 @@ public class Main {
 	public void start(String[] args) {
 		// TODO Auto-generated method stub
 
+	
 		// First of all, we have to get the Options which we maybe saved the
 		// last time using this application
 		options = this.getOptions();
@@ -176,24 +188,19 @@ public class Main {
 		gui = new DefaultGUI(this, options);
 		// Initialize the GUI
 		// gui.init("", new Point(20,20), 800, 600);
-		gui.init("osu! Storyboard Script Editor");
+		gui.init("SGL-Editor");
 		gui.onClose(this);
 		gui.setMenuHandler(handler);
 
 		gui.createMenu("File");
-		/*
-		gui.createMenuItem("New", 0, Action.New);
-		gui.createMenuItem("Open", 0, Action.Open);
-		gui.createMenuItem("Save", 0, Action.Save);
-	*/
-		gui.createMenu("Edit");
-		/*
-		gui.createMenuItem("Undo", 1, Action.New);
-		gui.createMenuItem("Redo", 1, Action.Open);
-		gui.createMenuItem("Cut", 1, Action.Save);
-		gui.createMenuItem("Copy", 1, Action.Save);
-		gui.createMenuItem("Paste", 1, Action.Save);
-		*/
+
+		gui.createMenuItem("New", 0, Action.New, null);
+		gui.createMenuItem("Open SGL-File", 0, Action.Open,
+				KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK, true));
+		gui.createMenuItem("Save SGL-File", 0, Action.Save,
+				KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK, true));
+		
+		gui.createMenuItem("Save As...", 0, Action.SaveAs, null);
 
 		/*
 		 * gui.createMenu("View");
@@ -206,10 +213,32 @@ public class Main {
 
 		gui.createMenu("Generate");
 
-		gui.createMenuItem("Generate Storyboard", 2, Action.GenerateStoryboard);
-		gui.createMenuItem("Generate Storyboard from OOSBL", 2, Action.ParseOosbl);
+		gui.createMenuItem("Generate Storyboard", 1, Action.GenerateStoryboard, null);
+		gui.createMenuItem("Generate Storyboard from OOSBL", 1, Action.ParseOosbl, null);
+
+		gui.createMenu("Help");
+
+		gui.createMenuItem("Online Documentation", 2, Action.ShowOnlineDocs, null);
 
 		gui.start();
+		
+		// Do we have a file Parameter?
+		if (args.length >= 1){
+			File file = new File(args[0]);
+			try {
+				gui.getMainClassContentArea().read(new FileReader(file), null);
+				gui.setFileName(file.getAbsolutePath());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
 		/*
 		 * Thread analyzeStructure = new AnalyseStructureThread(gui);
 		 * analyzeStructure.start();

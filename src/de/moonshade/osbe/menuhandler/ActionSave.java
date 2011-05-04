@@ -9,33 +9,52 @@
  * 
  * Contributors:
  *     Dominik Halfkann
-*/
+ */
 
 package de.moonshade.osbe.menuhandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
-public class ActionOpen extends MenuAction {
+public class ActionSave extends MenuAction {
 
 	@Override
 	public void start() {
-		File file = gui.showFileChooser("Open");
-		if (file != null) {
+
+		if (gui.getFileName().equals("")) {
+			File file = gui.showFileChooser("Save");
+			if (file != null) {
+				try {
+					if (!file.getName().contains(".")) {
+						file = new File(file.getAbsolutePath() + ".sgl");
+					}
+					gui.getMainClassContentArea().write(new FileWriter(file));
+					gui.setFileName(file.getAbsolutePath());
+
+					// Unlocks the file
+					file.setReadable(true);
+					file.setWritable(true);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} else {
 			try {
-				gui.getContentArea().setText("");
-				gui.getMainClassContentArea().read(new FileReader(file), null);
-				gui.setFileName(file.getAbsolutePath());
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				gui.getMainClassContentArea().write(new FileWriter(new File(gui.getFileName())));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
+		gui.setSaved(true);
 	}
 
 }
